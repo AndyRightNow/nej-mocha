@@ -48,7 +48,7 @@ app.get('/testIndex', function(req, res, next) {
         testFiles: specs,
         PORT: config.PORT,
         globalJSON: userConfig.globals ? JSON.stringify(userConfig.globals) : "",
-        globalsInjector: "(" + globalsInjector.toString() + ")()"
+        globalsInjector: globalsInjector.toString()
     });
 });
 
