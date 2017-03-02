@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <!-- encoding must be set for mocha's special characters to render properly -->
-    <link rel="stylesheet" href="./node_modules/mocha/mocha.css" />\
+    <link rel="stylesheet" href="http://localhost:<%= PORT %>/node_modules/mocha/mocha.css" />\
     <script>
         (<%- globalsInjector %>)('<%- globalJSON %>')
     </script>
@@ -10,9 +10,9 @@
 
 <body>
     <div id="mocha"></div>
-    <script src="./node_modules/regularjs/dist/regular.min.js"></script>
-    <script src="./node_modules/mocha/mocha.js"></script>
-    <script src="./node_modules/chai/chai.js"></script>
+    <script src="http://localhost:<%= PORT %>/node_modules/regularjs/dist/regular.min.js"></script>
+    <script src="http://localhost:<%= PORT %>/node_modules/mocha/mocha.js"></script>
+    <script src="http://localhost:<%= PORT %>/node_modules/chai/chai.js"></script>
     <script src="http://localhost:<%= PORT %>/src/javascript/lib/nej/src/define.js?pro=http://localhost:<%= PORT %>/src/javascript/&eui=http://localhost:<%= PORT %>/src/javascript/lib/edu-front-ui/src/js/&rui=http://localhost:<%= PORT %>/src/javascript/lib/edu-front-regularUI/src/js/&eutil=http://localhost:<%= PORT %>/src/javascript/common/util/&pool=http://localhost:<%= PORT %>/src/javascript/lib/&test=http://localhost:<%= PORT %>/test/spec/"></script>
     <script>
         mocha.ui('bdd');
