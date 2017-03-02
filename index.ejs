@@ -1,79 +1,10 @@
 <html>
-
 <head>
     <meta charset="utf-8">
     <!-- encoding must be set for mocha's special characters to render properly -->
     <link rel="stylesheet" href="./node_modules/mocha/mocha.css" />\
     <script>
-        window.urlPrefix = {
-            indexPrefix: "/",
-            homePrefix: "/home.htm",
-            loginPrefix: "/member/login.htm",
-            logoutPrefix: "/passport/member/logout.htm",
-            searchPrefix: "/search.htm",
-            courseListPrefix: "/category/all",
-            universityListPrefix: "/university/view/all.htm",
-            universityPrefix: "/university/",
-            universityPreviewPrefix: "/university/preview/",
-            vocationIndexPrefix: "/vemooc",
-            courseInfoPrefix: "/course/",
-            courseInfoPreviewPrefix: "/course/preview/",
-            courseLearnPrefix: "/learn/",
-            courseLearnPreviewPrefix: "/learn/preview/",
-            courseLearnReviewPrefix: "/learn/review/",
-            learnForTeacherPrefix: "/learn/enroll/",
-            spocMainPrefix: "/spoc/schoolcloud/index.htm",
-            spocCourseInfoPrefix: "/spoc/course/",
-            spocCourseLearnPrefix: "/spoc/learn/",
-            spocUsityIdPrefix: "/spoc/university.htm?schoolId=",
-            spocUniversityListPrefix: "/university/view/all.htm",
-            spocUniversityPrefix: "/spoc/university/",
-            spocUniversityPreviewPrefix: "/spoc/university/preview/",
-            spocMemberPrefix: "/spoc/u/",
-            spocMemberPreviewPrefix: "/spoc/u/preview/",
-            memberPrefix: "/u/",
-            memberPreviewPrefix: "/u/preview/",
-            addMemberInfoPrefix: "http://www.icourse163.org/member/addMemberInfo.htm",
-            partnerSuperAdminPrefix: "/partnerAdmin/superAdmin.htm",
-            partnerEditorAdminPrefix: "/partnerAdmin/editorAdmin.htm",
-            adminManagerPrefix: "/collegeAdmin/schoolPanel.htm",
-            adminTeacherPrefix: "/collegeAdmin/teacherPanel.htm",
-            coursecreatePrefix: "/collegeAdmin/courseCreate.htm",
-            adminSetMessagePrefix: "/collegeAdmin/setMessage.htm",
-            adminSettingPrefix: "/collegeAdmin/setting.htm",
-            adminToolsPrefix: "/collegeAdmin/tools.htm",
-            termManagePrefix: "/collegeAdmin/termManage/",
-            reviewQuizPrefix: "/review/quiz/{id}.htm",
-            reviewHwPrefix: "/review/hw/",
-            reviewTrainPrefix: "/review/train/",
-            teacherMainEditPrefix: "/user/teacherMainEdit.htm",
-            personInfoSettingPrefix: "/user/setting/personInfoEdit.htm",
-            accountSettingPrefix: "/user/setting/accountSetting.htm",
-            attachmentPrefix: "/homework/attachment.htm",
-            titleAttachmentPrefix: "/question/title/attachment.htm",
-            notSupportedPrefix: "/common/errors/notSupported.htm",
-            helpFrontPrefix: "/help/help.htm",
-            helpBackIndexPrefix: "/help/helpIndex.htm",
-            helpBackPrefix: "/help/manageHelp.htm",
-            aboutUsPrefix: "/about/aboutus.htm",
-            contactUsPrefix: "/about/contactus.htm",
-            certApplyPrefix: "/cert/apply.htm",
-            certDesignPrefix: "/cert/certDesign/{id}.htm",
-            chargeCertDesignPrefix: "/cert/chargeCertDesign/{id}.htm",
-            payOrderPrefix: "/pay/order.htm",
-            donateCoursePrefix: "/donate/course.htm",
-            getTextPrefix: "/resource/getText.htm",
-            cdnReportPrefix: 'http://study.163.com/about/cdnReport.htm',
-            snsOAuthPrefix: "/passport/sns/doOAuth.htm",
-            ursAuthorPrefix: "http://www.icourse163.org/member/ursLogin.htm",
-            thirdBindCallbackHref: "http://www.icourse163.org/logingate/urs/bindCallback.htm",
-            icourseAuthorPrefix: "http://www.icourse163.org/member/icourseLogin.htm"
-        };
-        window.moocHost = "icourse163.org";
-        window.moocHref = "http://www.icourse163.org";
-        window.moocStaticHost = "mc.stu.126.net";
-        window.callAppDownloadHref = "http://www.icourse163.org/client/callAppDownload.htm";
-
+        <%= globalsInjector.replace("globalJSON", '"' + globalJSON + '"') %>
     </script>
 </head>
 
@@ -82,7 +13,7 @@
     <script src="./node_modules/regularjs/dist/regular.min.js"></script>
     <script src="./node_modules/mocha/mocha.js"></script>
     <script src="./node_modules/chai/chai.js"></script>
-    <script src="http://localhost:8004/src/javascript/lib/nej/src/define.js?pro=http://localhost:8004/src/javascript/&eui=http://localhost:8004/src/javascript/lib/edu-front-ui/src/js/&rui=http://localhost:8004/src/javascript/lib/edu-front-regularUI/src/js/&eutil=http://localhost:8004/src/javascript/common/util/&pool=http://localhost:8004/src/javascript/lib/&test=http://localhost:8004/test/spec/"></script>
+    <script src="http://localhost:<%= PORT %>/src/javascript/lib/nej/src/define.js?pro=http://localhost:<%= PORT %>/src/javascript/&eui=http://localhost:<%= PORT %>/src/javascript/lib/edu-front-ui/src/js/&rui=http://localhost:<%= PORT %>/src/javascript/lib/edu-front-regularUI/src/js/&eutil=http://localhost:<%= PORT %>/src/javascript/common/util/&pool=http://localhost:<%= PORT %>/src/javascript/lib/&test=http://localhost:<%= PORT %>/test/spec/"></script>
     <script>
         mocha.ui('bdd');
         expect = chai.expect;
@@ -90,7 +21,7 @@
     <script>
         define([
         <% for(var i = 0; i < testFiles.length; i++) {%>
-            "<%= testFiles[i] %>",
+            "{test}/<%= testFiles[i] %>",
         <% } %>
         ], function () {
             mocha.run();
