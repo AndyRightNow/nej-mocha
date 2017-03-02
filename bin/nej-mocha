@@ -5,8 +5,8 @@ var path = require('path');
 
 var config = require('./../config');
 
-var serverCwd = path.resolve(__dirname),
-    runnerCwd = path.resolve(__dirname, "../", "../");
+var serverCwd = path.resolve(__dirname, "../"),
+    runnerCwd = path.resolve(__dirname, "../", "../", "../");
 
 var testServerProcess = spawn("node", ["./server.js"], {
     cwd: serverCwd
