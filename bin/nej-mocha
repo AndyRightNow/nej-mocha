@@ -29,6 +29,5 @@ testRunnerProcess.stderr.on('data', (data) => {
 
 testRunnerProcess.on('close', (code) => {
     console.log(`All tests are finished.`);
-    server.close(() => {
-    });
+    server.close();
 });
