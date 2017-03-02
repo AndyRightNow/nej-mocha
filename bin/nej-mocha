@@ -5,10 +5,11 @@ var path = require('path');
 
 var config = require('./../config');
 
-var cwd = path.resolve(__dirname, "../");
+var serverCwd = path.resolve(__dirname, "../"),
+    runnerCwd = path.resolve(__dirname, "../", "../", "../");
 
 var testServerProcess = spawn("node", ["./server.js"], {
-    cwd: cwd
+    cwd: serverCwd
 });
 
 testServerProcess.stdout.on('data', (data) => {
@@ -20,7 +21,7 @@ testServerProcess.stderr.on('data', (data) => {
 });
 
 var testRunnerProcess = spawn("node", ["./node_modules/phantomjs-prebuilt/bin/phantomjs", "./node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js", "http://localhost:" + config.PORT +"/testIndex", "spec","{\"useColors\":true}"], {
-    cwd: cwd
+    cwd: runnerCwd
 });
 
 testRunnerProcess.stdout.on('data', (data) => {
@@ -33,5 +34,5 @@ testRunnerProcess.stderr.on('data', (data) => {
 
 testRunnerProcess.on('close', (code) => {
   console.log(`Test Runner Process exited with code ${code}`);
-  testServerProcess.kill(0)
+  testServerProcess.kill(0);
 });
