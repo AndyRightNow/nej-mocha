@@ -58,6 +58,6 @@ app.use(function (err, req, res, next) {
   next();
 })
 
-app.listen(config.PORT, function () {
+module.exports = app.listen(config.PORT, function () {
     console.log("Test server is running on " + config.PORT);
 });
