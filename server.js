@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.static(path.resolve(__dirname, "../", "../")));
 app.set('view engine', 'ejs')
 
-var globalsInjector = function(globalJSON) {
+var globalsInjector = function (globalJSON) {
     function _injectHelper(obj, prop, value) {
         if (typeof value === "object") {
             obj[prop] = {};
@@ -21,8 +21,7 @@ var globalsInjector = function(globalJSON) {
                     _injectHelper(obj[prop], k, value[k]);
                 }
             }
-        }
-        else {
+        } else {
             obj[prop] = value;
         }
     }
@@ -30,8 +29,7 @@ var globalsInjector = function(globalJSON) {
     var gs = null;
     try {
         gs = JSON.parse(globalJSON);
-    }
-    catch(e) {}
+    } catch (e) {}
 
     if (gs) {
         window = window || {};
@@ -43,7 +41,7 @@ var globalsInjector = function(globalJSON) {
     }
 }
 
-app.get('/testIndex', function(req, res, next) {
+app.get('/testIndex', function (req, res, next) {
     res.render(path.resolve(__dirname, "index.ejs"), {
         testFiles: specs,
         PORT: config.PORT,
@@ -53,11 +51,12 @@ app.get('/testIndex', function(req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
-  console.log("ERROR:", err);
+    console.log("ERROR:", err);
 
-  next();
+    next();
 })
 
 module.exports = app.listen(config.PORT, function () {
     console.log("Test server is running on " + config.PORT);
+    console.log("Test is starting...");
 });

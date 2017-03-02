@@ -18,6 +18,9 @@ var walkSync = function (dir, filelist) {
 
 var testDir = path.resolve(__dirname, '../', "../", "test");
 
-specs = walkSync(testDir).map(s => s.replace(/[\\\/]/g, "/")).map(s => s.split("/test")[1]).filter(s => /\.js/.test(s));
+specs = walkSync(testDir)
+    .map(s => s.replace(/[\\\/]/g, "/"))
+    .map(s => s.split("test/")[1])
+    .filter(s => /\.js/.test(s));
 
 module.exports = specs;
