@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "A test framework specifically for NEJ module system users.",
   "main": "server.js",
-  "scripts": {},
+  "scripts": {
+    "postinstall": "bower install"
+  },
   "bin": {
     "nej-mocha": "./bin/nej-mocha"
   },
