@@ -4,7 +4,7 @@
     <!-- encoding must be set for mocha's special characters to render properly -->
     <link rel="stylesheet" href="./node_modules/mocha/mocha.css" />\
     <script>
-        <%- globalsInjector.replace("globalJSON", '"' + globalJSON + '"') %>
+        <%- globalsInjector.replace("globalJSON", "'" + globalJSON + "'") %>
     </script>
 </head>
 
