@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+var spawn = require('child_process').spawn;
+var path = require('path');
+
+var config = require('./../config');
+
+var serverCwd = path.resolve(__dirname),
+    runnerCwd = path.resolve(__dirname, "../", "../");
+
+var testServerProcess = spawn("node", ["./server.js"], {
+    cwd: serverCwd
+});
+
+testServerProcess.stdout.on('data', (data) => {
+    console.log(data.toString('utf-8'));
+});
+
+testServerProcess.stderr.on('data', (data) => {
+  console.log(`stderr: ${data.toString('utf-8')}`);
+});
+
+testServerProcess.on('close', (code) => {
+  console.log(`Test Server Process exited with code ${code}`);
+});
+
+var testRunnerProcess = spawn("node", ["./node_modules/phantomjs-prebuilt/bin/phantomjs", "./node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js", "http://localhost:" + config.PORT +"/testIndex", "spec","{\"useColors\":true}"], {
+    cwd: runnerCwd
+});
+
+testRunnerProcess.stdout.on('data', (data) => {
+    console.log(data.toString('utf-8'));
+});
+
+testRunnerProcess.stderr.on('data', (data) => {
+  console.log(`stderr: ${data.toString('utf-8')}`);
+});
+
+testRunnerProcess.on('close', (code) => {
+  console.log(`Test Runner Process exited with code ${code}`);
+  testServerProcess.kill(0)
+});

@@ -1,0 +1,22 @@
+{
+  "name": "nej-mocha",
+  "version": "1.0.0",
+  "description": "A test framework specifically for NEJ module system users.",
+  "main": "server.js",
+  "scripts": {},
+  "bin": {
+    "nej-mocha": "./bin/nej-mocha"
+  },
+  "author": "hzzhouandi",
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^3.5.0",
+    "cors": "^2.8.1",
+    "ejs": "^2.5.6",
+    "express": "^4.15.0",
+    "mocha": "^3.2.0",
+    "mocha-phantomjs-core": "^2.1.1",
+    "phantomjs-prebuilt": "^2.1.14",
+    "regularjs": "^0.6.0-beta.1"
+  }
+}
