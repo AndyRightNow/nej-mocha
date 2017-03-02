@@ -11,6 +11,8 @@
   },
   "author": "hzzhouandi",
   "license": "MIT",
+  "repository": "https://github.com/AndyRightNow/nej-mocha",
+  "bugs": "https://github.com/AndyRightNow/nej-mocha/issues",
   "dependencies": {
     "chai": "^3.5.0",
     "cors": "^2.8.1",
