@@ -51,3 +51,7 @@ define([
 ```
 
 It has exactly the same APIs as `mocha` and `chai`.
+
+# Notes
+
+More cli options will be added later.
