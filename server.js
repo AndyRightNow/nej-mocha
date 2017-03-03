@@ -2,9 +2,9 @@ var express = require('express');
 var path = require("path");
 var cors = require('cors');
 
-var getAllSpecs = require('./get-all-specs');
+var getAllSpecs = require('./src/get-all-specs');
 var config = require("./config");
-var userConfig = require('./get-user-config');
+var userConfig = require('./src/get-user-config');
 
 var app = express();
 

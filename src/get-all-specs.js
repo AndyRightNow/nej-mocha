@@ -5,9 +5,8 @@ var walkSync = function (dir, filelist) {
     var files;
 
     try {
-       files = fs.readdirSync(dir);
-    }
-    catch(err) {
+        files = fs.readdirSync(dir);
+    } catch (err) {
         console.log(err.message);
 
         return [];
@@ -24,10 +23,10 @@ var walkSync = function (dir, filelist) {
     return filelist;
 };
 
-var testDir = path.resolve(__dirname, '../', "../", "test");
+var baseDir = path.resolve(__dirname, '../', "../", "../");
 
 var getAllSpecs = function (testFolder) {
-    return walkSync(path.resolve(__dirname, '../', "../", testFolder))
+    return walkSync(path.resolve(baseDir, testFolder))
         .map(s => s.replace(/[\\\/]/g, "/"))
         .map(s => s.split("test/")[1])
         .filter(s => /\.js/.test(s));
