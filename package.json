@@ -4,7 +4,8 @@
   "description": "A test framework specifically for NEJ module system users.",
   "main": "server.js",
   "scripts": {
-    "start": "node ./bin/nej-mocha"
+    "start": "node ./bin/nej-mocha",
+    "patch:publish": "npm version patch && npm publish"
   },
   "bin": {
     "nej-mocha": "./bin/nej-mocha"
