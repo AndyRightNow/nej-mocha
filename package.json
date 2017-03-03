@@ -25,7 +25,5 @@
     "phantomjs-prebuilt": "^2.1.14",
     "regularjs": "^0.6.0-beta.1"
   },
-  "devDependencies": {
-    "release": "^1.1.7"
-  }
+  "devDependencies": {}
 }
