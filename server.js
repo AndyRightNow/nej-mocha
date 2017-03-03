@@ -2,7 +2,7 @@ var express = require('express');
 var path = require("path");
 var cors = require('cors');
 
-var specs = require('./get-all-specs');
+var getAllSpecs = require('./get-all-specs');
 var config = require("./config");
 var userConfig = require('./get-user-config');
 
@@ -43,7 +43,7 @@ var globalsInjector = function (globalJSON) {
 
 app.get('/testIndex', function (req, res, next) {
     res.render(path.resolve(__dirname, "index.ejs"), {
-        testFiles: specs,
+        testFiles: getAllSpecs(userConfig.testFolder || "./test"),
         PORT: config.PORT,
         globalJSON: userConfig.globals ? JSON.stringify(userConfig.globals) : "",
         globalsInjector: globalsInjector.toString()

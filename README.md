@@ -30,13 +30,24 @@ For NEJ users, unit testing could be a pain in the neck. This package solves the
 
 A configuration file can be used to configure the test runner. Create a `nej-mocha.conf.js` or `nej-mocha.config.js` under your working directory.
 
-## Options:
+## `nej-mocha.conf.js`:
 
-### **globals**
-
-* Type: `Object`
-
-* Description: Properties and nested properties to add to the `window` object. The object will be parse and add the exact same structure to the `window` object.
+```javascript 
+module.exports = {
+    /**
+     * Properties and nested properties to add to the `window` object. 
+     * The object will be parse and add the exact same structure to the `window` object.
+     */
+    globals: {
+        // Your global properties here
+    },
+    /**
+     * The test folder path relative to your working directory.
+     * Default to './test'
+     */
+    testFolder: ""
+}
+```
 
 # Examples
 
@@ -62,8 +73,8 @@ define([
 });
 ```
 
-It has exactly the same APIs as `mocha` and `chai`.
+It has exactly the same APIs as [`mocha`](https://mochajs.org/) and [`chai`](chaijs.com/).
 
 # Notes
 
-The package is currently customized for MOOC team. More generic features and more cli options will be updated later.
+The package is currently customized for MOOC team in NetEase Education. More generic features and more cli options will be updated later.
