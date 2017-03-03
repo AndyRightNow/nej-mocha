@@ -54,7 +54,7 @@ app.use(function (err, req, res, next) {
     console.log("ERROR:", err);
 
     next();
-})
+});
 
 module.exports = app.listen(config.PORT, function () {
     console.log("Test server is running on " + config.PORT);
