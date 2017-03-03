@@ -43,9 +43,14 @@ module.exports = {
     },
     /**
      * The test folder path relative to your working directory.
-     * Default to './test'
+     * Default to './test'.
      */
-    testFolder: ""
+    testFolder: "",
+    /**
+     * The time to wait before mocha tests exit.
+     * Default to 3000 ms.
+     */
+    timeout: 3000
 }
 ```
 

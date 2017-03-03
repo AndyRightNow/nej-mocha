@@ -5,11 +5,22 @@ var path = require('path');
 
 var server = require('./../server');
 var config = require('./../config');
+var userConfig = require('./../src/get-user-config');
+
+// Normalize user config 
+var runnerConfig = Object.create(null);
+runnerConfig.useColors = true;
+runnerConfig.timeout = userConfig.timeout === undefined ? 3000 : userConfig.timeout;
 
 var runnerCwd = path.resolve(__dirname, "../", "../", "../");
 
-
-var testRunnerProcess = spawn("node", ["./node_modules/phantomjs-prebuilt/bin/phantomjs", "./node_modules/mocha-phantomjs-core/mocha-phantomjs-core.js", "http://localhost:" + config.PORT + "/testIndex", "spec", "{\"useColors\":true}"], {
+var testRunnerProcess = spawn("node", [
+    config.phantomJSPath,
+    config.mochaPhantomJSCorePath,
+    `http://localhost:${config.PORT}/${config.TEST_INDEX}`,
+    config.defaultReporter,
+    JSON.stringify(runnerConfig)
+], {
     cwd: runnerCwd
 });
 
