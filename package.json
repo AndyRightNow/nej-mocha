@@ -10,7 +10,7 @@
   "bin": {
     "nej-mocha": "./bin/nej-mocha"
   },
-  "author": "hzzhouandi",
+  "author": "AndyRightNow",
   "license": "MIT",
   "repository": "https://github.com/AndyRightNow/nej-mocha",
   "bugs": "https://github.com/AndyRightNow/nej-mocha/issues",
