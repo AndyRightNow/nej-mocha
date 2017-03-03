@@ -82,4 +82,4 @@ It has exactly the same APIs as [`mocha`](https://mochajs.org/) and [`chai`](cha
 
 # Notes
 
-The package is currently customized for MOOC team in NetEase Education. More generic features and more cli options will be updated later.
+More cli options will be updated later.
