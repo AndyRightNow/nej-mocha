@@ -50,7 +50,14 @@ module.exports = {
      * The time to wait before mocha tests exit.
      * Default to 3000 ms.
      */
-    timeout: 3000
+    timeout: 3000,
+    /**
+     * Path aliases used to passed to 'define.js' as URL parameters
+     */
+     nejPathAliases: {
+         pro: 'src/javascript/',
+         // ...
+     }
 }
 ```
 

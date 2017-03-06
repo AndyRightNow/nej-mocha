@@ -46,7 +46,8 @@ app.get('/testIndex', function (req, res, next) {
         testFiles: getAllSpecs(userConfig.testFolder || "./test"),
         PORT: config.PORT,
         globalJSON: userConfig.globals ? JSON.stringify(userConfig.globals) : "",
-        globalsInjector: globalsInjector.toString()
+        globalsInjector: globalsInjector.toString(),
+        pathAliases: userConfig.nejPathAliases
     });
 });
 
