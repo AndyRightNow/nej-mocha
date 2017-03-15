@@ -47,7 +47,8 @@ app.get('/testIndex', function (req, res, next) {
         PORT: config.PORT,
         globalJSON: JSON.stringify(userConfig.globals),
         globalsInjector: globalsInjector.toString(),
-        nejPathAliases: userConfig.nejPathAliases
+        nejPathAliases: userConfig.nejPathAliases,
+        mochaOptions: userConfig.mochaOptions
     });
 });
 
@@ -58,6 +59,6 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app.listen(config.PORT, function () {
-    console.log("Test server is running on " + config.PORT);
-    console.log("Test is starting...");
+    console.log(" Test server is running on " + config.PORT);
+    console.log(" Tests are starting...");
 });

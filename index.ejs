@@ -16,15 +16,27 @@
     <script src="http://localhost:<%= PORT %>/src/javascript/lib/nej/src/define.js?<% for (var alias in nejPathAliases) { if (nejPathAliases.hasOwnProperty(alias)) {%><%- alias %>=http://localhost:<%= PORT %>/<%- nejPathAliases[alias] %>&<% }}%> "></script>
     <script>
         mocha.ui('bdd');
+        <% for (var option in mochaOptions) { if (mochaOptions.hasOwnProperty(option)) { %>
+        mocha.<%- option %> ? mocha.<%- option %>(<%- typeof mochaOptions[option] === "string" ? "'" : "" %><%- mochaOptions[option] %><%- typeof mochaOptions[option] === "string" ? "'" : "" %>) : undefined;
+        <% }} %>
         expect = chai.expect;
     </script>
     <script>
-        define([
-        <% for(var i = 0; i < testFiles.length; i++) {%>
-            "{test}/<%= testFiles[i] %>",
-        <% } %>
-        ], function () {
-            mocha.run();
+        var globalPromise = new Promise((resolve, reject) => {
+            define([
+            <% for(var i = 0; i < testFiles.length; i++) {%>
+                "{test}/<%= testFiles[i] %>",
+            <% } %>
+            ], function () {
+                mocha.run(function (err) {
+                    if (err) {
+                        reject(err);
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            });
         });
     </script>
 </body>

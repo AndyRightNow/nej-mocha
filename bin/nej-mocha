@@ -1,44 +1,83 @@
 #!/usr/bin/env node
 
-var spawn = require('child_process').spawn;
-var path = require('path');
+const {
+    spawn
+} = require('child_process');
+const path = require('path');
+const chalk = require('chalk');
+const CDP = require('chrome-remote-interface');
 
-var server = require('./../server');
-var config = require('./../config');
-var userConfig = require('./../src/get-user-config');
+const server = require('./../server');
+const config = require('./../config');
+const userConfig = require('./../src/get-user-config');
+const parseReport = require('./../src/parse-report');
+const printReport = require('./../src/print-report');
 
-// Normalize user config 
-var runnerConfig = Object.create(null);
-runnerConfig.useColors = true;
-runnerConfig.timeout = userConfig.timeout === undefined ? 3000 : userConfig.timeout;
+const testRunnerProcess = spawn(`${userConfig.chromePath}`.replace(/\"/g, ""), [
+    "--remote-debugging-port=9222",
+]);
 
-var runnerCwd = path.resolve(__dirname, "../", "../", "../");
+CDP((client) => {
+    // extract domains
+    const {
+        Network,
+        Page,
+        DOM,
+        Runtime
+    } = client;
 
-var testRunnerProcess = spawn("node", [
-    config.phantomJSPath,
-    config.mochaPhantomJSCorePath,
-    `http://localhost:${config.PORT}/${config.TEST_INDEX}`,
-    config.defaultReporter,
-    JSON.stringify(runnerConfig)
-], {
-    cwd: runnerCwd
-});
+    Page.loadEventFired(() => {
+        DOM.enable()
+            .then(() => {
+                return Runtime.evaluate({
+                    expression: `globalPromise`
+                });
+            })
+            .then((res) => {
+                console.log(chalk.green(" Tests are running..."));
 
-testRunnerProcess.stdout.on('data', (data) => {
-    var str = data.toString('utf-8');
+                return Runtime.awaitPromise({
+                    promiseObjectId: res.result.objectId
+                });
+            })
+            .then(() => DOM.getDocument())
+            .then((res) => {
+                return parseReport(DOM, res.root.nodeId);
+            })
+            .then((res) => {
+                testRunnerProcess.kill(0);
+                return printReport(res);
+            })
+            .then((res) => {
+                process.exit(0);
+            })
+            .catch((err) => {
+                console.log(err);
+                testRunnerProcess.kill(0);
+                process.exit(0);
+            });
+    });
 
-    if (/do\s/.test(str)) {
-        return;
-    }
-
-    console.log(str);
-});
-
-testRunnerProcess.stderr.on('data', (data) => {
-    console.log(`ERROR: ${data.toString('utf-8')}`);
-});
-
-testRunnerProcess.on('close', (code) => {
-    console.log(`All tests are finished.`);
-    server.close();
+    // enable events then start!
+    Promise.all([
+            Network.enable(),
+            Page.enable()
+        ]).then(() => {
+            return Page.navigate({
+                url: `http://localhost:${config.PORT}/${config.TEST_INDEX}`
+            });
+        })
+        .catch((err) => {
+            testRunnerProcess.kill(0);
+            process.exit(0);
+            client.close();
+        });
+}).on('error', (err) => {
+    // cannot connect to the remote endpoint
+    console.error(err);
+    console.log("");
+    console.log("");
+    console.log(chalk.red("  Please close all chrome browser processes before you start the tests"));
+    testRunnerProcess.kill(0);
+    process.exit(0);
 });
