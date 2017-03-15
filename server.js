@@ -43,11 +43,11 @@ var globalsInjector = function (globalJSON) {
 
 app.get('/testIndex', function (req, res, next) {
     res.render(path.resolve(__dirname, "index.ejs"), {
-        testFiles: getAllSpecs(userConfig.testFolder || "./test"),
+        testFiles: getAllSpecs(userConfig.testFolder),
         PORT: config.PORT,
-        globalJSON: userConfig.globals ? JSON.stringify(userConfig.globals) : "",
+        globalJSON: JSON.stringify(userConfig.globals),
         globalsInjector: globalsInjector.toString(),
-        pathAliases: userConfig.nejPathAliases
+        nejPathAliases: userConfig.nejPathAliases
     });
 });
 

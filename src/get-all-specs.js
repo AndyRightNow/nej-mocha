@@ -25,10 +25,13 @@ var walkSync = function (dir, filelist) {
 
 var baseDir = path.resolve(__dirname, '../', "../", "../");
 
+
 var getAllSpecs = function (testFolder) {
+    const testSplit = (testFolder.split('./')[1] + '/').replace(/[\/]+/g, '/');
+
     return walkSync(path.resolve(baseDir, testFolder))
         .map(s => s.replace(/[\\\/]/g, "/"))
-        .map(s => s.split("test/")[1])
+        .map(s => s.split(testSplit)[1])
         .filter(s => /\.js/.test(s));
 }
 
