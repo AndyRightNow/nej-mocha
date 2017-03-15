@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
 const {
-    spawn
+    spawn,
+    exec
 } = require('child_process');
 const path = require('path');
 const chalk = require('chalk');
 const CDP = require('chrome-remote-interface');
+const treeKill = require('tree-kill');
 
 const server = require('./../server');
 const config = require('./../config');
@@ -13,7 +15,7 @@ const userConfig = require('./../src/get-user-config');
 const parseReport = require('./../src/parse-report');
 const printReport = require('./../src/print-report');
 
-const testRunnerProcess = spawn(`${userConfig.chromePath}`.replace(/\"/g, ""), [
+const testRunnerProcess = spawn(`"${userConfig.chromePath}"`.replace(/\"/g, ""), [
     "--remote-debugging-port=9222",
 ]);
 
@@ -74,10 +76,9 @@ CDP((client) => {
         });
 }).on('error', (err) => {
     // cannot connect to the remote endpoint
-    console.error(err);
     console.log("");
-    console.log("");
-    console.log(chalk.red("  Please close all chrome browser processes before you start the tests"));
-    testRunnerProcess.kill(0);
-    process.exit(0);
+    console.log(chalk.red("  Please close all chrome browser processes before you start the tests."));
+    treeKill(testRunnerProcess.pid, 'SIGHUP', () => {
+        process.exit(0);
+    });
 });

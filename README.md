@@ -62,7 +62,15 @@ module.exports = {
          pro: 'src/javascript/',
          // ...
      },
-     windowsChromePath: ""
+     /**
+      * An absolute path of chrome binary.
+      * 
+      * Examples:
+      * 
+      * Mac: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      * Windows: 'C:\\Program\\ Files\\ (x86)\\Google\\Chrome\\Application\\chrome.exe'
+      */
+     chromePath: ""
 }
 ```
 
@@ -81,6 +89,14 @@ define([
 
         it("should be ok", function() {
             expect(true).to.be.true;
+        });
+
+        it("should be ok after a second", function(done) {
+            setTimeout(function () {
+                expect(true).to.be.true;
+
+                done();
+            }, 1000);
         });
 
         after("Some clean-up", function() {

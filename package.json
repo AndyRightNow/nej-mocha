@@ -25,9 +25,8 @@
     "jquery": "^3.1.1",
     "jsdom": "^9.12.0",
     "mocha": "^3.2.0",
-    "mocha-phantomjs-core": "^2.1.1",
-    "phantomjs-prebuilt": "^2.1.14",
-    "regularjs": "^0.6.0-beta.1"
+    "regularjs": "^0.6.0-beta.1",
+    "tree-kill": "^1.1.0"
   },
   "devDependencies": {}
 }
