@@ -5,7 +5,6 @@ const {
     exec
 } = require('child_process');
 const path = require('path');
-const chalk = require('chalk');
 const CDP = require('chrome-remote-interface');
 const treeKill = require('tree-kill');
 
@@ -14,6 +13,13 @@ const config = require('./../config');
 const userConfig = require('./../src/get-user-config');
 const parseReport = require('./../src/parse-report');
 const printReport = require('./../src/print-report');
+const {
+    printGreen,
+    printRed,
+    printNewLine,
+    print,
+    printAndNewLine
+} = require('./../src/util');
 
 const testRunnerProcess = spawn(`"${userConfig.chromePath}"`.replace(/\"/g, ""), [
     "--remote-debugging-port=9222",
@@ -36,7 +42,7 @@ CDP((client) => {
                 });
             })
             .then((res) => {
-                console.log(chalk.green(" Tests are running..."));
+                printGreen(" Tests are running...");
 
                 return Runtime.awaitPromise({
                     promiseObjectId: res.result.objectId
@@ -54,7 +60,8 @@ CDP((client) => {
                 process.exit(0);
             })
             .catch((err) => {
-                console.log(err);
+                printAndNewLine(err);
+                printRed(`  Something went wrong. Please restart the tests and try again.`);
                 testRunnerProcess.kill(0);
                 process.exit(0);
             });
@@ -63,8 +70,20 @@ CDP((client) => {
     // enable events then start!
     Promise.all([
             Network.enable(),
-            Page.enable()
+            Page.enable(),
+            Runtime.enable()
         ]).then(() => {
+            Runtime.consoleAPICalled((options) => {
+                if (options.type === 'log') {
+                    let output = options.args.reduce((prev, cur) => `${prev && prev.value ? prev.value : prev} ${cur.value}`);
+                    output = typeof output === "string" ? output : output ? output.value : "";
+
+                    if (!/^do\ /.test(output)) {
+                        print(`  ${output}`);
+                    }
+                }
+            });
+
             return Page.navigate({
                 url: `http://localhost:${config.PORT}/${config.TEST_INDEX}`
             });
@@ -76,8 +95,8 @@ CDP((client) => {
         });
 }).on('error', (err) => {
     // cannot connect to the remote endpoint
-    console.log("");
-    console.log(chalk.red("  Please close all chrome browser processes before you start the tests."));
+    printNewLine();
+    printRed("  Please close all chrome browser processes before you start the tests.");
     treeKill(testRunnerProcess.pid, 'SIGHUP', () => {
         process.exit(0);
     });
