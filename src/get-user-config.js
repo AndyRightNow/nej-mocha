@@ -48,6 +48,12 @@ userConfig.mochaOptions.timeout = isNaN(parseInt(userConfig.mochaOptions.timeout
 userConfig.nejPathAliases = userConfig.nejPathAliases || {};
 userConfig.nejPathAliases.pro = userConfig.nejPathAliases.pro || "src/javascript";
 userConfig.nejPathAliases.test = userConfig.nejPathAliases.test || userConfig.testFolder.split('./').splice(-1)[0];
+let nejPathAliases = userConfig.nejPathAliases;
+for (const alias in nejPathAliases) {
+    if (nejPathAliases.hasOwnProperty(alias)) {
+        nejPathAliases[alias] = `${nejPathAliases[alias]}/`.replace(/[\\\/]+/g, '/');
+    }
+}
 
 // Normalize testRunnerPort
 userConfig.testRunnerPort = isNaN(parseInt(userConfig.testRunnerPort)) ? config.DEFAULT_PORT : parseInt(userConfig.testRunnerPort);
