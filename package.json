@@ -1,6 +1,6 @@
 {
   "name": "nej-mocha",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A test framework specifically for NEJ module system users.",
   "main": "server.js",
   "scripts": {
