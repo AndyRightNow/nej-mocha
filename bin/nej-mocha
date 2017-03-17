@@ -21,11 +21,17 @@ const {
     printAndNewLine
 } = require('./../src/util');
 
+// Spawn the chrome process
 const testRunnerProcess = spawn(`"${userConfig.chromePath}"`.replace(/\"/g, ""), [
     userConfig.headless ? "--headless" : "",
     "--remote-debugging-port=9222",
 ]);
 
+/**
+ * Kill the browser and the node process
+ * 
+ * @param {any} client The client of CDP
+ */
 function exitBrowserAndProcess(client) {
     if (userConfig.shouldBrowserClosed) {
         treeKill(testRunnerProcess.pid, 'SIGHUP', () => {
@@ -37,13 +43,22 @@ function exitBrowserAndProcess(client) {
         }
     }
 }
+/** To test with userConfig.maxRetries */
 let retriedTimes = 0;
 
+/**
+ * Fetch test results as print it on the console. With limited number of retries
+ * 
+ * @param {any} promise 
+ * @param {any} Runtime 
+ * @param {any} DOM 
+ * @returns 
+ */
 function runTestRunner(promise, Runtime, DOM) {
     return promise
         .then(() => {
             return Runtime.evaluate({
-                expression: `globalPromise`
+                expression: config.GLOBAL_PROMISE
             });
         })
         .then((res) => {
@@ -90,12 +105,13 @@ CDP((client) => {
         runTestRunner(DOM.enable(), Runtime, DOM);
     });
 
-    // enable events then start!
+    // enable events then start
     Promise.all([
             Network.enable(),
             Page.enable(),
             Runtime.enable()
         ]).then(() => {
+            // Forward console output
             Runtime.consoleAPICalled((options) => {
                 if (options.type === 'log') {
                     let output = options.args.reduce((prev, cur) => `${prev && prev.value ? prev.value : prev} ${cur.value}`);
