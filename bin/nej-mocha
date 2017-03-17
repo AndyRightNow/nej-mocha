@@ -43,7 +43,7 @@ function runTestRunner(promise, Runtime, DOM) {
     return promise
         .then(() => {
             return Runtime.evaluate({
-                expression: `gglobalPromise`
+                expression: `globalPromise`
             });
         })
         .then((res) => {
