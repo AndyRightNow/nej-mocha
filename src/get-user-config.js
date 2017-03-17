@@ -1,5 +1,7 @@
 const chalk = require('chalk');
 
+const config = require('./../config');
+
 var userConfig;
 const isWin = /^win/.test(process.platform);
 
@@ -46,5 +48,11 @@ userConfig.mochaOptions.timeout = isNaN(parseInt(userConfig.mochaOptions.timeout
 userConfig.nejPathAliases = userConfig.nejPathAliases || {};
 userConfig.nejPathAliases.pro = userConfig.nejPathAliases.pro || "src/javascript";
 userConfig.nejPathAliases.test = userConfig.nejPathAliases.test || userConfig.testFolder.split('./').splice(-1)[0];
+
+// Normalize port 
+userConfig.port = isNaN(parseInt(userConfig.port)) ? config.PORT : parseInt(userConfig.port);
+
+// Normalize proxyHost
+userConfig.host = (userConfig.host || 'localhost').toString().trim();
 
 module.exports = userConfig;

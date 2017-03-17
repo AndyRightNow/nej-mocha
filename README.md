@@ -70,7 +70,18 @@ module.exports = {
       * Mac: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
       * Windows: 'C:\\Program\\ Files\\ (x86)\\Google\\Chrome\\Application\\chrome.exe'
       */
-     chromePath: ""
+     chromePath: "",
+     /**
+      * If you have a proxy server set up, you can pass a custom host name.
+      * This will replace 'localhost'.
+      * If not provided. 'localhost' is used.
+      */
+     host: "",
+     /**
+      * The port for the test runner server to listen on.
+      * Default to 8004
+      */
+     port: 8004
 }
 ```
 
