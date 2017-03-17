@@ -59,6 +59,6 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app.listen(userConfig.testRunnerPort, function () {
-    console.log(" Test server is running on " + userConfig.testRunnerPort);
-    console.log(" Tests are starting...");
+    console.log("  Test server is running on " + userConfig.testRunnerPort);
+    console.log("  Tests are starting...");
 });

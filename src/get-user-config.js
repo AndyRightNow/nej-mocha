@@ -69,4 +69,7 @@ userConfig.shouldBrowserClosed = userConfig.shouldBrowserClosed === undefined ? 
 // Normalize headless
 userConfig.headless = userConfig.headless === undefined ? true : Boolean(userConfig.headless);
 
+// Normalize maxRetries
+userConfig.maxRetries = isNaN(parseInt(userConfig.maxRetries)) ? 5 : parseInt(userConfig.maxRetries);
+
 module.exports = userConfig;

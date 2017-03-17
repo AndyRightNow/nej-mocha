@@ -37,6 +37,45 @@ function exitBrowserAndProcess(client) {
         }
     }
 }
+let retriedTimes = 0;
+
+function runTestRunner(promise, Runtime, DOM) {
+    return promise
+        .then(() => {
+            return Runtime.evaluate({
+                expression: `gglobalPromise`
+            });
+        })
+        .then((res) => {
+            printGreen("  Tests are running...");
+
+            return Runtime.awaitPromise({
+                promiseObjectId: res.result.objectId
+            });
+        })
+        .then(() => DOM.getDocument())
+        .then((res) => {
+            return parseReport(DOM, res.root.nodeId);
+        })
+        .then((res) => {
+            return printReport(res);
+        })
+        .then((res) => {
+            exitBrowserAndProcess();
+        })
+        .catch((err) => {
+            printAndNewLine(err);
+
+            if (retriedTimes >= userConfig.maxRetries) {
+                printRed(`  Something went wrong. Retried for ${retriedTimes} times and failed.`);
+                exitBrowserAndProcess();
+            } else {
+                printRed(`  Something went wrong. Retrying......`);
+                retriedTimes++;
+                runTestRunner(Promise.resolve(), Runtime, DOM);
+            }
+        });
+}
 
 CDP((client) => {
     // extract domains
@@ -48,34 +87,7 @@ CDP((client) => {
     } = client;
 
     Page.loadEventFired(() => {
-        DOM.enable()
-            .then(() => {
-                return Runtime.evaluate({
-                    expression: `globalPromise`
-                });
-            })
-            .then((res) => {
-                printGreen(" Tests are running...");
-
-                return Runtime.awaitPromise({
-                    promiseObjectId: res.result.objectId
-                });
-            })
-            .then(() => DOM.getDocument())
-            .then((res) => {
-                return parseReport(DOM, res.root.nodeId);
-            })
-            .then((res) => {
-                return printReport(res);
-            })
-            .then((res) => {
-                exitBrowserAndProcess();
-            })
-            .catch((err) => {
-                printAndNewLine(err);
-                printRed(`  Something went wrong. Please restart the tests and try again.`);
-                exitBrowserAndProcess();
-            });
+        runTestRunner(DOM.enable(), Runtime, DOM);
     });
 
     // enable events then start!

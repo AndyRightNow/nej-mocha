@@ -103,7 +103,14 @@ module.exports = {
       * 
       * Default to true
       */
-     headless: true
+     headless: true,
+     /**
+      * Max retrying times after something went wrong.
+      * Set 0 to disable retrying.
+      *
+      * Default to 5
+      */
+     maxRetries: 5
 }
 ```
 
