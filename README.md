@@ -90,7 +90,20 @@ module.exports = {
       * The port for the test runner server to listen on.
       * Default to 8004
       */
-     testRunnerPort: 8004
+     testRunnerPort: 8004,
+     /**
+      * Should the browser be closed after the tests are run
+      * 
+      * Default to true
+      */
+     shouldBrowserClosed: true,
+     /**
+      * Should the browser be headless when the tests are running
+      * Currently only support Linux
+      * 
+      * Default to true
+      */
+     headless: true
 }
 ```
 

@@ -57,4 +57,10 @@ userConfig.proxy = typeof userConfig.proxy === "object" ? userConfig.proxy : {};
 userConfig.proxy.port = isNaN(parseInt(userConfig.proxy.port)) ? userConfig.testRunnerPort : parseInt(userConfig.proxy.port);
 userConfig.proxy.host = (userConfig.proxy.host || 'localhost').toString().trim();
 
+// Normalize shouldBrowserClosed
+userConfig.shouldBrowserClosed = userConfig.shouldBrowserClosed === undefined ? true : Boolean(userConfig.shouldBrowserClosed);
+
+// Normalize headless
+userConfig.headless = userConfig.headless === undefined ? true : Boolean(userConfig.headless);
+
 module.exports = userConfig;

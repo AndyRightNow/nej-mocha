@@ -22,8 +22,21 @@ const {
 } = require('./../src/util');
 
 const testRunnerProcess = spawn(`"${userConfig.chromePath}"`.replace(/\"/g, ""), [
+    userConfig.headless ? "--headless" : "",
     "--remote-debugging-port=9222",
 ]);
+
+function exitBrowserAndProcess(client) {
+    if (userConfig.shouldBrowserClosed) {
+        treeKill(testRunnerProcess.pid, 'SIGHUP', () => {
+            process.exit(0);
+        });
+
+        if (client) {
+            client.close();
+        }
+    }
+}
 
 CDP((client) => {
     // extract domains
@@ -53,17 +66,15 @@ CDP((client) => {
                 return parseReport(DOM, res.root.nodeId);
             })
             .then((res) => {
-                testRunnerProcess.kill(0);
                 return printReport(res);
             })
             .then((res) => {
-                process.exit(0);
+                exitBrowserAndProcess();
             })
             .catch((err) => {
                 printAndNewLine(err);
                 printRed(`  Something went wrong. Please restart the tests and try again.`);
-                testRunnerProcess.kill(0);
-                process.exit(0);
+                exitBrowserAndProcess();
             });
     });
 
@@ -89,15 +100,11 @@ CDP((client) => {
             });
         })
         .catch((err) => {
-            testRunnerProcess.kill(0);
-            process.exit(0);
-            client.close();
+            exitBrowserAndProcess(client);
         });
 }).on('error', (err) => {
     // cannot connect to the remote endpoint
     printNewLine();
     printRed("  Please close all chrome browser processes before you start the tests.");
-    treeKill(testRunnerProcess.pid, 'SIGHUP', () => {
-        process.exit(0);
-    });
+    exitBrowserAndProcess();
 });
