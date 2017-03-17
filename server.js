@@ -44,7 +44,7 @@ var globalsInjector = function (globalJSON) {
 app.get('/testIndex', function (req, res, next) {
     res.render(path.resolve(__dirname, "index.ejs"), {
         testFiles: getAllSpecs(userConfig.testFolder),
-        PORT: userConfig.port,
+        PORT: userConfig.testRunnerPort,
         globalJSON: JSON.stringify(userConfig.globals),
         globalsInjector: globalsInjector.toString(),
         nejPathAliases: userConfig.nejPathAliases,
@@ -58,7 +58,7 @@ app.use(function (err, req, res, next) {
     next();
 });
 
-module.exports = app.listen(userConfig.port, function () {
-    console.log(" Test server is running on " + userConfig.port);
+module.exports = app.listen(userConfig.testRunnerPort, function () {
+    console.log(" Test server is running on " + userConfig.testRunnerPort);
     console.log(" Tests are starting...");
 });

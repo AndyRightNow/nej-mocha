@@ -49,10 +49,12 @@ userConfig.nejPathAliases = userConfig.nejPathAliases || {};
 userConfig.nejPathAliases.pro = userConfig.nejPathAliases.pro || "src/javascript";
 userConfig.nejPathAliases.test = userConfig.nejPathAliases.test || userConfig.testFolder.split('./').splice(-1)[0];
 
-// Normalize port 
-userConfig.port = isNaN(parseInt(userConfig.port)) ? config.PORT : parseInt(userConfig.port);
+// Normalize testRunnerPort
+userConfig.testRunnerPort = isNaN(parseInt(userConfig.testRunnerPort)) ? config.DEFAULT_PORT : parseInt(userConfig.testRunnerPort);
 
-// Normalize proxyHost
-userConfig.host = (userConfig.host || 'localhost').toString().trim();
+// Normalize proxy
+userConfig.proxy = typeof userConfig.proxy === "object" ? userConfig.proxy : {};
+userConfig.proxy.port = isNaN(parseInt(userConfig.proxy.port)) ? userConfig.testRunnerPort : parseInt(userConfig.proxy.port);
+userConfig.proxy.host = (userConfig.proxy.host || 'localhost').toString().trim();
 
 module.exports = userConfig;

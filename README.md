@@ -72,16 +72,25 @@ module.exports = {
       */
      chromePath: "",
      /**
-      * If you have a proxy server set up, you can pass a custom host name.
-      * This will replace 'localhost'.
-      * If not provided. 'localhost' is used.
+      * Proxy options
       */
-     host: "",
+     proxy: {
+        /**
+        * If you have a proxy server set up, you can pass a custom host name.
+        * This will replace 'localhost'.
+        * If not provided. 'localhost' is used.
+        */
+        host: "",
+        /**
+        * The port of the proxy address. Default to 'testRunnerPort'
+        */
+        port: 8004,
+     }
      /**
       * The port for the test runner server to listen on.
       * Default to 8004
       */
-     port: 8004
+     testRunnerPort: 8004
 }
 ```
 

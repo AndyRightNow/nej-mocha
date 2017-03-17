@@ -85,7 +85,7 @@ CDP((client) => {
             });
 
             return Page.navigate({
-                url: `http://${userConfig.host}:${userConfig.port}/${config.TEST_INDEX}`
+                url: `http://${userConfig.proxy.host}:${userConfig.proxy.port}/${config.TEST_INDEX}`
             });
         })
         .catch((err) => {

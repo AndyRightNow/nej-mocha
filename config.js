@@ -1,5 +1,5 @@
 module.exports = {
-    PORT: 8004,
+    DEFAULT_PORT: 8004,
     TEST_INDEX: "testIndex",
     defaultReporter: "spec",
     phantomJSPath: "./node_modules/phantomjs-prebuilt/bin/phantomjs",
