@@ -5,7 +5,6 @@ let passedTestCnt = 0;
 let failedTestCnt = 0;
 
 function printReportHelper(report, padding) {
-    // ✓✖
     if (Array.isArray(report)) {
         for (let i = 0, l = report.length; i < l; i++) {
             let print = console.log.bind(console, padding);

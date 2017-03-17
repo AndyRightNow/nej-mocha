@@ -1,30 +1,62 @@
 const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
 
-const printGreen = function (str) {
+function printGreen(str) {
     console.log(chalk.green(str));
 }
 
-const printRed = function (str) {
+function printRed(str) {
     console.log(chalk.red(str));
 }
 
-const printNewLine = function () {
+function printNewLine() {
     console.log("");
 }
 
-const print = function () {
+function print() {
     console.log.apply(console, Array.from(arguments));
 }
 
-const printAndNewLine = function () {
+function printAndNewLine() {
     print.apply(null, Array.from(arguments));
     printNewLine();
 }
+
+/**
+ * Recursively walk through all files in a directory synchronously
+ * 
+ * @param {any} dir 
+ * @param {any} filelist 
+ * @returns 
+ */
+function walkSync(dir, filelist) {
+    var files;
+
+    try {
+        files = fs.readdirSync(dir);
+    } catch (err) {
+        console.log(err.message);
+
+        return [];
+    }
+
+    filelist = filelist || [];
+    files.forEach(function (file) {
+        if (fs.statSync(path.join(dir, file)).isDirectory()) {
+            filelist = walkSync(path.join(dir, file), filelist);
+        } else {
+            filelist.push(path.join(dir, file));
+        }
+    });
+    return filelist;
+};
 
 module.exports = {
     printGreen,
     printRed,
     printNewLine,
     print,
-    printAndNewLine
+    printAndNewLine,
+    walkSync
 };

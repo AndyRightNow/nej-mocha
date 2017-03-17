@@ -1,32 +1,11 @@
 var fs = require('fs');
 var path = require('path');
 
-var walkSync = function (dir, filelist) {
-    var files;
+const {
+    walkSync
+} = require('./util');
 
-    try {
-        files = fs.readdirSync(dir);
-    } catch (err) {
-        console.log(err.message);
-
-        return [];
-    }
-
-    filelist = filelist || [];
-    files.forEach(function (file) {
-        if (fs.statSync(path.join(dir, file)).isDirectory()) {
-            filelist = walkSync(path.join(dir, file), filelist);
-        } else {
-            filelist.push(path.join(dir, file));
-        }
-    });
-    return filelist;
-};
-
-var baseDir = path.resolve(__dirname, '../', "../", "../");
-
-
-var getAllSpecs = function (testFolder) {
+var getAllSpecs = function (baseDir, testFolder) {
     const testSplit = (testFolder.split('./')[1] + '/').replace(/[\/]+/g, '/');
 
     return walkSync(path.resolve(baseDir, testFolder))

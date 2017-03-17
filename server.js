@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require("path");
+var fs = require("fs");
 var cors = require('cors');
 
 var getAllSpecs = require('./src/get-all-specs');
@@ -41,14 +42,26 @@ var globalsInjector = function (globalJSON) {
     }
 }
 
+// Check if node_modules is nested
+let nestedDependencies;
+try {
+    fs.readdirSync(path.resolve(__dirname, 'node_modules'));
+
+    nestedDependencies = true;
+}
+catch(e) {
+    nestedDependencies = false;
+}
+
 app.get('/testIndex', function (req, res, next) {
     res.render(path.resolve(__dirname, "index.ejs"), {
-        testFiles: getAllSpecs(userConfig.testFolder),
+        testFiles: getAllSpecs(path.resolve(__dirname, "../", '../'), userConfig.testFolder),
         PORT: userConfig.testRunnerPort,
         globalJSON: JSON.stringify(userConfig.globals),
         globalsInjector: globalsInjector.toString(),
         nejPathAliases: userConfig.nejPathAliases,
-        mochaOptions: userConfig.mochaOptions
+        mochaOptions: userConfig.mochaOptions,
+        nestedDependencies
     });
 });
 
