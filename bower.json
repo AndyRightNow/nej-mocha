@@ -1,0 +1,24 @@
+{
+  "name": "nej-mocha",
+  "description": "A test framework specifically for NEJ module system users.",
+  "main": "server.js",
+  "authors": [
+    "AndyRightNow"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "mocha",
+    "nej"
+  ],
+  "homepage": "https://github.com/AndyRightNow/nej-mocha",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "nej": "^0.3.8"
+  }
+}

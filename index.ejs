@@ -13,7 +13,7 @@
     <script src="http://localhost:<%= PORT %>/node_modules/regularjs/dist/regular.min.js"></script>
     <script src="http://localhost:<%= PORT %>/node_modules/mocha/mocha.js"></script>
     <script src="http://localhost:<%= PORT %>/node_modules/chai/chai.js"></script>
-    <script src="http://localhost:<%= PORT %>/src/javascript/lib/nej/src/define.js?<% for (var alias in nejPathAliases) { if (nejPathAliases.hasOwnProperty(alias)) {%><%- alias %>=http://localhost:<%= PORT %>/<%- nejPathAliases[alias] %>&<% }}%> "></script>
+    <script src="http://localhost:<%= PORT %>/node_modules/nej-mocha/bower_components/nej/src/define.js?<% for (var alias in nejPathAliases) { if (nejPathAliases.hasOwnProperty(alias)) {%><%- alias %>=http://localhost:<%= PORT %>/<%- nejPathAliases[alias] %>&<% }}%> "></script>
     <script>
         mocha.ui('bdd');
         <% for (var option in mochaOptions) { if (mochaOptions.hasOwnProperty(option)) { %>
