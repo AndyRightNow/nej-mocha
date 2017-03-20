@@ -158,5 +158,6 @@ It has exactly the same APIs as [`mocha`](https://mochajs.org/) and [`chai`](cha
 
 # Notes
 
+* Currently only supports **BDD** mode and **HTML** reporter.
 * More cli options will be updated later.
 * There is currently a known and unfixed bug appearing from time to time. See [This issue](https://github.com/AndyRightNow/nej-mocha/issues/1) for more information.
