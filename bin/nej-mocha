@@ -95,9 +95,13 @@ function runTestRunner(promise, Runtime, DOM) {
             }
         })
         .then((res) => {
-            return printReport(res);
+            if (!printedFlag && !retrying) {
+                return printReport(res);
+            }
         })
         .then((res) => {
+            printedFlag = true;
+
             exitBrowserAndProcess();
         })
         .catch((err) => {
