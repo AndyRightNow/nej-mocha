@@ -110,7 +110,15 @@ module.exports = {
       *
       * Default to 5
       */
-     maxRetries: 5
+     maxRetries: 5,
+     /**
+      * Scripts to inject before the test html is loaded
+      * Can take urls or paths relative to your working directory
+      */
+     scriptsToInject: [
+         'http://some.url/script.js',
+         './some/replative/path/script.js'
+     ]
 }
 ```
 

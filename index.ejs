@@ -10,12 +10,13 @@
 
 <body>
     <div id="mocha"></div>
+    <% for (var i = 0; i < scriptsToInject.length; i++) {%>
+    <script src="<%- scriptsToInject[i] %>"></script>
+    <% } %>
     <% if (nestedDependencies) { %>
-    <script src="http://localhost:<%= PORT %>/node_modules/nej-mocha/node_modules/regularjs/dist/regular.min.js"></script>
     <script src="http://localhost:<%= PORT %>/node_modules/nej-mocha/node_modules/mocha/mocha.js"></script>
     <script src="http://localhost:<%= PORT %>/node_modules/nej-mocha/node_modules/chai/chai.js"></script>
     <% } else { %>
-    <script src="http://localhost:<%= PORT %>/node_modules/regularjs/dist/regular.min.js"></script>
     <script src="http://localhost:<%= PORT %>/node_modules/mocha/mocha.js"></script>
     <script src="http://localhost:<%= PORT %>/node_modules/chai/chai.js"></script>
     <% } %>

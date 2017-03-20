@@ -61,7 +61,8 @@ app.get('/testIndex', function (req, res, next) {
         globalsInjector: globalsInjector.toString(),
         nejPathAliases: userConfig.nejPathAliases,
         mochaOptions: userConfig.mochaOptions,
-        nestedDependencies
+        nestedDependencies,
+        scriptsToInject: userConfig.scriptsToInject
     });
 });
 

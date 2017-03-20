@@ -21,8 +21,7 @@ try {
 if (!userConfig.chromePath) {
     console.log(chalk.red(`  Please provide correct chrome binary absolute path in the configuration file.`));
     process.exit(0);
-}
-else if (isWin && !/\:[\/\\]/.test(userConfig.chromePath)) {
+} else if (isWin && !/\:[\/\\]/.test(userConfig.chromePath)) {
     console.log(chalk.red(`  Please provide correct Windows chrome binary absolute path in the configuration file.`));
     process.exit(0);
 }
@@ -71,5 +70,21 @@ userConfig.headless = userConfig.headless === undefined ? true : Boolean(userCon
 
 // Normalize maxRetries
 userConfig.maxRetries = isNaN(parseInt(userConfig.maxRetries)) ? 5 : parseInt(userConfig.maxRetries);
+
+// Normalize scriptsToInject
+userConfig.scriptsToInject = userConfig.scriptsToInject || [];
+let scriptsToInject = userConfig.scriptsToInject;
+for (let i = 0, l = scriptsToInject.length, scriptPath; i < l; i++) {
+    scriptPath = scriptsToInject[i];
+
+    // Relative (Starts with dots, letters, slashs or backslashs)
+    if (/^(\.|[a-zA-Z]|[\\\/])/.test(scriptPath) && !/^http/.test(scriptPath)) {
+        scriptsToInject[i] = `./${scriptPath}`.replace(/[\\\/]+/g, '/').replace(/(\.\/)+/g, './');
+    }
+    // Not url, invalid path, ignore
+    else if (!/^http/.test(scriptPath)) {
+        scriptsToInject[i] = "";
+    }
+}
 
 module.exports = userConfig;
