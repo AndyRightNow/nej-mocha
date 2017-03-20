@@ -46,6 +46,15 @@ function exitBrowserAndProcess(client) {
 /** To test with userConfig.maxRetries */
 let retriedTimes = 0;
 
+/** Global flag to indicate if results are printed or not */
+let printedFlag = false;
+/** The nodeId of the document node */
+let documentNodeId;
+/** Global flag to indicate if the tests failed */
+let testFailed = false;
+/** Global flag to indicate if the test runner is retrying */
+let retrying = false;
+
 /**
  * Fetch test results as print it on the console. With limited number of retries
  * 
@@ -68,9 +77,22 @@ function runTestRunner(promise, Runtime, DOM) {
                 promiseObjectId: res.result.objectId
             });
         })
-        .then(() => DOM.getDocument())
         .then((res) => {
-            return parseReport(DOM, res.root.nodeId);
+            if (res.exceptionDetails) {
+                // Still need to store the document node id
+                testFailed = true;
+            }
+
+            return DOM.getDocument();
+        })
+        .then((res) => {
+            documentNodeId = res.root.nodeId;
+
+            if (testFailed) {
+                throw new Error("Tests failed");
+            } else {
+                return parseReport(DOM, res.root.nodeId);
+            }
         })
         .then((res) => {
             return printReport(res);
@@ -79,15 +101,46 @@ function runTestRunner(promise, Runtime, DOM) {
             exitBrowserAndProcess();
         })
         .catch((err) => {
-            printAndNewLine(err);
+            retrying = false;
 
-            if (retriedTimes >= userConfig.maxRetries) {
-                printRed(`  Something went wrong. Retried for ${retriedTimes} times and failed.`);
+            // Catch promise not found error
+            if (err.message.indexOf("not find") !== -1) {
+                printAndNewLine(err);
+
+                if (retriedTimes >= userConfig.maxRetries) {
+                    printRed(`  Something went wrong. Retried for ${retriedTimes} times and failed.`);
+                    exitBrowserAndProcess();
+                } else {
+                    printRed(`  Something went wrong. Retrying......`);
+                    retriedTimes++;
+                    retrying = true;
+                    runTestRunner(Promise.resolve(), Runtime, DOM);
+                }
+            }
+            // Tests failed
+            else {
+                if (!printedFlag) {
+                    return parseReport(DOM, documentNodeId);
+                }
+            }
+        })
+        .then((res) => {
+            if (!printedFlag && !retrying) {
+                return printReport(res);
+            }
+        })
+        .then(() => {
+            if (!retrying) {
+                printedFlag = true;
+
                 exitBrowserAndProcess();
-            } else {
-                printRed(`  Something went wrong. Retrying......`);
-                retriedTimes++;
-                runTestRunner(Promise.resolve(), Runtime, DOM);
+            }
+        })
+        .catch((err) => {
+            if (!retrying && !printedFlag) {
+                printAndNewLine(err);
+                printRed(`  Something went wrong.`);
+                exitBrowserAndProcess();
             }
         });
 }
