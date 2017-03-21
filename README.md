@@ -152,7 +152,3 @@ define([
 ```
 
 It has exactly the same APIs as [`mocha`](https://mochajs.org/) and [`chai`](chaijs.com/).
-
-# Notes
-
-* More cli options will be updated later.
