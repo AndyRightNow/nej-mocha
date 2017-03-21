@@ -1,6 +1,9 @@
 const chalk = require('chalk');
 
 const config = require('./../config');
+const {
+    normalizeSlashes
+} = require('./util');
 
 var userConfig;
 const isWin = /^win/.test(process.platform);
@@ -32,7 +35,7 @@ userConfig.globals = userConfig.globals || {};
 
 // Normalize testFolder
 userConfig.testFolder = userConfig.testFolder || "./test";
-userConfig.testFolder = userConfig.testFolder.replace(/[\\\/]+/g, '/');
+userConfig.testFolder = normalizeSlashes(userConfig.testFolder);
 if (userConfig.testFolder[0] !== '.') {
     if (userConfig.testFolder[0] !== '/') {
         userConfig.testFolder = '/' + userConfig.testFolder;
@@ -46,11 +49,10 @@ userConfig.mochaOptions.timeout = isNaN(parseInt(userConfig.mochaOptions.timeout
 // Normalize nejPathAliases
 userConfig.nejPathAliases = userConfig.nejPathAliases || {};
 userConfig.nejPathAliases.pro = userConfig.nejPathAliases.pro || "src/javascript";
-userConfig.nejPathAliases.test = userConfig.nejPathAliases.test || userConfig.testFolder.split('./').splice(-1)[0];
 let nejPathAliases = userConfig.nejPathAliases;
 for (const alias in nejPathAliases) {
     if (nejPathAliases.hasOwnProperty(alias)) {
-        nejPathAliases[alias] = `${nejPathAliases[alias]}/`.replace(/[\\\/]+/g, '/');
+        nejPathAliases[alias] = normalizeSlashes(`${nejPathAliases[alias]}/`);
     }
 }
 
@@ -79,7 +81,7 @@ for (let i = 0, l = scriptsToInject.length, scriptPath; i < l; i++) {
 
     // Relative (Starts with dots, letters, slashs or backslashs)
     if (/^(\.|[a-zA-Z]|[\\\/])/.test(scriptPath) && !/^http/.test(scriptPath)) {
-        scriptsToInject[i] = `./${scriptPath}`.replace(/[\\\/]+/g, '/').replace(/(\.\/)+/g, './');
+        scriptsToInject[i] = normalizeSlashes(`./${scriptPath}`).replace(/(\.\/)+/g, './');
     }
     // Not url, invalid path, ignore
     else if (!/^http/.test(scriptPath)) {

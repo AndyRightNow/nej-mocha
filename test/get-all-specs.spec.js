@@ -11,9 +11,9 @@ describe("Function getAllSpecs", () => {
 
     it("should have correct results", () => {
         let expected = [
-            'test1.js',
-            'test2.js',
-            'folder1/test1.js'
+            './testSpec/test1.js',
+            './testSpec/test2.js',
+            './testSpec/folder1/test1.js'
         ];
 
         expect(specs).to.have.members(expected);

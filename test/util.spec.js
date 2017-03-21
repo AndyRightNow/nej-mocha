@@ -3,7 +3,8 @@ const expect = require('chai').expect;
 const path = require('path');
 
 const {
-    walkSync
+    walkSync,
+    normalizeSlashes
 } = require('./../src/util');
 
 describe("Utility functions", () => {
@@ -11,7 +12,7 @@ describe("Utility functions", () => {
         let walkRes;
 
         before("Walk through walkSyncTestFolder", () => {
-            walkRes = walkSync(path.resolve(__dirname, 'walkSyncTestFolder')).map(p => p.replace(/[\\\/]/g, '/'));
+            walkRes = walkSync(path.resolve(__dirname, 'walkSyncTestFolder')).map(p => p.replace(/[\\\/]+/g, '/'));
         });
 
         it("should have correct results", () => {
@@ -21,9 +22,25 @@ describe("Utility functions", () => {
                 path.resolve(base, 'file2'),
                 path.resolve(base, 'folder1', 'file1'),
                 path.resolve(base, 'folder2', 'file1'),
-            ].map(p => p.replace(/[\\\/]/g, '/'));
+            ].map(p => p.replace(/[\\\/]+/g, '/'));
 
             expect(walkRes).to.have.members(expected);
+        });
+    });
+
+    describe("normalizeSlashes", () => {
+        let path = ".///wqwe//\\\qweqwe\\\////qweqwe///qwe/";
+
+        before("Normalize", () => {
+            path = normalizeSlashes(path);
+        });
+
+        it("should not have backslashes", () => {
+            expect(/\\/.test(path)).to.be.false;
+        });
+
+        it("should not have extra slashes", () => {
+            expect(/\/{2,}/.test(path)).to.be.false;
         });
     });
 });

@@ -44,7 +44,7 @@
         var globalPromise = new Promise((resolve, reject) => {
             define([
             <% for(var i = 0; i < testFiles.length; i++) {%>
-                "{test}/<%= testFiles[i] %>",
+                "<%- testFiles[i] %>",
             <% } %>
             ], function () {
                 new Mocha.reporters.html((mocha, mocha.run(function (err) {
