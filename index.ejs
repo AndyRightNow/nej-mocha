@@ -29,6 +29,18 @@
         expect = chai.expect;
     </script>
     <script>
+        let originalFn = console.log;
+        
+        // So that empty 'console.log()' is captured through CDP
+        console.log = function () {
+            if (!arguments.length) {
+                originalFn.call(console, ' ');
+            }
+            else {
+                originalFn.apply(console, arguments);
+            }
+        };
+
         var globalPromise = new Promise((resolve, reject) => {
             define([
             <% for(var i = 0; i < testFiles.length; i++) {%>
