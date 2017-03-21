@@ -69,7 +69,7 @@ module.exports = {
      * The test folder path(s) relative to your working directory.
      *
      * Only RELATIVE path is allowed.
-     * Wildcard path is also supported. (E.g. './src/**/test/')
+     * Wildcard path is also supported. (E.g. './src/\*\*\/test/')
      * 
      * Default to './test'.
      */
