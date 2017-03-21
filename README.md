@@ -1,3 +1,9 @@
+<p align="left">
+    <a target="_blank" href="https://www.npmjs.com/package/nej-mocha">
+        <img src="https://img.shields.io/npm/v/nej-mocha.svg" alt="Version">
+    </a>
+</p>
+
 # Mocha for NEJ Users 
 
 For NEJ users, unit testing could be a pain in the neck. This package solves the headache by letting you write mocha-chai-like test files directly with NEJ module system.
