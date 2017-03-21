@@ -35,14 +35,14 @@
                 "{test}/<%= testFiles[i] %>",
             <% } %>
             ], function () {
-                mocha.run(function (err) {
+                new Mocha.reporters.html((mocha, mocha.run(function (err) {
                     if (err) {
-                        reject(err);
+                        reject(new Error("Tests failed"));
                     }
                     else {
                         resolve();
                     }
-                });
+                })));
             });
         });
     </script>
