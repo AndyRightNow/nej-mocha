@@ -55,7 +55,7 @@ catch(e) {
 
 app.get('/testIndex', function (req, res, next) {
     res.render(path.resolve(__dirname, "index.ejs"), {
-        testFiles: getAllSpecs(path.resolve(__dirname, "../", '../'), userConfig.testFolder),
+        testFiles: getAllSpecs(path.resolve(__dirname, "../", '../'), userConfig.entries),
         PORT: userConfig.testRunnerPort,
         globalJSON: JSON.stringify(userConfig.globals),
         globalsInjector: globalsInjector.toString(),

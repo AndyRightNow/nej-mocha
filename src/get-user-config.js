@@ -33,14 +33,14 @@ userConfig.chromePath = userConfig.chromePath.replace(/[\"\'"]/g, "");
 // Normalize globals
 userConfig.globals = userConfig.globals || {};
 
-// Normalize testFolder
-userConfig.testFolder = userConfig.testFolder || "./test";
-userConfig.testFolder = normalizeSlashes(userConfig.testFolder);
-if (userConfig.testFolder[0] !== '.') {
-    if (userConfig.testFolder[0] !== '/') {
-        userConfig.testFolder = '/' + userConfig.testFolder;
+// Normalize entries
+userConfig.entries = userConfig.entries || "./test";
+userConfig.entries = normalizeSlashes(userConfig.entries);
+if (userConfig.entries[0] !== '.') {
+    if (userConfig.entries[0] !== '/') {
+        userConfig.entries = '/' + userConfig.entries;
     }
-    userConfig.testFolder = '.' + userConfig.testFolder;
+    userConfig.entries = '.' + userConfig.entries;
 }
 // Normalize mochaOptions
 userConfig.mochaOptions = userConfig.mochaOptions || {};

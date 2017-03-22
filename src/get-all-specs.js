@@ -6,8 +6,8 @@ const {
     normalizeSlashes
 } = require('./util');
 
-var getAllSpecs = function (baseDir, testFolder) {
-    return walkSync(path.resolve(baseDir, testFolder))
+var getAllSpecs = function (baseDir, entries) {
+    return walkSync(path.resolve(baseDir, entries))
         .map(s => normalizeSlashes(s))
         .map(s => normalizeSlashes(`./${s.split(normalizeSlashes(baseDir))[1]}`))
         .filter(s => /\.js/.test(s));
