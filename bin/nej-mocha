@@ -83,7 +83,7 @@ CDP((client) => {
 
                 let joined = results.join('');
                 if (!/^do\s*/.test(joined) && 
-                    /^try to unlock circular/.test(joined)) {
+                    !/^try to unlock circular/.test(joined)) {
                     console.log.apply(console, results);
                 }
             });
