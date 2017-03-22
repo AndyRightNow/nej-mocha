@@ -81,7 +81,9 @@ CDP((client) => {
             Runtime.consoleAPICalled((options) => {
                 let results = options.args.map(v => v && v.value && typeof v.value === 'string' ? v.value.replace('✓', '\u221A').replace('✖', '\u00D7').replace('․', '.') : v.value).filter(v => !/stdout\:/.test(v));
 
-                if (!/^do\s*/.test(results.join(''))) {
+                let joined = results.join('');
+                if (!/^do\s*/.test(joined) && 
+                    /^try to unlock circular/.test(joined)) {
                     console.log.apply(console, results);
                 }
             });
