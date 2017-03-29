@@ -76,10 +76,13 @@ module.exports = {
      *
      * Only RELATIVE path is allowed.
      * Wildcard path is also supported. (E.g. './src/\*\*\/test/')
+     * Can accept a string or an array
      * 
      * Default to './test'.
      */
-    entries: "",
+    entries: [
+        './test'
+    ],
     mochaOptions: {
         /**
         * The time to wait before mocha tests exit.
