@@ -19,6 +19,8 @@ const {
     printAndNewLine
 } = require('./../src/util');
 
+const maxRetry = 100;
+
 // Spawn the chrome process
 const testRunnerProcess = spawn(`"${userConfig.chromePath}"`.replace(/\"/g, ""), [
     userConfig.headless ? "--headless" : "",
@@ -41,6 +43,30 @@ function exitBrowserAndProcess(client) {
         }
     }
 }
+
+let tried = 0;
+function run(Runtime, client) {
+    Runtime
+        .evaluate({
+            expression: config.GLOBAL_PROMISE
+        })
+        .then((res) => {
+            return Runtime.awaitPromise({
+                promiseObjectId: res.result.objectId
+            });
+        })
+        .then((res) => {
+            exitBrowserAndProcess(client);
+        })
+        .catch((err) => {
+            if (tried >= maxRetry) {
+                exitBrowserAndProcess(client);
+            } else {
+                run(Runtime, client);
+            }
+        });
+}
+
 CDP((client) => {
     // extract domains
     const {
@@ -51,22 +77,7 @@ CDP((client) => {
     } = client;
 
     Page.loadEventFired(() => {
-        Runtime.evaluate({
-                expression: config.GLOBAL_PROMISE
-            })
-            .then((res) => {
-                return Runtime.awaitPromise({
-                    promiseObjectId: res.result.objectId
-                });
-            })
-            .then((res) => {
-                exitBrowserAndProcess(client);
-            })
-            .catch((err) => {
-                printRed(err);
-
-                exitBrowserAndProcess(client);
-            });
+        run(Runtime, client);
     });
 
     // enable events then start
@@ -82,7 +93,7 @@ CDP((client) => {
                 let results = options.args.map(v => v && v.value && typeof v.value === 'string' ? v.value.replace('✓', '\u221A').replace('✖', '\u00D7').replace('․', '.') : v.value).filter(v => !/stdout\:/.test(v));
 
                 let joined = results.join('');
-                if (!/^do\s*/.test(joined) && 
+                if (!/^do\s*/.test(joined) &&
                     !/^try to unlock circular/.test(joined)) {
                     console.log.apply(console, results);
                 }
