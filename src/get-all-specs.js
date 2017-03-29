@@ -7,10 +7,14 @@ const {
 } = require('./util');
 
 var getAllSpecs = function (baseDir, entries) {
-    return walkSync(path.resolve(baseDir, entries))
-        .map(s => normalizeSlashes(s))
-        .map(s => normalizeSlashes(`./${s.split(normalizeSlashes(baseDir))[1]}`))
-        .filter(s => /\.js/.test(s));
+    entries = typeof entries === 'string' ? [entries] : entries;
+
+    return entries.map(e => {
+        return walkSync(path.resolve(baseDir, e))
+            .map(s => normalizeSlashes(s))
+            .map(s => normalizeSlashes(`./${s.split(normalizeSlashes(baseDir))[1]}`))
+            .filter(s => /\.js/.test(s));
+    }).reduce((prev, cur) => prev.concat(cur));
 }
 
 module.exports = getAllSpecs;

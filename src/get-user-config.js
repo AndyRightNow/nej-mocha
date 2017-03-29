@@ -34,13 +34,15 @@ userConfig.chromePath = userConfig.chromePath.replace(/[\"\'"]/g, "");
 userConfig.globals = userConfig.globals || {};
 
 // Normalize entries
-userConfig.entries = userConfig.entries || "./test";
-userConfig.entries = normalizeSlashes(userConfig.entries);
-if (userConfig.entries[0] !== '.') {
-    if (userConfig.entries[0] !== '/') {
-        userConfig.entries = '/' + userConfig.entries;
+userConfig.entries = (userConfig.entries && (typeof userConfig.entries === 'string' ? [userConfig.entries] : userConfig.entries)) || ["./test"];
+for (let i = 0, es = userConfig.entries, l = es.length; i < l; i++) {
+    es[i] = normalizeSlashes(es[i]);
+    if (es[i][0] !== '.') {
+        if (es[i][0] !== '/') {
+            es[i] = '/' + es[i];
+        }
+        es[i] = '.' + es[i];
     }
-    userConfig.entries = '.' + userConfig.entries;
 }
 // Normalize mochaOptions
 userConfig.mochaOptions = userConfig.mochaOptions || {};
