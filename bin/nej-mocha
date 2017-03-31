@@ -59,7 +59,8 @@ function run(Runtime, client) {
             exitBrowserAndProcess(client);
         })
         .catch((err) => {
-            if (tried >= maxRetry) {
+            if (!/context|promise|id/.test(err.message) ||
+                tried >= maxRetry) {
                 exitBrowserAndProcess(client);
             } else {
                 run(Runtime, client);
