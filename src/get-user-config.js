@@ -91,4 +91,11 @@ for (let i = 0, l = scriptsToInject.length, scriptPath; i < l; i++) {
     }
 }
 
+// Normalize coverage
+userConfig.coverage = userConfig.coverage || false;
+
+// Normalize coverageOptions
+userConfig.coverageOptions = userConfig.coverageOptions || {};
+userConfig.coverageOptions.reporters = (userConfig.coverageOptions.reporters || ['text']) && (!Array.isArray(userConfig.coverageOptions.reporters) ? [userConfig.coverageOptions.reporters] : userConfig.coverageOptions.reporters);
+
 module.exports = userConfig;
