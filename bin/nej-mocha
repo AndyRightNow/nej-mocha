@@ -8,6 +8,7 @@ const path = require('path');
 const CDP = require('chrome-remote-interface');
 const treeKill = require('tree-kill');
 const istanbul = require('istanbul');
+const fs = require('fs');
 
 const server = require('./../server');
 const config = require('./../config');
@@ -70,15 +71,15 @@ function run(Runtime, client) {
                 for (let key in coverage) {
                     if (coverage.hasOwnProperty(key)) {
                         let newKey = `../../${key}`;
+                        let lineCountBefore = fs.readFileSync(path.resolve(newKey)).toString('utf-8').match(/(.|[\s\r\n])*?function/)[0].split(/[\r\n]+/).length - 1;
                         coverage[newKey] = coverage[key];
                         delete coverage[key];
                         coverage[newKey].path = newKey;
                     }
                 }
-
                 collector.add(coverage);
 
-                reporter.addAll(userConfig.coverageOptions.reporters);
+                reporter.addAll(['text']);
 
                 reporter.write(collector, sync, function () {
                     exitBrowserAndProcess(client);
