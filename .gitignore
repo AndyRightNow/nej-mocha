@@ -3,3 +3,5 @@ bower_components
 .vscode
 *.log.*
 *.log
+coverage
+test.json
