@@ -71,7 +71,7 @@ function run(Runtime, client) {
 
                 for (let key in coverage) {
                     if (coverage.hasOwnProperty(key)) {
-                        let newKey = path.resolve(`../../${key}`);
+                        let newKey = path.resolve(__dirname, `../../../${key}`);
                         coverage[newKey] = coverage[key];
                         delete coverage[key];
                         coverage[newKey].path = newKey;
