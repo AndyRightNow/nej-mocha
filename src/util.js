@@ -2,6 +2,7 @@ const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
+const _ = require('lodash');
 
 function printGreen(str) {
     console.log(chalk.green(str));
@@ -59,8 +60,7 @@ function walkSync(dir) {
 
     try {
         files = glob.sync(dir);
-    }
-    catch (err) {
+    } catch (err) {
         console.log(err.message);
 
         return [];
@@ -70,10 +70,10 @@ function walkSync(dir) {
     if (!/\.js$/.test(dir)) {
         // Remove all paths with .js extensions
         files = files.filter(f => !/\.js$/.test(f));
-        
+
         files = files.map(d => walkSyncHelper(d)).reduce((prev, cur) => prev.concat(cur), []);
     }
-    
+
     return files;
 }
 
@@ -87,6 +87,25 @@ function normalizeSlashes(path) {
     return path.replace(/[\\\/]+/g, '/');
 }
 
+/**
+ * Recursively map all own properties with the return value of the callback
+ * 
+ * @param {any} obj 
+ * @param {any} cb 
+ */
+function recurForOwn(obj, cb) {
+    if (typeof obj === 'object') {
+        _.forOwn(obj, (value, key) => {
+            if (typeof value === 'object') {
+                recurForOwn(value, cb);
+            }
+            else {
+                cb(value, key, obj);
+            }
+        });
+    }
+}
+
 module.exports = {
     printGreen,
     printRed,
@@ -94,5 +113,6 @@ module.exports = {
     print,
     printAndNewLine,
     walkSync,
-    normalizeSlashes
+    normalizeSlashes,
+    recurForOwn
 };

@@ -4,3 +4,4 @@ bower_components
 *.log.*
 *.log
 test.json
+coverage

@@ -18,7 +18,8 @@ const {
     printRed,
     printNewLine,
     print,
-    printAndNewLine
+    printAndNewLine,
+    recurForOwn
 } = require('./../src/util');
 
 const maxRetry = 100;
@@ -70,16 +71,22 @@ function run(Runtime, client) {
 
                 for (let key in coverage) {
                     if (coverage.hasOwnProperty(key)) {
-                        let newKey = `../../${key}`;
-                        let lineCountBefore = fs.readFileSync(path.resolve(newKey)).toString('utf-8').match(/(.|[\s\r\n])*?function/)[0].split(/[\r\n]+/).length - 1;
+                        let newKey = path.resolve(`../../${key}`);
                         coverage[newKey] = coverage[key];
                         delete coverage[key];
                         coverage[newKey].path = newKey;
+
+                        let lineCountBefore = fs.readFileSync(path.resolve(newKey)).toString('utf-8').match(/(.|[\s\r\n])*?function(.|[\s\r\n])*?\{[\s\r\n]*/)[0].split(/[\r\n]+/).length - 1;
+                        recurForOwn(coverage[newKey], (val, key, obj) => {
+                            if (key === 'line') {
+                                obj[key] = val + lineCountBefore;
+                            }
+                        });
                     }
                 }
                 collector.add(coverage);
 
-                reporter.addAll(['text']);
+                reporter.addAll(userConfig.coverageOptions.reporters);
 
                 reporter.write(collector, sync, function () {
                     exitBrowserAndProcess(client);

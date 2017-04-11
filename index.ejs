@@ -41,7 +41,7 @@
             let filePath = new Error().stack.match(/(at.*)/g)[1].replace('at ', "").replace(/\:\d+\:\d+$/, "").replace(/^http:\/\/.*?\//, "");
             //.split(/[\\\/]/).splice(-2).join('/')
             if (/nej-mocha-cover/.test(cb.toString())) {
-                let cbCode = cb.toString().replace(/^function(.|[\r\n])*?\{/, "").replace(/\}$/, "");
+                let cbCode = cb.toString().replace(/^function(.|[\r\n])*?\{[\s\r\n]*/, "").replace(/\}$/, "");
                 let cbArgs = cb.toString().match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[\(\)]/g, "").replace(/\/\/.*/g, "").replace(/\/\*(.|[\r\n])*\*\//g, "").replace(/[\s\r\n]/g, "").split(',');
 
                 cbCode = instrumenter.instrumentSync(cbCode, filePath);
@@ -73,7 +73,7 @@
                         reject(new Error("Tests failed"));
                     }
                     else {
-                        resolve(JSON.stringify(__coverage__));
+                        resolve(JSON.stringify(__coverage__ || {}));
                     }
                 })));
             });
