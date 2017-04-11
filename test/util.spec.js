@@ -4,7 +4,8 @@ const path = require('path');
 
 const {
     walkSync,
-    normalizeSlashes
+    normalizeSlashes,
+    recurForOwn
 } = require('./../src/util');
 
 describe("Utility functions", () => {
@@ -41,6 +42,34 @@ describe("Utility functions", () => {
 
         it("should not have extra slashes", () => {
             expect(/\/{2,}/.test(path)).to.be.false;
+        });
+    });
+
+    describe('recurForOwn', () => {
+        let obj = {
+            a: {
+                line: 0,
+                b: {
+                    line: 0
+                }
+            },
+            c: {
+                d: {
+                    line: 0
+                }
+            }
+        };
+
+        it('should change all line to 1', () => {
+            recurForOwn(obj, (val, key, o) => {
+                if (key === 'line') {
+                    o[key] = 1;
+                }
+            });
+
+            expect(obj.a.line).to.equal(1);
+            expect(obj.a.b.line).to.equal(1);
+            expect(obj.c.d.line).to.equal(1);
         });
     });
 });

@@ -2,7 +2,7 @@
   "name": "nej-mocha",
   "version": "3.1.5",
   "description": "A test framework specifically for NEJ module system users.",
-  "main": "server.js",
+  "main": "./bin/nej-mocha",
   "scripts": {
     "start": "node ./bin/nej-mocha",
     "postinstall": "bower install",
@@ -25,10 +25,13 @@
     "cors": "^2.8.1",
     "debug": "^2.6.1",
     "ejs": "^2.5.6",
+    "esprima": "^3.1.3",
     "express": "^4.15.0",
     "glob": "^7.1.1",
+    "istanbul": "^0.4.5",
     "jquery": "^3.1.1",
     "jsdom": "^9.12.0",
+    "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "tree-kill": "^1.1.0"
   },

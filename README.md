@@ -161,9 +161,37 @@ module.exports = {
      scriptsToInject: [
          'http://some.url/script.js',
          './some/replative/path/script.js'
-     ]
+     ],
+     /**
+      * Whether a test coverage report should be generated
+      *
+      * Default to false
+      */
+     coverage: false,
+     /**
+      * The test coverage tool configurations
+      *
+      */
+     coverageOptions: {
+         /**
+          * Reporters used to present the coverage report
+          *
+          * Default to 'text'
+          */
+         reporters: [
+             'text'
+         ]
+     }
 }
 ```
+
+# Coverage 
+
+You can generate test coverage reports by setting the `coverage` option in `nej-mocha.conf.js` to `true`. You can also configure the reports to use different kinds of reporters. For a whole list of reporters supported, please read the documentation of [istanbul](https://github.com/gotwarlost/istanbul);
+
+### **Usage:**
+
+Add `/* nej-mocha-cover */` or `// nej-mocha-cover` in the callback function of `NEJ.define` and this file will be covered and added to the reports generated.
 
 # Examples
 

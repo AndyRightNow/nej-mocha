@@ -20,6 +20,9 @@
     <script src="http://localhost:<%= PORT %>/node_modules/mocha/mocha.js"></script>
     <script src="http://localhost:<%= PORT %>/node_modules/chai/chai.js"></script>
     <% } %>
+    <script src="http://localhost:<%= PORT %>/node_modules/nej-mocha/node_modules/esprima/dist/esprima.js"></script>
+    <script src="http://localhost:<%= PORT %>/node_modules/nej-mocha/lib/escodegen.js"></script>
+    <script src="http://localhost:<%= PORT %>/node_modules/nej-mocha/node_modules/istanbul/lib/instrumenter.js"></script>
     <script src="http://localhost:<%= PORT %>/node_modules/nej-mocha/bower_components/nej/src/define.js?<% for (var alias in nejPathAliases) { if (nejPathAliases.hasOwnProperty(alias)) {%><%- alias %>=http://localhost:<%= PORT %>/<%- nejPathAliases[alias] %>&<% }}%> "></script>
     <script>
         mocha.ui('bdd');
@@ -30,6 +33,24 @@
     </script>
     <script>
         let originalFn = console.log;
+        let originalDefine = NEJ.define;
+        let instrumenter = new Instrumenter();
+
+        NEJ.define = function (uri, deps, callback) {
+            let cb = typeof uri === 'function' ? uri : typeof deps === 'function' ? deps : callback;
+            let filePath = new Error().stack.match(/(at.*)/g)[1].replace('at ', "").replace(/\:\d+\:\d+$/, "").replace(/^http:\/\/.*?\//, "");
+            //.split(/[\\\/]/).splice(-2).join('/')
+            if (/nej-mocha-cover/.test(cb.toString())) {
+                let cbCode = cb.toString().replace(/^function(.|[\r\n])*?\{[\s\r\n]*/, "").replace(/\}$/, "");
+                let cbArgs = cb.toString().match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[\(\)]/g, "").replace(/\/\/.*/g, "").replace(/\/\*(.|[\r\n])*\*\//g, "").replace(/[\s\r\n]/g, "").split(',');
+
+                cbCode = instrumenter.instrumentSync(cbCode, filePath);
+
+                cb = new Function(...cbArgs.concat([cbCode]));
+            }
+
+            originalDefine.call(NEJ, typeof uri === 'function' ? cb : uri, typeof deps === 'function' ? cb : deps, typeof callback === 'function' ? cb : callback);
+        }
         
         // So that empty 'console.log()' is captured through CDP
         console.log = function () {
@@ -52,7 +73,7 @@
                         reject(new Error("Tests failed"));
                     }
                     else {
-                        resolve();
+                        resolve(JSON.stringify(__coverage__ || {}));
                     }
                 })));
             });

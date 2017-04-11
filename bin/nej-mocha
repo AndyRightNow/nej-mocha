@@ -7,6 +7,8 @@ const {
 const path = require('path');
 const CDP = require('chrome-remote-interface');
 const treeKill = require('tree-kill');
+const istanbul = require('istanbul');
+const fs = require('fs');
 
 const server = require('./../server');
 const config = require('./../config');
@@ -16,7 +18,8 @@ const {
     printRed,
     printNewLine,
     print,
-    printAndNewLine
+    printAndNewLine,
+    recurForOwn
 } = require('./../src/util');
 
 const maxRetry = 100;
@@ -44,7 +47,13 @@ function exitBrowserAndProcess(client) {
     }
 }
 
+let collector = new istanbul.Collector();
+let reporter = new istanbul.Reporter();
+let sync = true;
 let tried = 0;
+/** Used to prevent multiple async report printing */
+let reportPrintingStarted = false;
+
 function run(Runtime, client) {
     Runtime
         .evaluate({
@@ -56,10 +65,39 @@ function run(Runtime, client) {
             });
         })
         .then((res) => {
-            exitBrowserAndProcess(client);
+            if (!res.exceptionDetails && !reportPrintingStarted && userConfig.coverage) {
+                reportPrintingStarted = true;
+                let coverage = JSON.parse(res.result.value);
+
+                for (let key in coverage) {
+                    if (coverage.hasOwnProperty(key)) {
+                        let newKey = path.resolve(`../../${key}`);
+                        coverage[newKey] = coverage[key];
+                        delete coverage[key];
+                        coverage[newKey].path = newKey;
+
+                        let lineCountBefore = fs.readFileSync(path.resolve(newKey)).toString('utf-8').match(/(.|[\s\r\n])*?function(.|[\s\r\n])*?\{[\s\r\n]*/)[0].split(/[\r\n]+/).length - 1;
+                        recurForOwn(coverage[newKey], (val, key, obj) => {
+                            if (key === 'line') {
+                                obj[key] = val + lineCountBefore;
+                            }
+                        });
+                    }
+                }
+                collector.add(coverage);
+
+                reporter.addAll(userConfig.coverageOptions.reporters);
+
+                reporter.write(collector, sync, function () {
+                    exitBrowserAndProcess(client);
+                });
+            } else {
+                exitBrowserAndProcess(client);
+            }
         })
         .catch((err) => {
-            if (!/context|promise|id/.test(err.message) ||
+            if (!/context|promise|id/.test((err.message || "").toLowerCase()) ||
+                reportPrintingStarted ||
                 tried >= maxRetry) {
                 exitBrowserAndProcess(client);
             } else {
