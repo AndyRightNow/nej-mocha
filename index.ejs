@@ -73,7 +73,7 @@
                         reject(new Error("Tests failed"));
                     }
                     else {
-                        resolve(JSON.stringify(__coverage__ ? __coverage__ : {}));
+                        resolve(JSON.stringify(window.__coverage__ || {}));
                     }
                 })));
             });
