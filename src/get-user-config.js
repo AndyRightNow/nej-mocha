@@ -1,9 +1,8 @@
 const chalk = require('chalk');
 
 const config = require('./../config');
-const {
-    normalizeSlashes
-} = require('./util');
+const util = require('./util');
+const normalizeSlashes = util.normalizeSlashes;
 
 var userConfig;
 const isWin = /^win/.test(process.platform);

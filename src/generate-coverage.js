@@ -1,8 +1,8 @@
-var istanbul = require('istanbul');
-var path = require('path');
-var fs = require('fs');
-var util = require('./util');
-var userConfig = require('./get-user-config');
+const istanbul = require('istanbul');
+const path = require('path');
+const fs = require('fs');
+const util = require('./util');
+const userConfig = require('./get-user-config');
 
 let collector = new istanbul.Collector();
 let reporter = new istanbul.Reporter();

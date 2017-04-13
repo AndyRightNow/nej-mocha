@@ -14,6 +14,9 @@
   "bin": {
     "nej-mocha": "./bin/nej-mocha"
   },
+  "engines": {
+    "node": "^5.12.0"
+  },
   "author": "AndyRightNow",
   "license": "MIT",
   "repository": "https://github.com/AndyRightNow/nej-mocha",

@@ -22,6 +22,7 @@ function print() {
 
 function printAndNewLine() {
     print.apply(null, Array.from(arguments));
+    
     printNewLine();
 }
 
@@ -69,9 +70,15 @@ function walkSync(dir) {
     // If '.js' extension is not provided, maybe any files wildcard or a concrete folder path
     if (!/\.js$/.test(dir)) {
         // Remove all paths with .js extensions
-        files = files.filter(f => !/\.js$/.test(f));
+        files = files.filter(function (f) {
+            return !/\.js$/.test(f);
+        });
 
-        files = files.map(d => walkSyncHelper(d)).reduce((prev, cur) => prev.concat(cur), []);
+        files = files.map(function (d) {
+            return walkSyncHelper(d);
+        }).reduce(function (prev, cur) {
+            return prev.concat(cur);
+        }, []);
     }
 
     return files;
@@ -95,11 +102,10 @@ function normalizeSlashes(path) {
  */
 function recurForOwn(obj, cb) {
     if (typeof obj === 'object') {
-        _.forOwn(obj, (value, key) => {
+        _.forOwn(obj, function (value, key) {
             if (typeof value === 'object') {
                 recurForOwn(value, cb);
-            }
-            else {
+            } else {
                 cb(value, key, obj);
             }
         });
