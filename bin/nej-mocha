@@ -1,153 +1,81 @@
 #!/usr/bin/env node
 
-const {
-    spawn,
-    exec
-} = require('child_process');
-const path = require('path');
-const CDP = require('chrome-remote-interface');
-const treeKill = require('tree-kill');
-const istanbul = require('istanbul');
-const fs = require('fs');
+var server = require('./../server');
+var config = require('./../config');
+var generateCoverage = require('./../src/generate-coverage');
+var userConfig = require('./../src/get-user-config');
+var util = require('./../src/util');
 
-const server = require('./../server');
-const config = require('./../config');
-const userConfig = require('./../src/get-user-config');
-const {
-    printGreen,
-    printRed,
-    printNewLine,
-    print,
-    printAndNewLine,
-    recurForOwn
-} = require('./../src/util');
+var Nightmare = require('nightmare');
+var nightmare = Nightmare({
+    show: !userConfig.headless
+});
 
-const maxRetry = 100;
+var addr = 'http://localhost:' + userConfig.testRunnerPort + '/' + config.TEST_INDEX;
+var doneFlag = false;
+var coverageFlag = false;
 
-// Spawn the chrome process
-const testRunnerProcess = spawn(`"${userConfig.chromePath}"`.replace(/\"/g, ""), [
-    userConfig.headless ? "--headless" : "",
-    "--remote-debugging-port=9222",
-]);
-
-/**
- * Kill the browser and the node process
- * 
- * @param {any} client The client of CDP
- */
-function exitBrowserAndProcess(client) {
+function exitProcess(s) {
     if (userConfig.shouldBrowserClosed) {
-        treeKill(testRunnerProcess.pid, 'SIGHUP', () => {
-            process.exit(0);
-        });
-
-        if (client) {
-            client.close();
-        }
+        s.close();
+        process.exit(0);
     }
 }
 
-let collector = new istanbul.Collector();
-let reporter = new istanbul.Reporter();
-let sync = true;
-let tried = 0;
-/** Used to prevent multiple async report printing */
-let reportPrintingStarted = false;
+var runningServer = server.listen(userConfig.testRunnerPort, function () {
+    console.log("  Test server is running on " + userConfig.testRunnerPort);
+    console.log("  Tests are starting...");
 
-function run(Runtime, client) {
-    Runtime
-        .evaluate({
-            expression: config.GLOBAL_PROMISE
-        })
-        .then((res) => {
-            return Runtime.awaitPromise({
-                promiseObjectId: res.result.objectId
-            });
-        })
-        .then((res) => {
-            if (!res.exceptionDetails && !reportPrintingStarted && userConfig.coverage) {
-                reportPrintingStarted = true;
-                let coverage = JSON.parse(res.result.value);
+    nightmare
+        .viewport(1024, 768)
+        .on('console', function () {
+            var args = Array.from(arguments);
+            var type = args[0];
+            args = args.slice(1);
+            var content = args.join('');
 
-                for (let key in coverage) {
-                    if (coverage.hasOwnProperty(key)) {
-                        let newKey = path.resolve(__dirname, `../../../${key}`);
-                        coverage[newKey] = coverage[key];
-                        delete coverage[key];
-                        coverage[newKey].path = newKey;
+            if (type === 'log' &&
+                !/^do|circular|alternately/.test(content)) {
+                let results = args.map(function (v) {
+                    return typeof v === 'string' ? v.replace('✓', '\u221A').replace('✖', '\u00D7').replace('․', '.') : v.toString();
+                }).filter(function (v) {
+                    return !/stdout\:/.test(v)
+                });
 
-                        let lineCountBefore = fs.readFileSync(path.resolve(newKey)).toString('utf-8').match(/(.|[\s\r\n])*?function(.|[\s\r\n])*?\{[\s\r\n]*/)[0].split(/[\r\n]+/).length - 1;
-                        recurForOwn(coverage[newKey], (val, key, obj) => {
-                            if (key === 'line') {
-                                obj[key] = val + lineCountBefore;
+                console.log.apply(console, results);
+            } else if (type === 'warn') {
+                if (/TEST_MOCHA_DONE\;/.test(content)) {
+                    doneFlag = true;
+
+                    if (coverageFlag && doneFlag) {
+                        exitProcess(runningServer);
+                    }
+                } else if (/COVERAGE_OBJECT;/.test(content)) {
+                    var coverage = JSON.parse(args[1]);
+                    coverageFlag = true;
+
+                    if (userConfig.coverage) {
+                        generateCoverage(coverage, function (err) {
+                            if (err) {
+                                util.printRed('  ' + err);
+                            }
+
+                            if (doneFlag) {
+                                exitProcess(runningServer);
                             }
                         });
+                    } else {
+                        if (doneFlag) {
+                            exitProcess(runningServer);
+                        }
                     }
                 }
-                collector.add(coverage);
-
-                reporter.addAll(userConfig.coverageOptions.reporters);
-
-                reporter.write(collector, sync, function () {
-                    exitBrowserAndProcess(client);
-                });
-            } else {
-                exitBrowserAndProcess(client);
             }
         })
-        .catch((err) => {
-            if (!/context|promise|id/.test((err.message || "").toLowerCase()) ||
-                reportPrintingStarted ||
-                tried >= maxRetry) {
-                exitBrowserAndProcess(client);
-            } else {
-                run(Runtime, client);
-            }
+        .goto(addr)
+        .catch(function (err) {
+            util.printRed("  " + err);
+
+            exitProcess(runningServer);
         });
-}
-
-CDP((client) => {
-    // extract domains
-    const {
-        Network,
-        Page,
-        DOM,
-        Runtime
-    } = client;
-
-    Page.loadEventFired(() => {
-        run(Runtime, client);
-    });
-
-    // enable events then start
-    Promise.all([
-            Network.enable(),
-            Page.enable(),
-            Runtime.enable()
-        ]).then(() => {
-            printGreen(`  Tests are running...`);
-
-            // Forward test reults
-            Runtime.consoleAPICalled((options) => {
-                let results = options.args.map(v => v && v.value && typeof v.value === 'string' ? v.value.replace('✓', '\u221A').replace('✖', '\u00D7').replace('․', '.') : v.value).filter(v => !/stdout\:/.test(v));
-
-                let joined = results.join('');
-                if (!/^do\s*/.test(joined) &&
-                    !/^try to unlock circular/.test(joined)) {
-                    console.log.apply(console, results);
-                }
-            });
-
-            return Page.navigate({
-                url: `http://${userConfig.proxy.host}:${userConfig.proxy.port}/${config.TEST_INDEX}`
-            });
-        })
-        .catch((err) => {
-            exitBrowserAndProcess(client);
-        });
-}).on('error', (err) => {
-    // cannot connect to the remote endpoint
-    printNewLine();
-    printRed("  Please close all chrome browser processes before you start the tests.");
-    exitBrowserAndProcess();
 });

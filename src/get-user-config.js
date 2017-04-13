@@ -20,15 +20,6 @@ try {
 
 // Normalize userConfig
 
-// Normalize chromePath
-if (!userConfig.chromePath) {
-    console.log(chalk.red(`  Please provide correct chrome binary absolute path in the configuration file.`));
-    process.exit(0);
-} else if (isWin && !/\:[\/\\]/.test(userConfig.chromePath)) {
-    console.log(chalk.red(`  Please provide correct Windows chrome binary absolute path in the configuration file.`));
-    process.exit(0);
-}
-userConfig.chromePath = userConfig.chromePath.replace(/[\"\'"]/g, "");
 
 // Normalize globals
 userConfig.globals = userConfig.globals || {};
