@@ -20,7 +20,7 @@ var getAllSpecs = function (baseDir, entries) {
                 return /\.js/.test(s);
             });
     }).reduce(function (prev, cur) {
-        prev.concat(cur)
+        return prev.concat(cur);
     });
 }
 
