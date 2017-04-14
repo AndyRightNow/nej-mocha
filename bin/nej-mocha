@@ -28,6 +28,14 @@ var runningServer = server.listen(userConfig.testRunnerPort, function () {
 
     nightmare
         .viewport(1024, 768)
+        .on('page', function (type, message, stack) {
+            if (type === 'error') {
+                util.printRed("  " + message);
+                util.printRed("  " + stack);
+
+                exitProcess(runningServer);
+            }
+        })
         .on('console', function () {
             var args = Array.from(arguments);
             var type = args[0];
