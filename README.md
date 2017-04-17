@@ -124,14 +124,13 @@ module.exports = {
       */
      testRunnerPort: 8004,
      /**
-      * Should the browser be closed after the tests are run
+      * Should the browser be closed after the tests are done
       * 
       * Default to true
       */
      shouldBrowserClosed: true,
      /**
       * Should the browser be headless when the tests are running
-      * Currently only support Linux
       * 
       * Default to true
       */
