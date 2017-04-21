@@ -4,7 +4,9 @@
     <!-- encoding must be set for mocha's special characters to render properly -->
     <link rel="stylesheet" href="http://localhost:<%= PORT %>/node_modules/mocha/mocha.css" />\
     <script>
-        (<%- globalsInjector %>)('<%- globalJSON %>')
+        (<%- globalsInjector %>)('<%- globalJSON %>');
+
+        window.dependencyInjectionMap = <% if (dependencyInjectionMap) {%> <%- JSON.stringify(dependencyInjectionMap) %> <% } else {%> {} <% } %>;
     </script>
 </head>
 

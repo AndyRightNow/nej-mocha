@@ -168,10 +168,15 @@ module.exports = {
      /**
       * Dependency injections
       * 
-      * It injects anything you provide to the dependency paths it matches exactly (using '===')
+      * It replaces the paths provided in the keys with the paths in the values. They are still parsed by NEJ and therefore you can use 
+      * any patterns that NEJ can recognize.
+      *
+      * Keys can be strings or regular expression strings.
+      * Values can only be strings.
       */
      inject: {
-        'some/exact/path': ObjectToInject
+        'some/old/path': 'some/new/path',
+        'some/regex/\d+/path': 'some/new/path'
      }
 }
 ```
