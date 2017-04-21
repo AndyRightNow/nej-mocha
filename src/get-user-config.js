@@ -88,4 +88,12 @@ userConfig.coverage = userConfig.coverage || false;
 userConfig.coverageOptions = userConfig.coverageOptions || {};
 userConfig.coverageOptions.reporters = (userConfig.coverageOptions.reporters || ['text']) && (!Array.isArray(userConfig.coverageOptions.reporters) ? [userConfig.coverageOptions.reporters] : userConfig.coverageOptions.reporters);
 
+//Normalize inject
+userConfig.inject = userConfig.inject || {};
+for (let p in userConfig.inject) {
+    if(userConfig.inject.hasOwnProperty(p) && userConfig.inject[p] == null) {
+        delete userConfig.inject[p];
+    }
+}
+
 module.exports = userConfig;

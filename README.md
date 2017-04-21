@@ -164,6 +164,14 @@ module.exports = {
          reporters: [
              'text'
          ]
+     },
+     /**
+      * Dependency injections
+      * 
+      * It injects anything you provide to the dependency paths it matches exactly (using '===')
+      */
+     inject: {
+        'some/exact/path': ObjectToInject
      }
 }
 ```

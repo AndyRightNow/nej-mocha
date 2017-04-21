@@ -52,7 +52,7 @@
             originalDefine.call(NEJ, typeof uri === 'function' ? cb : uri, typeof deps === 'function' ? cb : deps, typeof callback === 'function' ? cb : callback);
         }
         
-        // So that empty 'console.log()' is captured through CDP
+        // So that empty 'console.log()' is captured
         console.log = function () {
             if (!arguments.length) {
                 originalFn.call(console, ' ');
