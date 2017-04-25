@@ -123,7 +123,7 @@ module.exports = {
         * The port of the proxy address. Default to 'testRunnerPort'
         */
         port: 8004,
-     }
+     },
      /**
       * The port for the test runner server to listen on.
       *
