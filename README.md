@@ -11,7 +11,7 @@ For NEJ users, unit testing could be a pain in the neck. This package solves the
 # Why This?
 
 1. Easy to use and no boilerplates needed. Just wrap your `mocha` and `chai` code in `NEJ.define` and it is done!
-2. Running on latest **Chromium**. Almost all new **ES6** features are supported. Writing tests are just so much more efficient.
+2. Headless browser tests running on latest **Chromium** instead of PhantomJS. Almost all new **ES6** features are supported. Writing tests are just so much more efficient.
 3. Built-in [**coverage reports**](#coverage) using [`istanbul`](https://github.com/gotwarlost/istanbul).
 4. [**Dependency injections**](#dependency-injection), just like [`inject-loader`](https://github.com/plasticine/inject-loader) for Webpack, let you have more control over your tests.
 
