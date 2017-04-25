@@ -23,7 +23,7 @@ For NEJ users, unit testing could be a pain in the neck. This package solves the
     $ npm install nej-mocha --save-dev
     ```
 
-2. Make sure you have a `test` folder under your working directory. All `.js` files will be run recursively in this folder. Or you can specify other test folder in the configuration file.
+2. Configure your test files in `nej-mocha.conf.js`. If not, all `.js` files under `/test` in your working directory will be run recursively.
 
 3. Run the tests:
 
