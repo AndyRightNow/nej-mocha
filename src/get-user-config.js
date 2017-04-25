@@ -89,10 +89,16 @@ userConfig.coverageOptions = userConfig.coverageOptions || {};
 userConfig.coverageOptions.reporters = (userConfig.coverageOptions.reporters || ['text']) && (!Array.isArray(userConfig.coverageOptions.reporters) ? [userConfig.coverageOptions.reporters] : userConfig.coverageOptions.reporters);
 
 //Normalize inject
-userConfig.inject = userConfig.inject || {};
-for (let p in userConfig.inject) {
-    if(userConfig.inject.hasOwnProperty(p) && userConfig.inject[p] == null) {
-        delete userConfig.inject[p];
+userConfig.inject = (userConfig.inject && Array.isArray(userConfig.inject) && userConfig.inject) || [];
+
+for (let injection of userConfig.inject) {
+    if (typeof injection !== 'object') {
+        userConfig.inject = [];
+        break;
+    }
+    else {
+        injection.pattern = injection.pattern && injection.pattern.source ? injection.pattern.source : ((injection.pattern && typeof injection.pattern === 'string' && injection.pattern) || "")
+        injection.path = (injection.path && typeof injection.path === 'string' && injection.path) || "";
     }
 }
 

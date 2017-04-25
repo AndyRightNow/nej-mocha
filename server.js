@@ -63,7 +63,7 @@ app.get('/testIndex', function (req, res, next) {
         mochaOptions: userConfig.mochaOptions,
         nestedDependencies,
         scriptsToInject: userConfig.scriptsToInject,
-        dependencyInjectionMap: userConfig.inject
+        dependencyInjectionArr: userConfig.inject
     });
 });
 

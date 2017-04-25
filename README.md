@@ -168,18 +168,35 @@ module.exports = {
      /**
       * Dependency injections
       * 
-      * It replaces the paths provided in the keys with the paths in the values. They are still parsed by NEJ and therefore you can use 
-      * any patterns that NEJ can recognize.
+      * It replaces the patterns provided in the keys with the paths in the values. The new paths are still parsed by NEJ and therefore you can use 
+      * any path patterns that NEJ can recognize.
       *
-      * Keys can be strings or regular expression strings.
-      * Values can only be strings.
+      * Do not forget to add the instruction comment in files you want to inject dependencies
+      *
+      * @param {RegExp|string} pattern The pattern to match
+      * @param {string} path The new path to inject. If a relative path is used, it is relative to the file that has the dependency pattern.
       */
-     inject: {
-        'some/old/path': 'some/new/path',
-        'some/regex/\d+/path': 'some/new/path'
-     }
+     inject: [
+         {
+             pattern: 'some/literal/path',
+             path: 'some/new/path'
+         },
+         {
+             pattern: /some\/regex\/path/,
+             path: 'some/new/path'
+         }
+     ]
 }
 ```
+
+# Dependency Injection
+
+You can replace paths that match the given pattern with the new paths you provided. In other words, you can replace some dependencies with some mocked objects or data.
+
+### **Usage:**
+
+1. Add `/* nej-inject */` or `// nej-inject` in the callback function of `NEJ.define` and this file will be included in dependency injections.
+2. In `nej-mocha.conf.js`, add options about the patterns to replace and the new paths.
 
 # Coverage 
 
