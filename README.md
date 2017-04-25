@@ -191,12 +191,34 @@ module.exports = {
 
 # Dependency Injection
 
-You can replace paths that match the given pattern with the new paths you provided. In other words, you can replace some dependencies with some mocked objects or data.
+You can replace paths that match the given pattern with the new paths you provided at runtime. In other words, you can replace some dependencies with some mocked objects or data. Therefore you don't need and switches or back doors in your code to make it easier to test.
 
 ### **Usage:**
 
 1. Add `/* nej-inject */` or `// nej-inject` in the callback function of `NEJ.define` and this file will be included in dependency injections.
 2. In `nej-mocha.conf.js`, add options about the patterns to replace and the new paths.
+
+### **Examples:**
+
+A file:
+
+```javascript
+define([
+    'pro/some/path/to/replace'
+], function (someComplexObject) {
+
+});
+```
+
+after dependency injection, will be:
+
+```javascript
+define([
+    'pro/some/new/path'
+], function (someComplexObject) {
+
+});
+```
 
 # Coverage 
 
