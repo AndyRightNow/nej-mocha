@@ -7,12 +7,6 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="<%- nodeModulesPath %>mocha/mocha.css" />
-    <script src="<%- repoPath %>src/scripts/globals-injector.js"></script>
-    <script>
-        window.globalsInjector('<%- globalJSON %>');
-
-        window.dependencyInjectionArr = <% if (dependencyInjectionArr) {%> <%- JSON.stringify(dependencyInjectionArr) %> <% } else {%> [] <% } %>;
-    </script>
 </head>
 
 <body>
@@ -20,85 +14,20 @@
     <% for (var i = 0; i < scriptsToInject.length; i++) {%>
     <script src="<%- scriptsToInject[i] %>"></script>
     <% } %>
-    <% if (nestedDependencies) { %>
-    <script src="<%- repoNodeModulesPath %>mocha/mocha.js"></script>
-    <script src="<%- repoNodeModulesPath %>chai/chai.js"></script>
-    <% } else { %>
-    <script src="<%- nodeModulesPath %>mocha/mocha.js"></script>
-    <script src="<%- nodeModulesPath %>chai/chai.js"></script>
-    <% } %>
-    <script src="<%- repoNodeModulesPath %>esprima/dist/esprima.js"></script>
-    <script src="<%- repoPath %>lib/escodegen.js"></script>
-    <script src="<%- repoNodeModulesPath %>istanbul/lib/instrumenter.js"></script>
     <script src="<%- repoPath %>bower_components/nej/src/define.js?<% for (var alias in nejPathAliases) { if (nejPathAliases.hasOwnProperty(alias)) {%><%- alias %>=<%- url %>/<%- nejPathAliases[alias] %>&<% }}%> "></script>
+    <script src="<%- repoPath %>lib/escodegen.js"></script>
+    <script src="<%- repoPath %>dist/bundle.js"></script>
     <script>
-        mocha.ui('bdd');
-        <% for (var option in mochaOptions) { if (mochaOptions.hasOwnProperty(option)) { %>
-        mocha.<%- option %> ? mocha.<%- option %>(<%- typeof mochaOptions[option] === "string" ? "'" : "" %><%- mochaOptions[option] %><%- typeof mochaOptions[option] === "string" ? "'" : "" %>) : undefined;
-        <% }} %>
-        expect = chai.expect;
-    </script>
-    <script>
-        var originalFn = console.log;
-        var originalDefine = NEJ.define;
-        var instrumenter = new Instrumenter();
+        window.globalsInjector('<%- globalJSON %>');
 
-        NEJ.define = function (uri, deps, callback) {
-            // Coverage
-            var cb = typeof uri === 'function' ? uri : typeof deps === 'function' ? deps : callback;
-            var filePath = new Error().stack.match(/(at.*)/g)[1].replace('at ', "").replace(/\:\d+\:\d+$/, "").replace(/^http:\/\/.*?\//, "");
-            var cbStr = cb.toString();
-            if (/nej-mocha-cover/.test(cbStr)) {
-                var cbCode = cbStr.replace(/^function(.|[\r\n])*?\{[\s\r\n]*/, "").replace(/\}$/, "");
-                var cbArgs = cbStr.match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[\(\)]/g, "").replace(/\/\/.*/g, "").replace(/\/\*(.|[\r\n])*\*\//g, "").replace(/[\s\r\n]/g, "").split(',');
+        window.dependencyInjectionArr = <% if (dependencyInjectionArr) {%> <%- JSON.stringify(dependencyInjectionArr) %> <% } else {%> [] <% } %>;
+        window.testFiles = <% if (testFiles) {%> <%- JSON.stringify(testFiles) %> <% } else {%> [] <% } %>;
+        window.userConfig = <% if (userConfig) {%> <%- JSON.stringify(userConfig) %> <% } else {%> [] <% } %>;
 
-                cbCode = instrumenter.instrumentSync(cbCode, filePath);
+        define([], function () {
+            window.mochaSetup(window.mocha, window.userConfig.mochaOptions);
 
-                cb = new Function(...cbArgs.concat([cbCode]));
-            }
-
-            // Dependency injections
-            if (/nej-inject/.test(cbStr)) {
-                var isNew = {};
-                dependencyInjectionArr.forEach(d => isNew[d.path] = true);
-
-                var deps = Array.isArray(uri) ? uri : Array.isArray(deps) ? deps : [];
-
-                for (var injection of dependencyInjectionArr) {
-                    var pattern = injection.pattern ? new RegExp(injection.pattern) : null;
-
-                    if (pattern instanceof RegExp) {
-                        for (var i = 0, l = deps.length; i < l; i++) {
-                            if (pattern.test(deps[i]) && !isNew[deps[i]]) {
-                                deps[i] = injection.path;
-                            }
-                        }
-                    }
-                }
-            }
-
-            originalDefine.call(NEJ, typeof uri === 'function' ? cb : uri, typeof deps === 'function' ? cb : deps, typeof callback === 'function' ? cb : callback);
-        }
-        
-        // So that empty 'console.log()' is captured
-        console.log = function () {
-            if (!arguments.length) {
-                originalFn.call(console, ' ');
-            }
-            else {
-                originalFn.apply(console, arguments);
-            }
-        };
-
-        define([
-        <% for(var i = 0; i < testFiles.length; i++) {%>
-            "<%- testFiles[i] %>",
-        <% } %>
-        ], function () {
-            mocha.run(function (err) {
-                console.warn("TEST_MOCHA_DONE;");
-                console.warn("COVERAGE_OBJECT;", JSON.stringify(window.__coverage__ || {}));
-            });
+            window.runTest(window.testFiles, window.mocha);
         });
     </script>
 </body>

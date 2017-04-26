@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
-var server = require('./../server');
-var config = require('./../config');
-var generateCoverage = require('./../src/generate-coverage');
-var userConfig = require('./../src/get-user-config');
-var util = require('./../src/util');
+var server = require('./../src/node/server');
+var config = require('./../src/shared/config');
+var generateCoverage = require('./../src/node/generate-coverage');
+var userConfig = require('./../src/node/get-user-config');
+var util = require('./../src/node/util');
 
 var Nightmare = require('nightmare');
 var nightmare = Nightmare({
     show: !userConfig.headless
 });
 
-var addr = 'http://localhost:' + userConfig.testRunnerPort + '/' + config.TEST_INDEX;
+var addr = 'http://localhost:' + userConfig.testRunnerPort + '/' + config.CONSTANT.TEST_INDEX;
 var doneFlag = false;
 var coverageFlag = false;
 
@@ -52,13 +52,13 @@ var runningServer = server.listen(userConfig.testRunnerPort, function () {
 
                 console.log.apply(console, results);
             } else if (type === 'warn') {
-                if (/TEST_MOCHA_DONE\;/.test(content)) {
+                if (new RegExp(config.CONSTANT.MOCHA_DONE_SIGNAL).test(content)) {
                     doneFlag = true;
 
                     if (coverageFlag && doneFlag) {
                         exitProcess(runningServer);
                     }
-                } else if (/COVERAGE_OBJECT;/.test(content)) {
+                } else if (new RegExp(config.CONSTANT.HAS_COVERAGE_SIGNAL).test(content)) {
                     var coverage = JSON.parse(args[1]);
                     coverageFlag = true;
 

@@ -6,7 +6,7 @@ const {
     walkSync,
     normalizeSlashes,
     recurForOwn
-} = require('./../src/util');
+} = require('./../src/node/util');
 
 describe("Utility functions", () => {
     describe("walkSync", () => {

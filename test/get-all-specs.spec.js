@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const path = require('path');
-const getAllSpecs = require('./../src/get-all-specs');
+const getAllSpecs = require('./../src/node/get-all-specs');
 
 describe("Function getAllSpecs", () => {
     let specs;

@@ -1,8 +1,8 @@
-const chalk = require('chalk');
-const fs = require('fs');
-const path = require('path');
-const glob = require('glob');
-const _ = require('lodash');
+var chalk = require('chalk');
+var fs = require('fs');
+var path = require('path');
+var glob = require('glob');
+var _ = require('lodash');
 
 function printGreen(str) {
     console.log(chalk.green(str));
@@ -47,7 +47,7 @@ function walkSyncHelper(dir, filelist) {
     });
 
     return filelist;
-};
+}
 
 /**
  * Recursively walk through all files in a concrete or wildcard directory synchronously

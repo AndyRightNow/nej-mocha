@@ -1,9 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+var path = require('path');
 
-const util = require('./util');
-const walkSync = util.walkSync;
-const normalizeSlashes = util.normalizeSlashes;
+var util = require('./util');
+var walkSync = util.walkSync;
+var normalizeSlashes = util.normalizeSlashes;
 
 var getAllSpecs = function (baseDir, entries) {
     entries = typeof entries === 'string' ? [entries] : entries;

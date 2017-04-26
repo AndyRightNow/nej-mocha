@@ -1,17 +1,14 @@
-const chalk = require('chalk');
-
-const config = require('./../config');
-const util = require('./util');
-const normalizeSlashes = util.normalizeSlashes;
+var config = require('./../shared/config');
+var util = require('./util');
+var normalizeSlashes = util.normalizeSlashes;
 
 var userConfig;
-const isWin = /^win/.test(process.platform);
 
 try {
-    userConfig = require('./../../../nej-mocha.conf.js');
+    userConfig = require(config.CONSTANT.DEFAULT_CONFIG_PATH.CONF);
 } catch (e) {
     try {
-        userConfig = require('./../../../nej-mocha.config.js');
+        userConfig = require(config.CONSTANT.DEFAULT_CONFIG_PATH.CONFIG);
     } catch (e) {
         userConfig = {};
     }
@@ -24,7 +21,7 @@ try {
 userConfig.globals = userConfig.globals || {};
 
 // Normalize entries
-userConfig.entries = (userConfig.entries && (typeof userConfig.entries === 'string' ? [userConfig.entries] : userConfig.entries)) || ["./test"];
+userConfig.entries = (userConfig.entries && (typeof userConfig.entries === 'string' ? [userConfig.entries] : userConfig.entries)) || [config.CONSTANT.DEFAULT_TEST_ENTRY];
 for (let i = 0, es = userConfig.entries, l = es.length; i < l; i++) {
     es[i] = normalizeSlashes(es[i]);
     if (es[i][0] !== '.') {
@@ -40,16 +37,16 @@ userConfig.mochaOptions.timeout = isNaN(parseInt(userConfig.mochaOptions.timeout
 
 // Normalize nejPathAliases
 userConfig.nejPathAliases = userConfig.nejPathAliases || {};
-userConfig.nejPathAliases.pro = userConfig.nejPathAliases.pro || "src/javascript";
+userConfig.nejPathAliases.pro = userConfig.nejPathAliases.pro || config.CONSTANT.DEFAULT_NEJ_PRO;
 let nejPathAliases = userConfig.nejPathAliases;
-for (const alias in nejPathAliases) {
+for (var alias in nejPathAliases) {
     if (nejPathAliases.hasOwnProperty(alias)) {
         nejPathAliases[alias] = normalizeSlashes(`${nejPathAliases[alias]}/`);
     }
 }
 
 // Normalize testRunnerPort
-userConfig.testRunnerPort = isNaN(parseInt(userConfig.testRunnerPort)) ? config.DEFAULT_PORT : parseInt(userConfig.testRunnerPort);
+userConfig.testRunnerPort = isNaN(parseInt(userConfig.testRunnerPort)) ? config.CONSTANT.DEFAULT_PORT : parseInt(userConfig.testRunnerPort);
 
 // Normalize proxy
 userConfig.proxy = typeof userConfig.proxy === "object" ? userConfig.proxy : {};
