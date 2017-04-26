@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-var nejMocha = require('./../src/node');
+var nejMocha = require('./../index');
 
 nejMocha.run();

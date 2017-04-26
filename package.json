@@ -2,7 +2,7 @@
   "name": "nej-mocha",
   "version": "4.1.0",
   "description": "A test framework specifically for NEJ module system users.",
-  "main": "./bin/nej-mocha",
+  "main": "index.js",
   "scripts": {
     "start": "node ./bin/nej-mocha",
     "postinstall": "bower install",
