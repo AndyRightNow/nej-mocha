@@ -41269,14 +41269,22 @@ function getFilePath() {
     return new Error().stack.match(/(at.*)/g)[1].replace('at ', "").replace(/\:\d+\:\d+$/, "").replace(/^http:\/\/.*?\//, "");
 }
 
+function getFunctionCode(fnStr) {
+    return fnStr.replace(/^function(.|[\r\n])*?\{[\s\r\n]*/, "").replace(/\}$/, "");
+}
+
+function getFunctionArgs(fnStr) {
+    return fnStr.match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[\(\)]/g, "").replace(/\/\/.*/g, "").replace(/\/\*(.|[\r\n])*\*\//g, "").replace(/[\s\r\n]/g, "").split(',');
+}
+
 function instrumentFunction(fn, instrumenter) {
     fn = fn || noop;
     var fnStr = fn.toString();
     var filePath = getFilePath();
 
     if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr)) {
-        var fnCode = fnStr.replace(/^function(.|[\r\n])*?\{[\s\r\n]*/, "").replace(/\}$/, "");
-        var fnArgs = fnStr.match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[\(\)]/g, "").replace(/\/\/.*/g, "").replace(/\/\*(.|[\r\n])*\*\//g, "").replace(/[\s\r\n]/g, "").split(',');
+        var fnCode = getFunctionCode(fnStr);
+        var fnArgs = getFunctionArgs(fnStr);
 
         fnCode = instrumenter.instrumentSync(fnCode, filePath);
 
@@ -41308,6 +41316,8 @@ function applyInjections(fn, deps, dependencyInjectionArr) {
 
 module.exports = {
     getFilePath,
+    getFunctionCode,
+    getFunctionArgs,
     instrumentFunction,
     applyInjections
 }
@@ -41413,8 +41423,8 @@ module.exports = {
         DEFAULT_NEJ_PRO: "src/javascript",
         DEFAULT_TEST_ENTRY: './test',
         DEFAULT_CONFIG_PATH: {
-            CONF: './../../../nej-mocha.conf.js',
-            CONFIG: './../../../nej-mocha.config.js'
+            CONF: './../../../../nej-mocha.conf.js',
+            CONFIG: './../../../../nej-mocha.config.js'
         },
         COVERAGE_IDENTIFIER: 'nej-mocha-cover',
         INJECT_IDENTIFIER: 'nej-mocha-inject',

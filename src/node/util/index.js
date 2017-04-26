@@ -22,7 +22,7 @@ function print() {
 
 function printAndNewLine() {
     print.apply(null, Array.from(arguments));
-    
+
     printNewLine();
 }
 
@@ -112,6 +112,16 @@ function recurForOwn(obj, cb) {
     }
 }
 
+
+function exitProcess(shouldBrowserClosed, server) {
+    if (shouldBrowserClosed) {
+        if (server) {
+            server.close();
+        }
+        process.exit(0);
+    }
+}
+
 module.exports = {
     printGreen,
     printRed,
@@ -120,5 +130,6 @@ module.exports = {
     printAndNewLine,
     walkSync,
     normalizeSlashes,
-    recurForOwn
+    recurForOwn,
+    exitProcess
 };

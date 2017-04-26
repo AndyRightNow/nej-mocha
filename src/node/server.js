@@ -2,8 +2,8 @@ var express = require('express');
 var path = require("path");
 var cors = require('cors');
 
-var getAllSpecs = require('./get-all-specs');
-var userConfig = require('./get-user-config');
+var getAllSpecs = require('./util/get-all-specs');
+var userConfig = require('./util/get-user-config');
 
 var app = express();
 var publicDir = path.resolve(__dirname, "../", "../", "../", '../');

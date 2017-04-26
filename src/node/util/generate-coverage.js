@@ -1,7 +1,7 @@
 var istanbul = require('istanbul');
 var path = require('path');
 var fs = require('fs');
-var util = require('./util');
+var util = require('./index');
 var userConfig = require('./get-user-config');
 
 let collector = new istanbul.Collector();

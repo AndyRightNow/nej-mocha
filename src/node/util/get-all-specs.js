@@ -1,6 +1,6 @@
 var path = require('path');
 
-var util = require('./util');
+var util = require('./index');
 var walkSync = util.walkSync;
 var normalizeSlashes = util.normalizeSlashes;
 
