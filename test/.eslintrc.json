@@ -12,5 +12,8 @@
     },
     "rules": {
         "no-console": "warn"
+    },
+    "globals": {
+        "describe": true
     }
 }

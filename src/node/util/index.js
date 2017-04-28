@@ -1,113 +1,111 @@
-var chalk = require('chalk');
-var fs = require('fs');
-var path = require('path');
-var glob = require('glob');
-var _ = require('lodash');
+var chalk = require('chalk')
+var path = require('path')
+var glob = require('glob')
 
 /* istanbul ignore next */
-function printGreen(str) {
-    console.log(chalk.green(str));
+function printGreen (str) {
+  console.log(chalk.green(str))
 }
 
 /* istanbul ignore next */
-function printRed(str) {
-    console.log(chalk.red(str));
+function printRed (str) {
+  console.log(chalk.red(str))
 }
 
 /* istanbul ignore next */
-function printNewLine() {
-    console.log("");
+function printNewLine () {
+  console.log('')
 }
 
 /* istanbul ignore next */
-function print() {
-    console.log.apply(console, Array.from(arguments));
+function print () {
+  console.log.apply(console, Array.from(arguments))
 }
 
 /* istanbul ignore next */
-function printAndNewLine() {
-    print.apply(null, Array.from(arguments));
+function printAndNewLine () {
+  print.apply(null, Array.from(arguments))
 
-    printNewLine();
+  printNewLine()
 }
 
-function normalizeDir(dir) {
-    if (!/\.js$/.test(dir)) {
-        dir = path.resolve(dir, '**/**/*.js');
-    }
+function normalizeDir (dir) {
+  if (!/\.js$/.test(dir)) {
+    dir = path.resolve(dir, '**/**/*.js')
+  }
 
-    return dir;
+  return dir
 }
 
 /**
  * Recursively walk through all files in a concrete or wildcard directory synchronously
- * 
- * @param {any} dir 
- * @param {any} filelist 
+ *
+ * @param {any} dir
+ * @param {any} filelist
  * @returns {Array} Paths, relative to the cwd, of all files in the directory
  */
-function walkSync(dir) {
-    let files;
+function walkSync (dir) {
+  let files
 
-    dir = normalizeDir(dir);
+  dir = normalizeDir(dir)
 
-    try {
-        files = glob.sync(dir);
-    } catch (err) {
-        console.log(err.message);
+  try {
+    files = glob.sync(dir)
+  } catch (err) {
+    console.log(err.message)
 
-        files = [];
-    }
+    files = []
+  }
 
-    return files;
+  return files
 }
 
 /**
  * Normalize a path. Remove extra slashes and replace all backslashes with slashes.
- * 
- * @param {any} path 
- * @returns 
+ *
+ * @param {any} path
+ * @returns
  */
-function normalizeSlashes(path) {
-    return path.replace(/[\\\/]+/g, '/');
+function normalizeSlashes (path) {
+  return path.replace(/[\\/]+/g, '/')
 }
 
 /* istanbul ignore next */
-function exitProcess(shouldBrowserClosed, server) {
-    if (shouldBrowserClosed) {
-        if (server) {
-            server.close();
-        }
-        process.exit(0);
+function exitProcess (shouldBrowserClosed, server) {
+  if (shouldBrowserClosed) {
+    if (server) {
+      server.close()
     }
+    process.exit(0)
+  }
 }
 
-function normalizeCliOptionValue(val) {
-    var parsed;
+function normalizeCliOptionValue (val) {
+  var parsed
 
-    try {
-        parsed = JSON.parse(val);
-    } catch (err) {
-        switch (val) {
-            case 'undefined':
-                return undefined;
-            default:
-                return val;
-        }
+  try {
+    parsed = JSON.parse(val)
+  } catch (err) {
+    switch (val) {
+      case 'undefined':
+        return undefined
+      default:
+        return val
     }
+  }
 
-    return parsed;
+  return parsed
 }
 
 module.exports = {
-    printGreen,
-    printRed,
-    printNewLine,
-    print,
-    printAndNewLine,
-    normalizeDir,
-    walkSync,
-    normalizeSlashes,
-    exitProcess,
-    normalizeCliOptionValue
-};
+  printGreen,
+  printRed,
+  printNewLine,
+  print,
+  printAndNewLine,
+  normalizeDir,
+  walkSync,
+  normalizeSlashes,
+  exitProcess,
+  normalizeCliOptionValue
+}
