@@ -26,7 +26,7 @@ function getUserConfig(path) {
         }
     }
 
-    normalizeUserConfig(userConfig);
+    userConfig = normalizeUserConfig(userConfig);
 
     return userConfig;
 }
