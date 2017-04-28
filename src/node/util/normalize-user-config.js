@@ -2,13 +2,11 @@ var util = require('./index');
 var config = require('./../../shared/config');
 var normalizeSlashes = util.normalizeSlashes;
 
-function normalizeUserConfig(userConfig) {
-    userConfig = (typeof userConfig === 'object' && userConfig) || {};
-
-    // Normalize globals
+function normalizeGlobals(userConfig) {
     userConfig.globals = userConfig.globals || {};
+}
 
-    // Normalize entries
+function normalizeEntries(userConfig) {
     userConfig.entries = (userConfig.entries && (typeof userConfig.entries === 'string' ? [userConfig.entries] : userConfig.entries)) || [config.CONSTANT.DEFAULT_TEST_ENTRY];
     for (let i = 0, es = userConfig.entries, l = es.length; i < l; i++) {
         es[i] = normalizeSlashes(es[i]);
@@ -19,11 +17,16 @@ function normalizeUserConfig(userConfig) {
             es[i] = '.' + es[i];
         }
     }
-    // Normalize mochaOptions
+}
+
+function normalizeMochaOptions(userConfig) {
     userConfig.mochaOptions = userConfig.mochaOptions || {};
     userConfig.mochaOptions.timeout = isNaN(parseInt(userConfig.mochaOptions.timeout)) ? 3000 : parseInt(userConfig.mochaOptions.timeout);
+    userConfig.mochaOptions.useColors = userConfig.mochaOptions.useColors === undefined ? true : userConfig.mochaOptions.useColors;
+    userConfig.mochaOptions.reporter = userConfig.mochaOptions.reporter || 'spec';
+}
 
-    // Normalize nejPathAliases
+function normalizeNejPathAliases(userConfig) {
     userConfig.nejPathAliases = userConfig.nejPathAliases || {};
     userConfig.nejPathAliases.pro = userConfig.nejPathAliases.pro || config.CONSTANT.DEFAULT_NEJ_PRO;
     let nejPathAliases = userConfig.nejPathAliases;
@@ -32,25 +35,27 @@ function normalizeUserConfig(userConfig) {
             nejPathAliases[alias] = normalizeSlashes(`${nejPathAliases[alias]}/`);
         }
     }
+}
 
-    // Normalize testRunnerPort
+function normalizeTestRunnerPort(userConfig) {
     userConfig.testRunnerPort = isNaN(parseInt(userConfig.testRunnerPort)) ? config.CONSTANT.DEFAULT_PORT : parseInt(userConfig.testRunnerPort);
+}
 
-    // Normalize proxy
+function normalizeProxy(userConfig) {
     userConfig.proxy = typeof userConfig.proxy === "object" ? userConfig.proxy : {};
     userConfig.proxy.port = isNaN(parseInt(userConfig.proxy.port)) ? userConfig.testRunnerPort : parseInt(userConfig.proxy.port);
     userConfig.proxy.host = (userConfig.proxy.host || 'localhost').toString().trim();
+}
 
-    // Normalize shouldBrowserClosed
+function normalizeShouldBrowserClosed(userConfig) {
     userConfig.shouldBrowserClosed = userConfig.shouldBrowserClosed === undefined ? true : Boolean(userConfig.shouldBrowserClosed);
+}
 
-    // Normalize headless
+function normalizeHeadless(userConfig) {
     userConfig.headless = userConfig.headless === undefined ? true : Boolean(userConfig.headless);
+}
 
-    // Normalize maxRetries
-    userConfig.maxRetries = isNaN(parseInt(userConfig.maxRetries)) ? 5 : parseInt(userConfig.maxRetries);
-
-    // Normalize scriptsToInject
+function normalizeScriptsToInject(userConfig) {
     userConfig.scriptsToInject = userConfig.scriptsToInject || [];
     let scriptsToInject = userConfig.scriptsToInject;
     for (let i = 0, l = scriptsToInject.length, scriptPath; i < l; i++) {
@@ -65,15 +70,26 @@ function normalizeUserConfig(userConfig) {
             scriptsToInject[i] = "";
         }
     }
+}
 
-    // Normalize coverage
+function normalizeCoverage(userConfig) {
     userConfig.coverage = userConfig.coverage || false;
+}
 
-    // Normalize coverageOptions
+function normalizeCoverageOptions(userConfig) {
     userConfig.coverageOptions = userConfig.coverageOptions || {};
-    userConfig.coverageOptions.reporters = (userConfig.coverageOptions.reporters || ['text']) && (!Array.isArray(userConfig.coverageOptions.reporters) ? [userConfig.coverageOptions.reporters] : userConfig.coverageOptions.reporters);
+    var reporters = userConfig.coverageOptions.reporters;
+    userConfig.coverageOptions.reporters = reporters || ['text'];
+    userConfig.coverageOptions.reporters = Array.isArray(reporters) ? reporters : [reporters];
+    userConfig.coverageOptions.reporters = userConfig.coverageOptions.reporters.map(function (val) {
+        if (typeof val !== 'string') {
+            return "text";
+        }
+        else return val;
+    });
+}
 
-    //Normalize inject
+function normalizeInject(userConfig) {
     userConfig.inject = (userConfig.inject && Array.isArray(userConfig.inject) && userConfig.inject) || [];
 
     for (let injection of userConfig.inject) {
@@ -87,4 +103,38 @@ function normalizeUserConfig(userConfig) {
     }
 }
 
+/* istanbul ignore next */
+function normalizeUserConfig(userConfig) {
+    userConfig = (typeof userConfig === 'object' && userConfig) || {};
+
+    normalizeGlobals(userConfig);
+    normalizeEntries(userConfig);
+    normalizeMochaOptions(userConfig);
+    normalizeNejPathAliases(userConfig);
+    normalizeTestRunnerPort(userConfig);
+    normalizeProxy(userConfig);
+    normalizeShouldBrowserClosed(userConfig);
+    normalizeHeadless(userConfig);
+    normalizeScriptsToInject(userConfig);
+    normalizeCoverage(userConfig);
+    normalizeCoverageOptions(userConfig);
+    normalizeInject(userConfig);
+
+    return userConfig;
+}
+
 module.exports = normalizeUserConfig;
+module.exports.helpers = {
+    normalizeGlobals,
+    normalizeEntries,
+    normalizeMochaOptions,
+    normalizeNejPathAliases,
+    normalizeTestRunnerPort,
+    normalizeProxy,
+    normalizeShouldBrowserClosed,
+    normalizeHeadless,
+    normalizeScriptsToInject,
+    normalizeCoverage,
+    normalizeCoverageOptions,
+    normalizeInject,
+};
