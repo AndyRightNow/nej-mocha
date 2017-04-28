@@ -122,6 +122,23 @@ function exitProcess(shouldBrowserClosed, server) {
     }
 }
 
+function normalizeCliOptionValue(val) {
+    var parsed;
+
+    try {
+        parsed = JSON.parse(val);
+    } catch (err) {
+        switch (val) {
+            case 'undefined':
+                return undefined;
+            default:
+                return val;
+        }
+    }
+
+    return parsed;
+}
+
 module.exports = {
     printGreen,
     printRed,
@@ -131,5 +148,6 @@ module.exports = {
     walkSync,
     normalizeSlashes,
     recurForOwn,
-    exitProcess
+    exitProcess,
+    normalizeCliOptionValue
 };

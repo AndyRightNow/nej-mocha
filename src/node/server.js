@@ -1,33 +1,36 @@
 var express = require('express');
 var path = require("path");
 var cors = require('cors');
-
 var getAllSpecs = require('./util/get-all-specs');
-var userConfig = require('./util/get-user-config');
+var config = require('./../shared/config');
 
-var app = express();
-var publicDir = path.resolve(__dirname, "../", "../", "../", '../');
+function createServer(userConfig) {
+    var server = express();
+    var publicDir = path.resolve(process.cwd(), userConfig._baseDir || '.');
 
-app.use(cors());
-app.use(express.static(publicDir));
-app.set('view engine', 'ejs')
+    server.use(cors());
+    server.use(express.static(publicDir));
+    server.set('view engine', 'ejs')
 
-app.get('/testIndex', function (req, res) {
-    res.render(path.resolve(__dirname, '../', '../', "index.ejs"), {
-        testFiles: getAllSpecs(publicDir, userConfig.entries),
-        PORT: userConfig.testRunnerPort,
-        globalJSON: JSON.stringify(userConfig.globals),
-        nejPathAliases: userConfig.nejPathAliases,
-        userConfig: userConfig,
-        scriptsToInject: userConfig.scriptsToInject,
-        dependencyInjectionArr: userConfig.inject
+    server.get(`/${config.CONSTANT.TEST_INDEX}`, function (req, res) {
+        res.render(path.resolve(__dirname, "index.ejs"), {
+            testFiles: getAllSpecs(publicDir, userConfig.entries),
+            PORT: userConfig.testRunnerPort,
+            globalJSON: JSON.stringify(userConfig.globals),
+            nejPathAliases: userConfig.nejPathAliases,
+            userConfig: userConfig,
+            scriptsToInject: userConfig.scriptsToInject,
+            dependencyInjectionArr: userConfig.inject
+        });
     });
-});
 
-app.use(function (err, req, res, next) {
-    console.log("ERROR:", err);
+    server.use(function (err, req, res, next) {
+        console.log("ERROR:", err);
 
-    next();
-});
+        next();
+    });
 
-module.exports = app;
+    return server;
+}
+
+module.exports = createServer;

@@ -10,7 +10,7 @@
     "major:publish": "npm version major && npm publish",
     "minor:publish": "npm version minor && npm publish",
     "build": "gulp browserify",
-    "test": "mocha --timeout=30000 --recursive && npm start",
+    "test:unit": "mocha --timeout=30000 --recursive",
     "lint": "eslint **/**/*.js"
   },
   "bin": {
@@ -36,7 +36,8 @@
     "istanbul": "^0.4.5",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
-    "nightmare": "^2.10.0"
+    "nightmare": "^2.10.0",
+    "yargs": "^7.1.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

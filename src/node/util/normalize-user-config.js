@@ -3,6 +3,8 @@ var config = require('./../../shared/config');
 var normalizeSlashes = util.normalizeSlashes;
 
 function normalizeUserConfig(userConfig) {
+    userConfig = (typeof userConfig === 'object' && userConfig) || {};
+
     // Normalize globals
     userConfig.globals = userConfig.globals || {};
 

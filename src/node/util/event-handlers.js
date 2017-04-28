@@ -1,7 +1,7 @@
 var util = require('./index');
 var consoleForwardHanlders = require('./console-forward-handlers');
 
-function consoleEventHandler(cb) {
+function consoleEventHandler(userConfig, cb) {
     return function () {
         var args = Array.from(arguments);
         var type = args[0];
@@ -10,7 +10,7 @@ function consoleEventHandler(cb) {
         if (type === 'log') {
             consoleForwardHanlders.consoleLogForwardHandler(args);
         } else if (type === 'warn') {
-            consoleForwardHanlders.consoleWarnForwardHandler(args, function () {
+            consoleForwardHanlders.consoleWarnForwardHandler(userConfig, args, function () {
                 cb();
             });
         }

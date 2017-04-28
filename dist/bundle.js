@@ -41422,7 +41422,7 @@ module.exports = {
         TEST_INDEX: "testIndex",
         DEFAULT_NEJ_PRO: "src/javascript",
         DEFAULT_TEST_ENTRY: './test',
-        DEFAULT_CONFIG_PATH: {
+        DEFAULT_CONFIG_FILENAME: {
             CONF: './../../../../nej-mocha.conf.js',
             CONFIG: './../../../../nej-mocha.config.js'
         },

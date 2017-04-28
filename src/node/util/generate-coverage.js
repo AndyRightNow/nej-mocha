@@ -2,12 +2,11 @@ var istanbul = require('istanbul');
 var path = require('path');
 var fs = require('fs');
 var util = require('./index');
-var userConfig = require('./get-user-config');
 
 let collector = new istanbul.Collector();
 let reporter = new istanbul.Reporter();
 
-module.exports = function generateCoverage(coverage, cb) {
+module.exports = function generateCoverage(userConfig, coverage, cb) {
     for (let key in coverage) {
         if (coverage.hasOwnProperty(key)) {
             let newKey = path.resolve(__dirname, `../../../${key}`);

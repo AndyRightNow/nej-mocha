@@ -52,7 +52,6 @@ module.exports = {
     // Optional options
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
-
     /**
      * Properties and nested properties to add to the `window` object. 
      * The object will be parse and add the exact same structure to the `window` object.

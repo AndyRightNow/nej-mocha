@@ -1,6 +1,5 @@
 var generateCoverage = require('./generate-coverage');
 var config = require('./../../shared/config');
-var userConfig = require('./get-user-config');
 var util = require('./index');
 
 function consoleLogForwardHandler(args) {
@@ -21,7 +20,7 @@ var consoleWarnForwardHandler = (function () {
     var doneFlag = false;
     var coverageFlag = false;
 
-    return function (args, cb) {
+    return function (userConfig, args, cb) {
         var content = args.join('');
 
         if (new RegExp(config.CONSTANT.MOCHA_DONE_SIGNAL).test(content)) {
@@ -35,7 +34,7 @@ var consoleWarnForwardHandler = (function () {
             coverageFlag = true;
 
             if (userConfig.coverage) {
-                generateCoverage(coverage, function (err) {
+                generateCoverage(userConfig, coverage, function (err) {
                     if (err) {
                         util.printRed('  ' + err);
                     }
