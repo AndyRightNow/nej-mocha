@@ -4,49 +4,39 @@ var path = require('path');
 var glob = require('glob');
 var _ = require('lodash');
 
+/* istanbul ignore next */
 function printGreen(str) {
     console.log(chalk.green(str));
 }
 
+/* istanbul ignore next */
 function printRed(str) {
     console.log(chalk.red(str));
 }
 
+/* istanbul ignore next */
 function printNewLine() {
     console.log("");
 }
 
+/* istanbul ignore next */
 function print() {
     console.log.apply(console, Array.from(arguments));
 }
 
+/* istanbul ignore next */
 function printAndNewLine() {
     print.apply(null, Array.from(arguments));
 
     printNewLine();
 }
 
-function walkSyncHelper(dir, filelist) {
-    var files;
-
-    try {
-        files = fs.readdirSync(dir);
-    } catch (err) {
-        console.log(err.message);
-
-        return [];
+function normalizeDir(dir) {
+    if (!/\.js$/.test(dir)) {
+        dir = path.resolve(dir, '**/**/*.js');
     }
 
-    filelist = filelist || [];
-    files.forEach(function (file) {
-        if (fs.statSync(path.join(dir, file)).isDirectory()) {
-            filelist = walkSyncHelper(path.join(dir, file), filelist);
-        } else {
-            filelist.push(path.join(dir, file));
-        }
-    });
-
-    return filelist;
+    return dir;
 }
 
 /**
@@ -59,26 +49,14 @@ function walkSyncHelper(dir, filelist) {
 function walkSync(dir) {
     let files;
 
+    dir = normalizeDir(dir);
+
     try {
         files = glob.sync(dir);
     } catch (err) {
         console.log(err.message);
 
-        return [];
-    }
-
-    // If '.js' extension is not provided, maybe any files wildcard or a concrete folder path
-    if (!/\.js$/.test(dir)) {
-        // Remove all paths with .js extensions
-        files = files.filter(function (f) {
-            return !/\.js$/.test(f);
-        });
-
-        files = files.map(function (d) {
-            return walkSyncHelper(d);
-        }).reduce(function (prev, cur) {
-            return prev.concat(cur);
-        }, []);
+        files = [];
     }
 
     return files;
@@ -94,25 +72,7 @@ function normalizeSlashes(path) {
     return path.replace(/[\\\/]+/g, '/');
 }
 
-/**
- * Recursively map all own properties with the return value of the callback
- * 
- * @param {any} obj 
- * @param {any} cb 
- */
-function recurForOwn(obj, cb) {
-    if (typeof obj === 'object') {
-        _.forOwn(obj, function (value, key) {
-            if (typeof value === 'object') {
-                recurForOwn(value, cb);
-            } else {
-                cb(value, key, obj);
-            }
-        });
-    }
-}
-
-
+/* istanbul ignore next */
 function exitProcess(shouldBrowserClosed, server) {
     if (shouldBrowserClosed) {
         if (server) {
@@ -145,9 +105,9 @@ module.exports = {
     printNewLine,
     print,
     printAndNewLine,
+    normalizeDir,
     walkSync,
     normalizeSlashes,
-    recurForOwn,
     exitProcess,
     normalizeCliOptionValue
 };

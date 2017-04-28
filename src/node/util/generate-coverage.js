@@ -1,7 +1,7 @@
 var istanbul = require('istanbul');
 var path = require('path');
 var fs = require('fs');
-var util = require('./index');
+var traverse = require('traverse');
 
 let collector = new istanbul.Collector();
 let reporter = new istanbul.Reporter();
@@ -23,11 +23,11 @@ module.exports = function generateCoverage(userConfig, coverage, cb) {
                 return cb(err);
             }
 
-            util.recurForOwn(coverage[newKey], (val, key, obj) => {
-                if (key === 'line') {
-                    obj[key] = val + lineCountBefore;
+            traverse(coverage[newKey]).forEach(function (val) {
+                if (this.key && this.key === 'line') {
+                    this.update(val + lineCountBefore);
                 }
-            });
+            })
         }
     }
     collector.add(coverage);

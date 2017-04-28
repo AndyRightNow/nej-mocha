@@ -17,7 +17,10 @@
     "nej-mocha": "./bin/nej-mocha"
   },
   "engines": {
-    "node": "^5.12.0"
+    "node": "5 || 6 || 7"
+  },
+  "devEngines": {
+    "node": "5 || 6 || 7"
   },
   "author": "AndyRightNow",
   "license": "MIT",
@@ -37,6 +40,7 @@
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "nightmare": "^2.10.0",
+    "traverse": "^0.6.6",
     "yargs": "^7.1.0"
   },
   "devDependencies": {
