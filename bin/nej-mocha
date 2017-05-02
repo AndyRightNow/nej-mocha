@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 
-var argv = require('yargs').argv;
-var util = require('./../src/node/util');
-var nejMocha = require('./../index');
-delete argv._;
-delete argv.$0;
+var argv = require('yargs').argv
+var util = require('./../src/node/util')
+var nejMocha = require('./../index')
+delete argv._
+delete argv.$0
 
-var config = argv.configPath;
+var config = argv.configPath
 
 if (!config) {
-    config = {};
+  config = {}
 
-    Object.keys(argv).forEach(function (key) {
-        config[key] = util.normalizeCliOptionValue(argv[key]);
-    });
+  Object.keys(argv).forEach(function (key) {
+    config[key] = util.normalizeCliOptionValue(argv[key])
+  })
 }
 
 nejMocha.run({
-    config
-});
+  config
+})

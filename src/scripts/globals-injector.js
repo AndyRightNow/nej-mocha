@@ -1,6 +1,7 @@
 /* global window */
 
-function globalsInjector (globalJSON) {
+function globalsInjector (globalJSON, global) {
+  global = global || window || {}
   function _injectHelper (obj, prop, value) {
     if (typeof value === 'object') {
       obj[prop] = {}
@@ -22,7 +23,6 @@ function globalsInjector (globalJSON) {
   }
 
   if (gs) {
-    var global = window || {}
     for (var k in gs) {
       if (gs.hasOwnProperty(k)) {
         _injectHelper(global || {}, k, gs[k])

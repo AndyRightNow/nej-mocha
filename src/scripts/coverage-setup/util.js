@@ -1,9 +1,17 @@
+/* global window */
 var config = require('./../../shared/config')
 
 var noop = () => true
 
 function getFilePath () {
-  return new Error().stack.match(/(at.*)/g)[1].replace('at ', '').replace(/\:\d+\:\d+$/, '').replace(/^http:\/\/.*?\//, '')
+  var ua = (typeof window !== 'undefined' && window.navigator && window.navigator.userAgent && window.navigator.userAgent.toLowerCase()) || ''
+
+  if (ua && !/chrome/.test(ua)) {
+    console.error('Please run the test index page in chromium browsers. Other browsers are currently not supported.')
+    return
+  }
+
+  return new Error().stack.match(/(at.*)/g)[1].replace('at ', '').replace(/:\d+:\d+$/, '').replace(/^http:\/\/.*?\//, '')
 }
 
 function getFunctionCode (fnStr) {
@@ -11,7 +19,7 @@ function getFunctionCode (fnStr) {
 }
 
 function getFunctionArgs (fnStr) {
-  return fnStr.match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[\(\)]/g, '').replace(/\/\/.*/g, '').replace(/\/\*(.|[\r\n])*\*\//g, '').replace(/[\s\r\n]/g, '').split(',')
+  return fnStr.match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[()]/g, '').replace(/\/\/.*/g, '').replace(/\/\*(.|[\r\n])*\*\//g, '').replace(/[\s\r\n]/g, '').split(',')
 }
 
 function instrumentFunction (fn, instrumenter) {

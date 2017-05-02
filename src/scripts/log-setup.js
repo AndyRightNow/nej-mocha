@@ -1,12 +1,16 @@
-function logSetup (console) {
-  var originalFn = console.log
+function logSetup (customConsole) {
+  if (!customConsole || !customConsole.log) {
+    return
+  }
+
+  var originalFn = customConsole.log
 
   // So that empty 'console.log()' is captured
-  console.log = function () {
+  customConsole.log = function () {
     if (!arguments.length) {
-      originalFn.call(console, ' ')
+      originalFn.call(customConsole, ' ')
     } else {
-      originalFn.apply(console, arguments)
+      originalFn.apply(customConsole, arguments)
     }
   }
 }
