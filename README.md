@@ -23,7 +23,7 @@ For NEJ users, unit testing could be a pain in the neck. This package solves the
     $ npm install nej-mocha --save-dev
     ```
 
-2. Configure your test files in `nej-mocha.conf.js`. If not, all `.js` files under `/test` in your working directory will be run recursively.
+2. [Configure your test files](#configurations) in `nej-mocha.conf.js`. If not, all `.js` files under `/test` in your working directory will be run recursively.
 
 3. Run the tests:
 
@@ -38,6 +38,38 @@ For NEJ users, unit testing could be a pain in the neck. This package solves the
         "test": "nej-mocha"
     }
     ```
+
+# Examples
+
+A test file will look like this:
+
+```javascript
+define([
+    "{pro}/..."
+], function(myModule) {
+    describe("My test", function() {
+        before("Some preparations", function() {
+            // Anything you want to run before the tests
+        });
+
+        it("should be ok", function() {
+            expect(true).to.be.true;
+        });
+
+        it("should be ok after a second", function(done) {
+            setTimeout(function () {
+                expect(true).to.be.true;
+
+                done();
+            }, 1000);
+        });
+
+        after("Some clean-up", function() {
+            // Anything you want to run after the tests
+        });
+    });
+});
+```
 
 # Configurations
 
@@ -195,6 +227,18 @@ module.exports = {
 }
 ```
 
+# CLI Options
+
+You can pass options in cli to override the options defined in your `nej-mocha.conf.js` file.
+
+For example:
+
+```bash
+$ nej-mocha --shouldBrowserClosed=false --headless=false
+```
+
+This command will override `shouldBrowserClosed` and `headless` options. For more options, see [configurations](#configurations).
+
 # Dependency Injection
 
 You can replace paths that match the given pattern with the new paths you provided at runtime. In other words, you can replace some dependencies with some mocked objects or data. Therefore you don't need and switches or back doors in your code to make it easier to test.
@@ -234,34 +278,34 @@ You can generate test coverage reports by setting the `coverage` option in `nej-
 
 Add `/* nej-mocha-cover */` or `// nej-mocha-cover` in the callback function of `NEJ.define` and this file will be covered and added to the reports generated.
 
-# Examples
+# API
 
-A test file will look like this:
+You can also run `nej-mocha` programmatically
 
 ```javascript
-define([
-    "{pro}/..."
-], function(myModule) {
-    describe("My test", function() {
-        before("Some preparations", function() {
-            // Anything you want to run before the tests
-        });
+const nejMocha = require('nej-mocha');
 
-        it("should be ok", function() {
-            expect(true).to.be.true;
-        });
+nejMocha.run({
+    config: './path/to/your/config/file'
+}, (err) => {
+    console.log(err);
+});
+```
 
-        it("should be ok after a second", function(done) {
-            setTimeout(function () {
-                expect(true).to.be.true;
+or use an object directly to config `nej-mocha`. Options in the config object here will override options defined in `nej-mocha.conf.js` in your current working directory. If no config file is found, `nej-mocha` will use only the options defined in your config object.
 
-                done();
-            }, 1000);
-        });
+```javascript
+const nejMocha = require('nej-mocha');
 
-        after("Some clean-up", function() {
-            // Anything you want to run after the tests
-        });
-    });
+nejMocha.run({
+    config: {
+        entries: [
+            './test'
+        ],
+        shouldBrowserClosed: true
+        // ...
+    }
+}, (err) => {
+    console.log(err);
 });
 ```
