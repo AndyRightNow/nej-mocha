@@ -3,6 +3,7 @@
 
 var expect = require('chai').expect
 var util = require('./../../../../src/scripts/coverage-setup/util')
+var config = require('./../../../../src/shared/config')
 var instrumenter = new (require('istanbul').Instrumenter)()
 
 describe('src/scripts/coverage-setup/util', () => {
@@ -39,6 +40,32 @@ describe('src/scripts/coverage-setup/util', () => {
 
       var newFn = util.instrumentFunction(fn, instrumenter)
       expect(newFn(1, 1, 1)).to.equal(3)
+    })
+  })
+
+  describe('Function applyInjections', () => {
+    it('should replace the literally matched paths with the new paths', () => {
+      let arr = [{
+        pattern: 'some/literal/path',
+        path: 'some/new/path'
+      }]
+      let deps = [
+        'some/literal/path'
+      ]
+      util.applyInjections(config.CONSTANT.INJECT_IDENTIFIER, deps, arr)
+      expect(deps[0]).to.equal(arr[0].path)
+    })
+    
+    it('should replace the paths matched by regex with the new paths', () => {
+      let arr = [{
+        pattern: /some\/.*?\/path/,
+        path: 'some/new/path'
+      }]
+      let deps = [
+        'some/literal/path'
+      ]
+      util.applyInjections(config.CONSTANT.INJECT_IDENTIFIER, deps, arr)
+      expect(deps[0]).to.equal(arr[0].path)
     })
   })
 })

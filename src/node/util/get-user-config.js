@@ -1,6 +1,5 @@
 var path = require('path')
 var config = require('./../../shared/config')
-var util = require('./index')
 var normalizeUserConfig = require('./normalize-user-config')
 
 var defaultConfPath = path.resolve(process.cwd(), config.CONSTANT.DEFAULT_CONFIG_FILENAME.CONF)
@@ -19,9 +18,7 @@ function getUserConfig (path) {
       try {
         userConfig = require(defaultConfigPath)
       } catch (e) {
-        userConfig = {}
-        util.printRed('  Invalid configuration path.')
-        process.exit(0)
+        throw new Error('Invalid config path. Neither nej-mocha.conf.js nor nej-mocha.config.js is found under your current working directory. ')
       }
     }
   }

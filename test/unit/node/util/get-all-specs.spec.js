@@ -1,4 +1,5 @@
 /* global describe, it */
+/* eslint no-unused-expressions: off */
 
 var expect = require('chai').expect
 

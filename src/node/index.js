@@ -4,20 +4,33 @@ var Nightmare = require('nightmare')
 var createServer = require('./server')
 var config = require('./../shared/config')
 var getUserConfig = require('./util/get-user-config')
+var normalizeUserConfig = require('./util/normalize-user-config')
 var util = require('./util')
 var eventHandlers = require('./util/event-handlers')
-var userConfig = getUserConfig()
 
 function run (options, callback) {
+  var userConfig
+
+  try {
+    userConfig = getUserConfig()
+  } catch (e) {
+    userConfig = {}
+  }
+
   callback = callback || util.noop
   if (options) {
     var optionsConfig = options.config
 
     if (optionsConfig) {
       if (typeof optionsConfig === 'string') {
-        userConfig = getUserConfig(path.resolve(process.cwd(), optionsConfig))
+        try {
+          userConfig = getUserConfig(path.resolve(process.cwd(), optionsConfig))
+        } catch (error) {
+          callback(error)
+          return
+        }
       } else if (typeof optionsConfig === 'object') {
-        userConfig = _.merge(userConfig, options.config || {})
+        userConfig = normalizeUserConfig(_.merge(userConfig, options.config || {}))
       }
     }
   }

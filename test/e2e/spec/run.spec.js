@@ -7,9 +7,18 @@ describe('src/node/index', () => {
   describe('Run with config files', () => {
     it('should run with no errors', done => {
       nejMocha.run({
-        config: './nej-mocha.conf.js'
+        config: './test/e2e/fixtures/nej-mocha.conf.js'
       }, (err) => {
         expect(err).to.be.undefined
+        done()
+      })
+    })
+    
+    it('should throw an error if path is invalid', done => {
+      nejMocha.run({
+        config: './invalid-mocha.conf.js'
+      }, (err) => {
+        expect(err).to.not.be.undefined
         done()
       })
     })
