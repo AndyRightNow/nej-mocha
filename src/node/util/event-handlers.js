@@ -19,6 +19,7 @@ function consoleEventHandler (userConfig, cb) {
 
 function pageEventHandler (cb) {
   return function (type, message, stack) {
+    /* istanbul ignore if */
     if (type === 'error') {
       util.printRed('  ' + message)
       util.printRed('  ' + stack)

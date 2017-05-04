@@ -41,19 +41,21 @@ var consoleWarnForwardHandler = (function () {
 
       if (userConfig.coverage) {
         generateCoverage(userConfig, coverage, function (err) {
+          /* istanbul ignore if */
           if (err) {
             util.printRed('  ' + err)
             cb(err)
             resetFlags()
             return
           }
-
+          /* istanbul ignore if */
           if (doneFlag) {
             cb()
             resetFlags()
           }
         })
       } else {
+        /* istanbul ignore if */
         if (doneFlag) {
           cb()
           resetFlags()
