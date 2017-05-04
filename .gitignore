@@ -5,3 +5,4 @@ bower_components
 *.log
 coverage
 test.json
+.nyc_output
