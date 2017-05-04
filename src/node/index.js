@@ -33,6 +33,8 @@ function run (options, callback) {
         userConfig = normalizeUserConfig(_.merge(userConfig, options.config || {}))
       }
     }
+
+    this.userConfig = userConfig
   }
 
   var addr = 'http://localhost:' + userConfig.testRunnerPort + '/' + config.CONSTANT.TEST_INDEX

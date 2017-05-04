@@ -239,6 +239,12 @@ $ nej-mocha --shouldBrowserClosed=false --headless=false
 
 This command will override `shouldBrowserClosed` and `headless` options. For more options, see [configurations](#configurations).
 
+### Other options:
+
+```bash
+--configPath=./path/to/your/config # Directly choose another config file. If this option is passed, other options are ignored
+```
+
 # Dependency Injection
 
 You can replace paths that match the given pattern with the new paths you provided at runtime. In other words, you can replace some dependencies with some mocked objects or data. Therefore you don't need and switches or back doors in your code to make it easier to test.
