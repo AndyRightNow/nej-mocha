@@ -20,7 +20,8 @@ function createServer (userConfig) {
       nejPathAliases: userConfig.nejPathAliases,
       userConfig: userConfig,
       scriptsToInject: userConfig.scriptsToInject,
-      dependencyInjectionArr: userConfig.inject
+      dependencyInjectionArr: userConfig.inject,
+      __DEV_TEST__: userConfig.__DEV_TEST__
     })
   })
 

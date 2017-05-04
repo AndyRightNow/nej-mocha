@@ -1,18 +1,6 @@
-/* global window */
 var config = require('./../../shared/config')
 
 var noop = () => true
-
-function getFilePath () {
-  var ua = (typeof window !== 'undefined' && window.navigator && window.navigator.userAgent && window.navigator.userAgent.toLowerCase()) || ''
-
-  if (ua && !/chrome/.test(ua)) {
-    console.error('Please run the test index page in chromium browsers. Other browsers are currently not supported.')
-    return
-  }
-
-  return new Error().stack.match(/(at.*)/g)[1].replace('at ', '').replace(/:\d+:\d+$/, '').replace(/^http:\/\/.*?\//, '')
-}
 
 function getFunctionCode (fnStr) {
   return fnStr.replace(/^function(.|[\r\n])*?\{[\s\r\n]*/, '').replace(/\}$/, '')
@@ -22,10 +10,9 @@ function getFunctionArgs (fnStr) {
   return fnStr.match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[()]/g, '').replace(/\/\/.*/g, '').replace(/\/\*(.|[\r\n])*\*\//g, '').replace(/[\s\r\n]/g, '').split(',')
 }
 
-function instrumentFunction (fn, instrumenter) {
+function instrumentFunction (fn, instrumenter, filePath) {
   fn = fn || noop
   var fnStr = fn.toString()
-  var filePath = getFilePath()
 
   if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr)) {
     var fnCode = getFunctionCode(fnStr)
@@ -60,7 +47,6 @@ function applyInjections (fn, deps, dependencyInjectionArr) {
 }
 
 module.exports = {
-  getFilePath,
   getFunctionCode,
   getFunctionArgs,
   instrumentFunction,

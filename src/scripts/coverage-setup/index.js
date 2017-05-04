@@ -9,7 +9,21 @@ function coverageSetup () {
   var instrumenter = new Instrumenter()
   /* eslint no-undef:off */
   NEJ.define = define = function () {
+    function getFilePath () {
+      var ua = (typeof window !== 'undefined' && window.navigator && window.navigator.userAgent && window.navigator.userAgent.toLowerCase()) || ''
+
+      if (!ua || !/chrome/.test(ua)) {
+        console.error('Please run the test index page in chromium browsers. Other browsers are currently not supported.')
+        return ``
+      }
+      var matched = new Error().stack.match(/(at.*)/g)
+      var path = matched && matched.length && matched[matched.length - 1]
+      
+      return path && path.replace('at ', '').replace(/:\d+:\d+$/, '').replace(/^http:\/\/.*?\//, '')
+    }
+
     var uri, deps, cb
+    var filePath = getFilePath()
 
     switch (arguments.length) {
       case 1:
@@ -28,7 +42,7 @@ function coverageSetup () {
         return
     }
 
-    util.instrumentFunction(cb, instrumenter)
+    cb = util.instrumentFunction(cb, instrumenter, filePath) || cb
     util.applyInjections(cb, deps, dependencyInjectionArr)
 
     originalDefine.apply(NEJ, uri ? [uri, deps, cb] : [deps, cb])

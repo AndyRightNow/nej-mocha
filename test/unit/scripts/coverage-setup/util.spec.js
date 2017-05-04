@@ -3,28 +3,28 @@
 
 var expect = require('chai').expect
 var util = require('./../../../../src/scripts/coverage-setup/util')
+var instrumenter = new (require('istanbul').Instrumenter)()
 
 describe('src/scripts/coverage-setup/util', () => {
-  describe('Function getFunctionCode', () => {
-    it('should get the code body of a stringified function', () => {
-      let code = util.getFunctionCode(function () {
-        /* eslint-disable no-unused-vars */
-        let i = 0
-        /* eslint-enable no-unused-vars */
-      }.toString())
+  describe('Function getFunctionName', () => {
+    it('should return the function name', () => {
+      function fn (a, b, c) {
+        return a + b + c
+      }
 
-      expect(code).to.contain('let i = 0')
+      expect(util.getFunctionName(fn.toString())).to.equal('fn')
     })
   })
-  describe('Function getFunctionArgs', () => {
-    it('should return an array of function arguments', () => {
-      let args = util.getFunctionArgs(function (arg1, arg2, arg3) {
-        /* eslint-disable no-unused-vars */
-        let i = 0
-        /* eslint-enable no-unused-vars */
-      }.toString())
+  describe('Function instrumentFunction', () => {
+    it('should instrument the function and keep the function intact', () => {
+      function fn (a, b, c) {
+        /* nej-mocha-cover */
+        return a + b + c
+      }
 
-      expect(args).to.include.members(['arg1', 'arg2', 'arg3'])
+      var newFn = util.instrumentFunction(fn, instrumenter)
+      console.log(newFn.toString())
+      expect(newFn(1, 1, 1)).to.equal(3)
     })
   })
 })

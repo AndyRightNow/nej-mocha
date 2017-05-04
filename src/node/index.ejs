@@ -1,12 +1,15 @@
 <% var url = 'http://localhost:' + PORT.toString(); %>
-<% var nodeModulesPath = url + "/node_modules/"; %>
-<% var repoPath = nodeModulesPath + "nej-mocha/"; %>
+<% var repoPath = url + "/node_modules/nej-mocha/"; %>
+
+<% if (__DEV_TEST__) { %>
+<%     repoPath = url + '/'; %>
+<% } %>
+
 <% var repoNodeModulesPath = repoPath + "node_modules/"; %>
 
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="<%- nodeModulesPath %>mocha/mocha.css" />
 </head>
 
 <body>

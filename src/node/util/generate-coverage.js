@@ -7,10 +7,12 @@ let collector = new istanbul.Collector()
 let reporter = new istanbul.Reporter()
 
 function getLineCountBeforeCallbackFn (fileContent) {
-  return fileContent.toString('utf-8').match(/(.|[\s\r\n])*?function(.|[\s\r\n])*?\{[\s\r\n]*/)[0].split(/[\r\n]+/).length - 1
+  return fileContent && fileContent.toString('utf-8').match(/(.|[\s\r\n])*?function(.|[\s\r\n])*?\{[\s\r\n]*/)[0].split(/[\r\n]+/).length - 1
 }
 
 function adjustLineNumbers (coverageObj, lineCountBefore) {
+  lineCountBefore = lineCountBefore || 0
+
   traverse(coverageObj).forEach(function (val) {
     if (this.key && this.key === 'line') {
       this.update(val + lineCountBefore)
@@ -28,10 +30,10 @@ function updatePathsToAbsPaths (coverage, key) {
 }
 
 /* istanbul ignore next */
-function safeGetFileContentSync (path, cb) {
+function safeGetFileContentSync (p, cb) {
   var fileContent
   try {
-    fileContent = fs.readFileSync(path.resolve(path))
+    fileContent = fs.readFileSync(path.resolve(p))
   } catch (err) {
     return cb(err)
   }

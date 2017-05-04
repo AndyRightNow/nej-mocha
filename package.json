@@ -10,7 +10,9 @@
     "major:publish": "npm version major && npm publish",
     "minor:publish": "npm version minor && npm publish",
     "build": "gulp browserify",
-    "test:unit": "mocha --timeout=30000 --recursive",
+    "test:unit": "mocha --timeout=30000 --recursive ./test/unit/",
+    "test:e2e": "node ./test/e2e/index.spec.js",
+    "test": "npm run test:unit && npm run test:e2e",
     "lint": "eslint **/**/*.js"
   },
   "bin": {
