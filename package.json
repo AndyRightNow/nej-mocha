@@ -11,8 +11,10 @@
     "minor:publish": "npm version minor && npm publish",
     "build": "gulp browserify",
     "test:unit": "mocha --timeout=30000 --recursive ./test/unit/",
-    "test:e2e": "node ./test/e2e/index.spec.js",
+    "test:e2e": "mocha --timeout=30000 --recursive ./test/e2e/spec/**/**/*.spec.js",
     "test": "npm run test:unit && npm run test:e2e",
+    "test:unit:cover": "nyc npm run test:unit",
+    "test:e2e:cover": "nyc npm run test:e2e",
     "lint": "eslint **/**/*.js"
   },
   "bin": {

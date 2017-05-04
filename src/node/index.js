@@ -8,7 +8,8 @@ var util = require('./util')
 var eventHandlers = require('./util/event-handlers')
 var userConfig = getUserConfig()
 
-function run (options) {
+function run (options, callback) {
+  callback = callback || util.noop
   if (options) {
     var optionsConfig = options.config
 
@@ -27,23 +28,23 @@ function run (options) {
     show: !userConfig.headless
   })
 
-  var exitProcess = util.exitProcess.bind(null, userConfig.shouldBrowserClosed)
+  var finish = util.finish.bind(null, userConfig.shouldBrowserClosed)
 
   var runningServer = createServer(userConfig).listen(userConfig.testRunnerPort, function () {
-    exitProcess = exitProcess.bind(null, runningServer)
+    finish = finish.bind(null, runningServer, nightmare, callback)
 
     console.log('  Test server is running on ' + userConfig.testRunnerPort)
     console.log('  Tests are starting...')
 
     nightmare
       .viewport(1024, 768)
-      .on('page', eventHandlers.pageEventHandler(exitProcess))
-      .on('console', eventHandlers.consoleEventHandler(userConfig, exitProcess))
+      .on('page', eventHandlers.pageEventHandler(finish))
+      .on('console', eventHandlers.consoleEventHandler(userConfig, finish))
       .goto(addr)
       .catch(function (err) {
         util.printRed('  ' + err)
 
-        exitProcess()
+        finish(err)
       })
   })
 }

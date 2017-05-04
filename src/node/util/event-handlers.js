@@ -22,8 +22,10 @@ function pageEventHandler (cb) {
     if (type === 'error') {
       util.printRed('  ' + message)
       util.printRed('  ' + stack)
+      var err = new Error(message)
+      err.stack = stack
 
-      cb()
+      cb(err)
     }
   }
 }

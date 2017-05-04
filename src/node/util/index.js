@@ -71,13 +71,15 @@ function normalizeSlashes (path) {
 }
 
 /* istanbul ignore next */
-function exitProcess (shouldBrowserClosed, server) {
+function finish (shouldBrowserClosed, server, proc, callback, err) {
   if (shouldBrowserClosed) {
     if (server) {
       server.close()
     }
-    process.exit(0)
+    proc.end()
   }
+
+  callback(err)
 }
 
 function normalizeCliOptionValue (val) {
@@ -97,6 +99,10 @@ function normalizeCliOptionValue (val) {
   return parsed
 }
 
+function noop () {
+  return true
+}
+
 module.exports = {
   printGreen,
   printRed,
@@ -106,6 +112,7 @@ module.exports = {
   normalizeDir,
   walkSync,
   normalizeSlashes,
-  exitProcess,
-  normalizeCliOptionValue
+  finish,
+  normalizeCliOptionValue,
+  noop
 }

@@ -20,6 +20,11 @@ var consoleWarnForwardHandler = (function () {
   var doneFlag = false
   var coverageFlag = false
 
+  function resetFlags () {
+    doneFlag = false
+    coverageFlag = false
+  }
+
   return function (userConfig, args, cb) {
     var content = args.join('')
 
@@ -28,24 +33,30 @@ var consoleWarnForwardHandler = (function () {
 
       if (coverageFlag && doneFlag) {
         cb()
+        resetFlags()
       }
     } else if (new RegExp(config.CONSTANT.HAS_COVERAGE_SIGNAL).test(content)) {
-      var coverage = JSON.parse(args[1])
       coverageFlag = true
+      var coverage = JSON.parse(args[1])
 
       if (userConfig.coverage) {
         generateCoverage(userConfig, coverage, function (err) {
           if (err) {
             util.printRed('  ' + err)
+            cb(err)
+            resetFlags()
+            return
           }
 
           if (doneFlag) {
             cb()
+            resetFlags()
           }
         })
       } else {
         if (doneFlag) {
           cb()
+          resetFlags()
         }
       }
     }
