@@ -41242,7 +41242,7 @@ function coverageSetup () {
       }
       var matched = new Error().stack.match(/(at.*)/g)
       var path = matched && matched.length && matched[matched.length - 1]
-      
+
       return path && path.replace('at ', '').replace(/:\d+:\d+$/, '').replace(/^http:\/\/.*?\//, '')
     }
 
@@ -41292,7 +41292,7 @@ function instrumentFunction (fn, instrumenter, filePath) {
   fn = fn || noop
   var fnStr = fn.toString()
 
-  if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr)) {
+  if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr) && window.userConfig.coverage) {
     var fnCode = getFunctionCode(fnStr)
     var fnArgs = getFunctionArgs(fnStr)
 

@@ -16,7 +16,8 @@
     "test:cover": "nyc npm run test",
     "test:unit:cover": "nyc npm run test:unit",
     "test:e2e:cover": "nyc npm run test:e2e",
-    "lint": "eslint **/**/*.js"
+    "lint": "eslint **/**/*.js",
+    "pre-push": "npm run build && npm run lint && npm run test:cover"
   },
   "bin": {
     "nej-mocha": "./bin/nej-mocha"

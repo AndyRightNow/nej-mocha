@@ -25,6 +25,7 @@ describe('src/scripts/log-setup', () => {
     logSetup(testConsole)
 
     testConsole.log()
+    testConsole.log(1)
 
     expect(testConsole.logged[0]).to.equal(' ')
   })

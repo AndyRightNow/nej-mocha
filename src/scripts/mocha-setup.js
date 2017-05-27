@@ -1,4 +1,5 @@
 module.exports = function mochaSetup (mocha, mochaOptions) {
+  /* istanbul ignore if */
   if (!mocha) {
     return
   }

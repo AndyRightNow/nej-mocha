@@ -14,7 +14,7 @@ function instrumentFunction (fn, instrumenter, filePath) {
   fn = fn || noop
   var fnStr = fn.toString()
 
-  if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr)) {
+  if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr) && window.userConfig.coverage) {
     var fnCode = getFunctionCode(fnStr)
     var fnArgs = getFunctionArgs(fnStr)
 

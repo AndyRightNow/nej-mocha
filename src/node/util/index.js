@@ -52,8 +52,10 @@ function walkSync (dir) {
   try {
     files = glob.sync(dir)
   } catch (err) {
+    /* istanbul ignore next */
     console.log(err.message)
 
+    /* istanbul ignore next */
     files = []
   }
 
@@ -99,6 +101,7 @@ function normalizeCliOptionValue (val) {
   return parsed
 }
 
+/* istanbul ignore next */
 function noop () {
   return true
 }

@@ -1,6 +1,8 @@
 module.exports = {
   entries: [
-    './test/e2e/fixtures/test/**/**/*.spec.js'
+    './test/e2e/fixtures/test/conditional-add.spec.js',
+    './test/e2e/fixtures/test/add.spec.js',
+    './test/e2e/fixtures/test/sub.spec.js'
   ],
   __DEV_TEST__: true,
   nejPathAliases: {

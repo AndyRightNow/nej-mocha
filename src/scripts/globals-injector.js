@@ -19,6 +19,7 @@ function globalsInjector (globalJSON, global) {
   try {
     gs = JSON.parse(globalJSON)
   } catch (e) {
+    /* istanbul ignore next */
     gs = {}
   }
 

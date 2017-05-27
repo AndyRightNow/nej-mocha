@@ -1,0 +1,17 @@
+{
+    "extends": "eslint:recommended",
+    "env": {
+        "browser": true,
+        "commonjs": false,
+        "es6": true,
+        "node": false,
+        "shared-node-browser": true
+    },
+    "globals": {
+        "require": true,
+        "module": true
+    },
+    "rules": {
+        "no-console": "warn"
+    }
+}

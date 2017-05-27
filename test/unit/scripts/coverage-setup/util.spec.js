@@ -5,6 +5,11 @@ var expect = require('chai').expect
 var util = require('./../../../../src/scripts/coverage-setup/util')
 var config = require('./../../../../src/shared/config')
 var instrumenter = new (require('istanbul').Instrumenter)()
+global.window = {
+  userConfig: {
+    coverage: true
+  }
+}
 
 describe('src/scripts/coverage-setup/util', () => {
   describe('Function getFunctionCode', () => {
@@ -32,14 +37,21 @@ describe('src/scripts/coverage-setup/util', () => {
   })
 
   describe('Function instrumentFunction', () => {
+    function fn (a, b, c) {
+      /* nej-mocha-cover */
+      return a + b + c
+    }
     it('should instrument the function and keep the function intact', () => {
-      function fn (a, b, c) {
-        /* nej-mocha-cover */
-        return a + b + c
-      }
-
       var newFn = util.instrumentFunction(fn, instrumenter)
       expect(newFn(1, 1, 1)).to.equal(3)
+    })
+
+    it('should not instrument the function if coverage property is set to false in userConfig', () => {
+      /* global window */
+      window.userConfig.coverage = false
+
+      var newFn = util.instrumentFunction(fn, instrumenter)
+      expect(newFn).to.be.undefined
     })
   })
 
@@ -55,7 +67,7 @@ describe('src/scripts/coverage-setup/util', () => {
       util.applyInjections(config.CONSTANT.INJECT_IDENTIFIER, deps, arr)
       expect(deps[0]).to.equal(arr[0].path)
     })
-    
+
     it('should replace the paths matched by regex with the new paths', () => {
       let arr = [{
         pattern: /some\/.*?\/path/,
