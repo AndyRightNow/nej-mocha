@@ -41365,6 +41365,7 @@ function globalsInjector (globalJSON, global) {
   try {
     gs = JSON.parse(globalJSON)
   } catch (e) {
+    /* istanbul ignore next */
     gs = {}
   }
 
@@ -41401,6 +41402,7 @@ module.exports = logSetup
 
 },{}],145:[function(require,module,exports){
 module.exports = function mochaSetup (mocha, mochaOptions) {
+  /* istanbul ignore if */
   if (!mocha) {
     return
   }
@@ -41440,7 +41442,7 @@ module.exports = runTest
 module.exports = {
   CONSTANT: {
     DEFAULT_PORT: 8004,
-    TEST_INDEX: 'testIndex',
+    TEST_INDEX: 'nej-mocha',
     DEFAULT_NEJ_PRO: 'src/javascript',
     DEFAULT_TEST_ENTRY: './test',
     DEFAULT_CONFIG_FILENAME: {

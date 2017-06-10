@@ -315,3 +315,12 @@ nejMocha.run({
     console.log(err);
 });
 ```
+For more API documentations, see [API](/API.md).
+
+# UI Testing and Debugging in Browsers
+
+After setting the flag `shouldBrowserClosed` to `false` and starting the tests, you can open the url:
+
+`http://localhost:{testRunnerPort}/nej-mocha`
+
+in browsers to test and debug your code and UIs. The `testRunnerPort` can also be set in the configurations. See [configurations](#configurations).

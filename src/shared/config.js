@@ -1,7 +1,7 @@
 module.exports = {
   CONSTANT: {
     DEFAULT_PORT: 8004,
-    TEST_INDEX: 'testIndex',
+    TEST_INDEX: 'nej-mocha',
     DEFAULT_NEJ_PRO: 'src/javascript',
     DEFAULT_TEST_ENTRY: './test',
     DEFAULT_CONFIG_FILENAME: {
