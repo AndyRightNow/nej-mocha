@@ -18,6 +18,6 @@ run(options: {
 
 | Parameter Name | Type            | Description                                      | Required |
 |:--------------:|-----------------|--------------------------------------------------|----------|
-| options.config | String / Object | The path to the config file or the config object | **true** |
+| options.config | String / ConfigurationObject | The path to the config file or the config object | **true** |
 | callback | Function | The callback to run after the tests are done. You must explicitly exit the node process here. | **true** |
 
