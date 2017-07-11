@@ -101,6 +101,32 @@ function normalizeCliOptionValue (val) {
   return parsed
 }
 
+function getErrorOutput (err, indent) {
+  if (!err) {
+    return ''
+  }
+  indent = indent || ''
+
+  var output = ''
+  var errorProps = [
+    'details',
+    'message',
+    'stack',
+    'url'
+  ]
+  var newLine = '\n\r'
+
+  for (let i = 0, l = errorProps.length, val; i < l; i++) {
+    val = err[errorProps[i]]
+
+    if (val) {
+      output += (indent + err[errorProps[i]] + newLine)
+    }
+  }
+
+  return output
+}
+
 /* istanbul ignore next */
 function noop () {
   return true
@@ -117,5 +143,6 @@ module.exports = {
   normalizeSlashes,
   finish,
   normalizeCliOptionValue,
-  noop
+  noop,
+  getErrorOutput
 }

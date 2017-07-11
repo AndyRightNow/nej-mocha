@@ -20,7 +20,7 @@ nejMocha.run({
   config
 }, (err) => {
   if (err) {
-    util.printRed(err)
+    util.printRed(util.getErrorOutput(err))
   }
 
   if (nejMocha.userConfig.shouldBrowserClosed) {

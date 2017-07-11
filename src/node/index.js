@@ -57,7 +57,7 @@ function run (options, callback) {
       .on('console', eventHandlers.consoleEventHandler(userConfig, finish))
       .goto(addr)
       .catch(function (err) {
-        util.printRed('  ' + err)
+        util.printRed(util.getErrorOutput(err, '  '))
 
         finish(err)
       })

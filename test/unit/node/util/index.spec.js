@@ -61,4 +61,30 @@ describe('src/node/util/index', () => {
       expect(util.normalizeCliOptionValue('undefined')).to.be.undefined
     })
   })
+
+  describe('Function getErrorOutput', () => {
+    it('should compose the error info with the indent', () => {
+      var err = {
+        details: 'details',
+        message: 'msg',
+        stack: 'some stack',
+        url: 'url'
+      }
+
+      var ret = util.getErrorOutput(err, '  ')
+
+      expect(ret.match(/[\n\r]/g).length).to.be.greaterThan(7)
+    })
+    
+    it('should compose the partial error info with the indent', () => {
+      var err = {
+        details: 'details',
+        message: 'msg'
+      }
+
+      var ret = util.getErrorOutput(err, '  ')
+
+      expect(ret.match(/[\n]/g).length).to.be.lessThan(3)
+    })
+  })
 })
