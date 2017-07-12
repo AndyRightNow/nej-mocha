@@ -1,5 +1,11 @@
 node_modules
-bower_components
+bower_components/nej/res
+bower_components/nej/doc
+bower_components/nej/src/util
+bower_components/nej/src/ui
+bower_components/nej/src/base
+bower_components/nej/*.md
+bower_components/nej/*.json
 .vscode
 *.log.*
 *.log

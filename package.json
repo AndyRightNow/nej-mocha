@@ -4,7 +4,6 @@
   "description": "A test framework specifically for NEJ module system users.",
   "main": "index.js",
   "scripts": {
-    "postinstall": "bower install",
     "patch:publish": "npm version patch && npm publish",
     "major:publish": "npm version major && npm publish",
     "minor:publish": "npm version minor && npm publish",
@@ -24,10 +23,10 @@
     "nej-mocha": "./bin/nej-mocha"
   },
   "engines": {
-    "node": "5 || 6 || 7"
+    "node": "5 || 6 || 7 || 8"
   },
   "devEngines": {
-    "node": "5 || 6 || 7"
+    "node": "5 || 6 || 7 || 8"
   },
   "author": "AndyRightNow",
   "license": "MIT",
@@ -56,6 +55,7 @@
     "gulp-browserify": "^0.5.1",
     "gulp-rename": "^1.2.2",
     "nyc": "^10.2.0",
-    "standard": "^10.0.2"
+    "standard": "^10.0.2",
+    "bower": "^1.8.0"
   }
 }
