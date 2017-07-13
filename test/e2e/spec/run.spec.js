@@ -40,7 +40,7 @@ describe('src/node/index', () => {
             useColors: true,
             reporter: 'spec'
           },
-          testRunnerPort: 8004,
+          testRunnerPort: 8005,
           shouldBrowserClosed: true,
           headless: true,
           coverage: true,

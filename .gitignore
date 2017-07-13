@@ -1,5 +1,7 @@
 node_modules
-bower_components
+bower_components/nej/res
+bower_components/nej/doc
+bower_components/nej/**/**/test
 .vscode
 *.log.*
 *.log

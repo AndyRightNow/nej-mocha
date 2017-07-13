@@ -19,6 +19,6 @@
     "tests"
   ],
   "dependencies": {
-    "nej": "^0.3.8"
+    "nej": "^0.4.3"
   }
 }
