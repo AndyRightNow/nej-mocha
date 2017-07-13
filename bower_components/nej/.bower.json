@@ -1,0 +1,29 @@
+{
+  "name": "nej",
+  "version": "0.3.9",
+  "homepage": "https://github.com/genify/nej",
+  "authors": [
+    "genify <caijf@corp.netease.com>"
+  ],
+  "description": "JavaScript Cross-Platform Framework",
+  "main": "./src/define.js",
+  "keywords": [
+    "nej",
+    "javascript",
+    "cross platform",
+    "framework"
+  ],
+  "ignore": [
+    ".*"
+  ],
+  "license": "MIT",
+  "_release": "0.3.9",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.9",
+    "commit": "eea6ebca9572c55b9f5f6541669a0adf48fc600e"
+  },
+  "_source": "https://github.com/genify/nej.git",
+  "_target": "^0.3.8",
+  "_originalSource": "nej"
+}
