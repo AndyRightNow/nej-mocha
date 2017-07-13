@@ -1,6 +1,6 @@
 {
   "name": "nej",
-  "version": "0.3.9",
+  "version": "0.4.3",
   "homepage": "https://github.com/genify/nej",
   "authors": [
     "genify <caijf@corp.netease.com>"
@@ -14,16 +14,20 @@
     "framework"
   ],
   "ignore": [
-    ".*"
+    ".*",
+    "**/test/",
+    "**/demo/",
+    "doc",
+    "res"
   ],
   "license": "MIT",
-  "_release": "0.3.9",
+  "_release": "0.4.3",
   "_resolution": {
     "type": "version",
-    "tag": "0.3.9",
-    "commit": "eea6ebca9572c55b9f5f6541669a0adf48fc600e"
+    "tag": "0.4.3",
+    "commit": "a9018ae908b28853291a4588d2883f20523e6d1a"
   },
   "_source": "https://github.com/genify/nej.git",
-  "_target": "^0.3.8",
+  "_target": "^0.4.3",
   "_originalSource": "nej"
 }
