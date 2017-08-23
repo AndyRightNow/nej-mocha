@@ -29,7 +29,7 @@ describe('src/node/index', () => {
       nejMocha.run({
         config: {
           entries: [
-            './test/e2e/fixtures/test/**/**/*.spec.js'
+            './test/e2e/fixtures/test/**/**/add.spec.js'
           ],
           __DEV_TEST__: true,
           nejPathAliases: {

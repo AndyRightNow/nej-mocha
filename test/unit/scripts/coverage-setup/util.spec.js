@@ -39,6 +39,7 @@ describe('src/scripts/coverage-setup/util', () => {
   describe('Function instrumentFunction', () => {
     function fn (a, b, c) {
       /* nej-mocha-cover */
+      /* nej-mocha-inject */
       return a + b + c
     }
     it('should instrument the function and keep the function intact', () => {

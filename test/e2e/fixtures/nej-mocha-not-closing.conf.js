@@ -11,7 +11,7 @@ module.exports = {
     useColors: true,
     reporter: 'spec'
   },
-  testRunnerPort: 8004,
+  testRunnerPort: 8324,
   shouldBrowserClosed: false,
   headless: true,
   coverage: true,
@@ -20,5 +20,9 @@ module.exports = {
       'lcov',
       'text'
     ]
-  }
+  },
+  inject: [{
+    pattern: 'pro/does/not/exist',
+    path: '{pro}/add.js'
+  }]
 }

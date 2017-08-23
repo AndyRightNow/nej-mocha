@@ -8,7 +8,7 @@ function coverageSetup () {
   var originalDefine = NEJ.define
   var instrumenter = new Instrumenter()
   /* eslint no-undef:off */
-  NEJ.define = define = function () {
+  NEJ.define = window.define = function () {
     function getFilePath () {
       var ua = (typeof window !== 'undefined' && window.navigator && window.navigator.userAgent && window.navigator.userAgent.toLowerCase()) || ''
 
@@ -42,8 +42,8 @@ function coverageSetup () {
         return
     }
 
-    cb = util.instrumentFunction(cb, instrumenter, filePath) || cb
     util.applyInjections(cb, deps, dependencyInjectionArr)
+    cb = util.instrumentFunction(cb, instrumenter, filePath) || cb
 
     originalDefine.apply(NEJ, uri ? [uri, deps, cb] : [deps, cb])
   }

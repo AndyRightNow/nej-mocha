@@ -13,7 +13,7 @@ module.exports = {
     useColors: true,
     reporter: 'spec'
   },
-  testRunnerPort: 8004,
+  testRunnerPort: 8114,
   shouldBrowserClosed: true,
   headless: true,
   coverage: true,

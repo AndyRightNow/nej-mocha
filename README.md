@@ -251,7 +251,7 @@ You can replace paths that match the given pattern with the new paths you provid
 
 ### **Usage:**
 
-1. Add `/* nej-inject */` or `// nej-inject` in the callback function of `NEJ.define` and this file will be included in dependency injections.
+1. Add `/* nej-mocha-inject */` or `// nej-mocha-inject` in the callback function of `NEJ.define` and this file will be included in dependency injections.
 2. In `nej-mocha.conf.js`, add options about the patterns to replace and the new paths.
 
 ### **Examples:**
