@@ -12,7 +12,7 @@ function coverageSetup () {
     function getFilePath () {
       var ua = (typeof window !== 'undefined' && window.navigator && window.navigator.userAgent && window.navigator.userAgent.toLowerCase()) || ''
 
-      if (!ua || !/chrome/.test(ua)) {
+      if (!ua || !/chrome/i.test(ua)) {
         console.error('Please run the test index page in chromium browsers. Other browsers are currently not supported.')
         return ``
       }
