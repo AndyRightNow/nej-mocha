@@ -1,13 +1,12 @@
 {
   "name": "nej-mocha",
-  "version": "4.2.11-0",
+  "version": "4.2.11",
   "description": "A test framework specifically for NEJ module system users.",
   "main": "index.js",
   "scripts": {
     "patch:publish": "npm version patch && git push origin master --follow-tags && npm publish",
     "major:publish": "npm version major && git push origin master --follow-tags && npm publish",
     "minor:publish": "npm version minor && git push origin master --follow-tags && npm publish",
-    "prepatch:publish": "npm version prepatch && git push origin master --follow-tags && npm publish",
     "build": "gulp browserify",
     "test": "mocha --timeout=30000 --recursive",
     "test:unit": "npm run test ./test/unit/",
