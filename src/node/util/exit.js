@@ -1,3 +1,5 @@
+var logger = require('./logger')
+
 function bindExitHandlers (finish) {
   process
     .on('exit', finish.bind(null, 'exit'))
@@ -11,14 +13,14 @@ function bindExitHandlers (finish) {
 
     readline.on('SIGINT', function () {
       if (process.env.NODE_ENV === 'test') {
-        console.log('on receiving SIGINT')
+        logger.debug('on receiving SIGINT')
       }
       process.exit()
     })
 
     readline.on('SIGTSTP', function () {
       if (process.env.NODE_ENV === 'test') {
-        console.log('on receiving SIGTSTP')
+        logger.debug('on receiving SIGTSTP')
       }
       process.exit()
     })

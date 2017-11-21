@@ -1,33 +1,5 @@
-var chalk = require('chalk')
 var path = require('path')
 var glob = require('glob')
-
-/* istanbul ignore next */
-function printGreen (str) {
-  console.log(chalk.green(str))
-}
-
-/* istanbul ignore next */
-function printRed (str) {
-  console.log(chalk.red(str))
-}
-
-/* istanbul ignore next */
-function printNewLine () {
-  console.log('')
-}
-
-/* istanbul ignore next */
-function print () {
-  console.log.apply(console, Array.from(arguments))
-}
-
-/* istanbul ignore next */
-function printAndNewLine () {
-  print.apply(null, Array.from(arguments))
-
-  printNewLine()
-}
 
 function normalizeDir (dir) {
   if (!/\.js$/.test(dir)) {
@@ -137,11 +109,6 @@ function noop () {
 }
 
 module.exports = {
-  printGreen,
-  printRed,
-  printNewLine,
-  print,
-  printAndNewLine,
   normalizeDir,
   walkSync,
   normalizeSlashes,

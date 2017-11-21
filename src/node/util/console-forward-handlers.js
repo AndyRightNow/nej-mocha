@@ -1,6 +1,7 @@
 var generateCoverage = require('./generate-coverage')
 var config = require('./../../shared/config')
 var util = require('./index')
+var logger = require('./logger')
 
 function consoleLogForwardHandler (args) {
   var content = args.join('')
@@ -43,7 +44,7 @@ var consoleWarnForwardHandler = (function () {
         generateCoverage(userConfig, coverage, function (err) {
           /* istanbul ignore if */
           if (err) {
-            util.printRed(util.getErrorOutput(err, '  '))
+            logger.error(util.getErrorOutput(err, '  '))
             cb(err)
             resetFlags()
             return

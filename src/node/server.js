@@ -2,6 +2,7 @@ var express = require('express')
 var path = require('path')
 var cors = require('cors')
 var getAllSpecs = require('./util/get-all-specs')
+var logger = require('./util/logger')
 var config = require('./../shared/config')
 
 function createServer (userConfig) {
@@ -26,7 +27,7 @@ function createServer (userConfig) {
   })
 
   server.use(function (err, req, res, next) {
-    console.log('ERROR:', err)
+    logger.error('ERROR:', err)
 
     next()
   })

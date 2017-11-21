@@ -4,6 +4,7 @@ var Nightmare = require('nightmare')
 var createServer = require('./server')
 var config = require('./../shared/config')
 var getUserConfig = require('./util/get-user-config')
+var logger = require('./util/logger')
 var normalizeUserConfig = require('./util/normalize-user-config')
 var util = require('./util')
 var eventHandlers = require('./util/event-handlers')
@@ -48,8 +49,8 @@ function run (options, callback) {
   var runningServer = createServer(userConfig).listen(userConfig.testRunnerPort, function () {
     finish = finish.bind(this, runningServer, nightmare, callback)
 
-    console.log('  Test server is running on ' + userConfig.testRunnerPort)
-    console.log('  Tests are starting...')
+    logger.info('  Test server is running on ' + userConfig.testRunnerPort)
+    logger.info('  Tests are starting...')
     this.isRunning = true
     this.isClosed = false
     this.end = finish
@@ -60,7 +61,7 @@ function run (options, callback) {
       .on('console', eventHandlers.consoleEventHandler(userConfig, finish))
       .goto(addr)
       .catch(function (err) {
-        util.printRed(util.getErrorOutput(err, '  '))
+        logger.error(util.getErrorOutput(err, '  '))
 
         finish(err)
       })
