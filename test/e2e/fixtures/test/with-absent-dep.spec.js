@@ -1,6 +1,6 @@
-/* global define, describe, it, expect */
+/* global NEJ, describe, it, expect */
 
-define([
+NEJ.define([
   '{pro}/with-absent-dep.js'
 ], (add) => {
   describe('Function add from dependency injection', () => {

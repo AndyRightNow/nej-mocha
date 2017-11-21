@@ -21,8 +21,8 @@ function pageEventHandler (cb) {
   return function (type, message, stack) {
     /* istanbul ignore if */
     if (type === 'error') {
-      logger.error('  ' + message)
-      logger.error('  ' + stack)
+      logger.error(message)
+      logger.error(stack)
       var err = new Error(message)
       err.stack = stack
 

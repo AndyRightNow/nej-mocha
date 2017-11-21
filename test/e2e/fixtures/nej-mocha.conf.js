@@ -21,6 +21,8 @@ module.exports = {
     reporters: [
       'lcov',
       'text'
-    ]
+    ],
+    include: /fixtures.*?test/,
+    exclude: /nej/
   }
 }

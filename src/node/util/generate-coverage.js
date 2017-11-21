@@ -2,12 +2,26 @@ var istanbul = require('istanbul')
 var path = require('path')
 var fs = require('fs')
 var traverse = require('traverse')
+var logger = require('./logger')
 
 var collector = new istanbul.Collector()
 var reporter = new istanbul.Reporter()
 
 function getLineCountBeforeCallbackFn (fileContent) {
-  return fileContent && fileContent.toString('utf-8').match(/(.|[\s\r\n])*?function(.|[\s\r\n])*?\{[\s\r\n]*/)[0].split(/[\r\n]+/).length - 1
+  if (fileContent) {
+    var fileContentStr = fileContent.toString('utf-8')
+    var matched
+
+    try {
+      matched = fileContentStr.match(/(.|[\s\r\n])*?(function)?(.|[\s\r\n])*?(=>)?(.|[\s\r\n])*?\{[\s\r\n]*/)
+    } catch (error) {
+      logger.error(error)
+    }
+
+    if (matched) {
+      return matched[0].split(/[\r\n]+/).length - 1
+    }
+  }
 }
 
 function adjustLineNumbers (coverageObj, lineCountBefore) {

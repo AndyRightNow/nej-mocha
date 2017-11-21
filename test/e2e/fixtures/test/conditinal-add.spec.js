@@ -1,7 +1,7 @@
-/* global define, describe, it, expect */
+/* global NEJ, describe, it, expect */
 /* eslint no-unused-expressions:off */
 
-define([
+NEJ.define([
   '{pro}/conditional-add.js'
 ], (conditionalAdd) => {
   describe('Function conditionalAdd', () => {

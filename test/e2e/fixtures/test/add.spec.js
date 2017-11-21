@@ -1,6 +1,6 @@
-/* global define, describe, it, expect */
+/* global NEJ, describe, it, expect */
 
-define([
+NEJ.define([
   '{pro}/add.js'
 ], (add) => {
   describe('Function add', () => {

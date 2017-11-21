@@ -1,9 +1,9 @@
-/* global define, window */
+/* global NEJ, window */
 /* eslint no-console:off */
 var config = require('./../shared/config')
 
 function runTest (testFiles, mocha) {
-  define(testFiles, function () {
+  NEJ.define(testFiles, function () {
     mocha.run(function (err) {
       if (err) {
         console.log(err)

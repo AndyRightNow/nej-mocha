@@ -2,17 +2,37 @@ var config = require('./../../shared/config')
 
 var noop = () => true
 
+var functionStrRE = /^(function)?(.|[\r\n])*?(=>)?(.|[\r\n])*?\{/
+
 function getFunctionCode (fnStr) {
-  return fnStr.replace(/^function(.|[\r\n])*?\{[\s\r\n]*/, '').replace(/\}$/, '')
+  return fnStr
+    .replace(functionStrRE, '')
+    .replace(/\}$/, '')
 }
 
 function getFunctionArgs (fnStr) {
-  return fnStr.match(/^function(.|[\r\n])*?\{/)[0].match(/\((.|[\r\n])*\)/)[0].replace(/[()]/g, '').replace(/\/\/.*/g, '').replace(/\/\*(.|[\r\n])*\*\//g, '').replace(/[\s\r\n]/g, '').split(',')
+  return fnStr
+    .match(functionStrRE)[0]
+    .match(/\((.|[\r\n])*\)/)[0]
+    .replace(/[()]/g, '')
+    .replace(/\/\/.*/g, '')
+    .replace(/\/\*(.|[\r\n])*\*\//g, '')
+    .replace(/[\s\r\n]/g, '')
+    .split(',')
 }
 
 function instrumentFunction (fn, instrumenter, filePath) {
   fn = fn || noop
   var fnStr = fn.toString()
+  var includeRE = /./
+  var excludeRE = /./
+
+  try {
+    includeRE = window.userConfig.coverageOptions && window.userConfig.coverageOptions.include && new RegExp(window.userConfig.coverageOptions.include.source, window.userConfig.coverageOptions.include.flags)
+    excludeRE = window.userConfig.coverageOptions && window.userConfig.coverageOptions.exclude && new RegExp(window.userConfig.coverageOptions.exclude.source, window.userConfig.coverageOptions.exclude.flags)
+  } catch (error) {
+    console.error(error)
+  }
 
   if (!window.userConfig.coverage ||
     new RegExp(config.CONSTANT.COVERAGE_IGNORE_IDENTIFIER).test(fnStr)) {
@@ -20,10 +40,18 @@ function instrumentFunction (fn, instrumenter, filePath) {
   }
 
   if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr) ||
-  (!new RegExp(window.userConfig.coverageOptions.exclude.source, window.userConfig.coverageOptions.exclude.flags).test(filePath) &&
-  new RegExp(window.userConfig.coverageOptions.include.source, window.userConfig.coverageOptions.include.flags).test(filePath))) {
-    var fnCode = getFunctionCode(fnStr)
-    var fnArgs = getFunctionArgs(fnStr)
+    (!excludeRE.test(filePath) &&
+      includeRE.test(filePath))) {
+    var fnCode
+    var fnArgs
+
+    try {
+      fnCode = getFunctionCode(fnStr)
+      fnArgs = getFunctionArgs(fnStr)
+    } catch (error) {
+      console.error(error)
+      return
+    }
 
     fnCode = instrumenter.instrumentSync(fnCode, filePath)
     /* eslint no-new-func:off */

@@ -14,7 +14,7 @@ function createServer (userConfig) {
   server.set('view engine', 'ejs')
 
   server.get(`/${config.CONSTANT.TEST_INDEX}`, function (req, res) {
-    res.render(path.resolve(__dirname, 'index.ejs'), {
+    res.render(path.resolve(__dirname, '../../dist', 'index.ejs'), {
       testFiles: getAllSpecs(publicDir, userConfig.entries),
       PORT: userConfig.testRunnerPort,
       globalJSON: JSON.stringify(userConfig.globals),

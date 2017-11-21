@@ -7,6 +7,7 @@
     "patch:publish": "npm version patch && npm publish",
     "major:publish": "npm version major && npm publish",
     "minor:publish": "npm version minor && npm publish",
+    "alpha:publish": "npm publish --tag alpha",
     "build": "gulp browserify",
     "test": "mocha --timeout=30000 --recursive",
     "test:unit": "npm run test ./test/unit/",
@@ -53,13 +54,21 @@
   },
   "devDependencies": {
     "bower": "^1.8.0",
+    "browserify": "^14.5.0",
     "cross-env": "^5.1.1",
+    "del": "^3.0.0",
     "eslint": "^3.19.0",
     "gulp": "^3.9.1",
-    "gulp-browserify": "^0.5.1",
+    "gulp-hash": "^4.1.1",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
+    "gulp-tap": "^1.0.1",
+    "gulp-transform": "^3.0.5",
+    "gulp-uglify": "^3.0.0",
     "husky": "^0.14.3",
     "nyc": "^10.2.0",
-    "standard": "^10.0.2"
+    "standard": "^10.0.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   }
 }

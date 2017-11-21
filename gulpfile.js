@@ -1,1 +1,1 @@
-require('./build/browserify');
+require('./build/browserify')

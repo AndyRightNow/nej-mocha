@@ -50,6 +50,7 @@ function run (options, callback) {
     finish = finish.bind(this, runningServer, nightmare, callback)
 
     logger.info('Test server is running on ' + userConfig.testRunnerPort)
+    logger.info('You can visit http://localhost:' + userConfig.testRunnerPort + '/' + config.CONSTANT.TEST_INDEX + ' to debug the tests')
     logger.info('Tests are starting...')
     this.isRunning = true
     this.isClosed = false

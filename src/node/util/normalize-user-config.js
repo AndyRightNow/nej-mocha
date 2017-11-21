@@ -90,6 +90,13 @@ function normalizeCoverageOptions (userConfig) {
   })
   userConfig.coverageOptions.include = userConfig.coverageOptions.include || DEFAULT_INCLUDE_REGEXP
   userConfig.coverageOptions.exclude = userConfig.coverageOptions.exclude || DEFAULT_EXCLUDE_REGEXP
+
+  if (!(userConfig.coverageOptions.include instanceof RegExp)) {
+    throw new Error('Invalid option coverageOptions.include. Expected RegExp. Instead received ' + typeof userConfig.coverageOptions.include)
+  }
+  if (!(userConfig.coverageOptions.exclude instanceof RegExp)) {
+    throw new Error('Invalid option coverageOptions.exclude. Expected RegExp. Instead received ' + typeof userConfig.coverageOptions.exclude)
+  }
 }
 
 function normalizeInject (userConfig) {
