@@ -8,7 +8,7 @@ function normalizeGlobals (userConfig) {
 
 function normalizeEntries (userConfig) {
   userConfig.entries = (userConfig.entries && (typeof userConfig.entries === 'string' ? [userConfig.entries] : userConfig.entries)) || [config.CONSTANT.DEFAULT_TEST_ENTRY]
-  for (let i = 0, es = userConfig.entries, l = es.length; i < l; i++) {
+  for (var i = 0, es = userConfig.entries, l = es.length; i < l; i++) {
     es[i] = normalizeSlashes(es[i])
     if (es[i][0] !== '.') {
       if (es[i][0] !== '/') {
@@ -29,7 +29,7 @@ function normalizeMochaOptions (userConfig) {
 function normalizeNejPathAliases (userConfig) {
   userConfig.nejPathAliases = userConfig.nejPathAliases || {}
   userConfig.nejPathAliases.pro = userConfig.nejPathAliases.pro || config.CONSTANT.DEFAULT_NEJ_PRO
-  let nejPathAliases = userConfig.nejPathAliases
+  var nejPathAliases = userConfig.nejPathAliases
   for (var alias in nejPathAliases) {
     if (nejPathAliases.hasOwnProperty(alias)) {
       nejPathAliases[alias] = normalizeSlashes(`${nejPathAliases[alias]}/`)
@@ -57,8 +57,8 @@ function normalizeHeadless (userConfig) {
 
 function normalizeScriptsToInject (userConfig) {
   userConfig.scriptsToInject = userConfig.scriptsToInject || []
-  let scriptsToInject = userConfig.scriptsToInject
-  for (let i = 0, l = scriptsToInject.length, scriptPath; i < l; i++) {
+  var scriptsToInject = userConfig.scriptsToInject
+  for (var i = 0, l = scriptsToInject.length, scriptPath; i < l; i++) {
     scriptPath = scriptsToInject[i]
 
     // Relative (Starts with dots, letters, slashs or backslashs)
@@ -90,7 +90,7 @@ function normalizeCoverageOptions (userConfig) {
 function normalizeInject (userConfig) {
   userConfig.inject = (userConfig.inject && Array.isArray(userConfig.inject) && userConfig.inject) || []
 
-  for (let injection of userConfig.inject) {
+  for (var injection of userConfig.inject) {
     if (typeof injection !== 'object') {
       userConfig.inject = []
       break

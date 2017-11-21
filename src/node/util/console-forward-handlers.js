@@ -6,7 +6,7 @@ function consoleLogForwardHandler (args) {
   var content = args.join('')
 
   if (!/^do|circular|alternately/.test(content)) {
-    let results = args.map(function (v) {
+    var results = args.map(function (v) {
       return typeof v === 'string' ? v.replace('✓', '\u221A').replace('✖', '\u00D7').replace('․', '.') : (v && v.toString()) || ''
     }).filter(function (v) {
       return !/stdout:/.test(v)

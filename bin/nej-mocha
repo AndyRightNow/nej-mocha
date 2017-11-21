@@ -2,6 +2,7 @@
 
 var argv = require('yargs').argv
 var util = require('./../src/node/util')
+var exitUtil = require('./../src/node/util/exit')
 var nejMocha = require('./../index')
 delete argv._
 delete argv.$0
@@ -22,6 +23,14 @@ nejMocha.run({
   if (err) {
     util.printRed(util.getErrorOutput(err))
   }
+
+  exitUtil.bindExitHandlers(function () {
+    if (process.env.NODE_ENV === 'test') {
+      console.log('on exiting')
+    }
+
+    nejMocha.end()
+  })
 
   if (nejMocha.userConfig.shouldBrowserClosed) {
     process.exit(0)

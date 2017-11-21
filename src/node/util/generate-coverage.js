@@ -3,8 +3,8 @@ var path = require('path')
 var fs = require('fs')
 var traverse = require('traverse')
 
-let collector = new istanbul.Collector()
-let reporter = new istanbul.Reporter()
+var collector = new istanbul.Collector()
+var reporter = new istanbul.Reporter()
 
 function getLineCountBeforeCallbackFn (fileContent) {
   return fileContent && fileContent.toString('utf-8').match(/(.|[\s\r\n])*?function(.|[\s\r\n])*?\{[\s\r\n]*/)[0].split(/[\r\n]+/).length - 1
@@ -21,7 +21,7 @@ function adjustLineNumbers (coverageObj, lineCountBefore) {
 }
 
 function updatePathsToAbsPaths (coverage, key) {
-  let newKey = path.resolve(process.cwd(), key)
+  var newKey = path.resolve(process.cwd(), key)
   coverage[newKey] = coverage[key]
   delete coverage[key]
   coverage[newKey].path = newKey
@@ -43,7 +43,7 @@ function safeGetFileContentSync (p, cb) {
 
 /* istanbul ignore next */
 function normalizeCoverageObject (coverage, cb) {
-  for (let key in coverage) {
+  for (var key in coverage) {
     if (coverage.hasOwnProperty(key)) {
       var newKey = updatePathsToAbsPaths(coverage, key)
       var fileContent = safeGetFileContentSync(newKey, cb)

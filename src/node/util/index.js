@@ -45,7 +45,7 @@ function normalizeDir (dir) {
  * @returns {Array} Paths, relative to the cwd, of all files in the directory
  */
 function walkSync (dir) {
-  let files
+  var files
 
   dir = normalizeDir(dir)
 
@@ -78,6 +78,10 @@ function finish (shouldBrowserClosed, server, proc, callback, err) {
     if (server) {
       server.close()
     }
+
+    this.isRunning = false
+    this.isClosed = true
+
     proc.end()
   }
 
@@ -116,7 +120,7 @@ function getErrorOutput (err, indent) {
   ]
   var newLine = '\n\r'
 
-  for (let i = 0, l = errorProps.length, val; i < l; i++) {
+  for (var i = 0, l = errorProps.length, val; i < l; i++) {
     val = err[errorProps[i]]
 
     if (val) {

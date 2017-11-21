@@ -43,13 +43,16 @@ function run (options, callback) {
     show: !userConfig.headless
   })
 
-  var finish = util.finish.bind(null, userConfig.shouldBrowserClosed)
+  var finish = util.finish.bind(this, userConfig.shouldBrowserClosed)
 
   var runningServer = createServer(userConfig).listen(userConfig.testRunnerPort, function () {
-    finish = finish.bind(null, runningServer, nightmare, callback)
+    finish = finish.bind(this, runningServer, nightmare, callback)
 
     console.log('  Test server is running on ' + userConfig.testRunnerPort)
     console.log('  Tests are starting...')
+    this.isRunning = true
+    this.isClosed = false
+    this.end = finish
 
     nightmare
       .viewport(1024, 768)
@@ -61,9 +64,15 @@ function run (options, callback) {
 
         finish(err)
       })
-  })
+  }.bind(this))
 }
 
-module.exports = {
-  run
+var nejMocha = {
+  run,
+  isRunning: false,
+  isClosed: true,
+  userConfig: null,
+  end: util.noop
 }
+
+module.exports = nejMocha
