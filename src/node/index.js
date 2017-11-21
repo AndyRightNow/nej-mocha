@@ -49,8 +49,8 @@ function run (options, callback) {
   var runningServer = createServer(userConfig).listen(userConfig.testRunnerPort, function () {
     finish = finish.bind(this, runningServer, nightmare, callback)
 
-    logger.info('  Test server is running on ' + userConfig.testRunnerPort)
-    logger.info('  Tests are starting...')
+    logger.info('Test server is running on ' + userConfig.testRunnerPort)
+    logger.info('Tests are starting...')
     this.isRunning = true
     this.isClosed = false
     this.end = finish

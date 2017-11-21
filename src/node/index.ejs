@@ -25,7 +25,7 @@
 
         window.dependencyInjectionArr = <% if (dependencyInjectionArr) {%> <%- JSON.stringify(dependencyInjectionArr) %> <% } else {%> [] <% } %>;
         window.testFiles = <% if (testFiles) {%> <%- JSON.stringify(testFiles) %> <% } else {%> [] <% } %>;
-        window.userConfig = <% if (userConfig) {%> <%- JSON.stringify(userConfig) %> <% } else {%> [] <% } %>;
+        window.userConfig = <% if (userConfig) {%> <%- JSON.stringify(userConfig, function (key, val) { if (val instanceof RegExp) { return { source: val.source, flags: val.flags }; } else { return val; } }) %> <% } else {%> [] <% } %>;
 
         define([], function () {
             window.mochaSetup(window.mocha, window.userConfig.mochaOptions);

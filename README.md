@@ -201,7 +201,19 @@ module.exports = {
           */
          reporters: [
              'text'
-         ]
+         ],
+         /**
+          * The files to collect coverage from
+          *
+          * Default to /\.js$/
+          */
+         include: /\.js$/,
+         /**
+          * The files to exclude from collecting coverage
+          *
+          * Default to /\.spec\.js$/
+          */
+         exclude: /\.spec\.js$/,
      },
      /**
       * Dependency injections
@@ -280,9 +292,16 @@ define([
 
 You can generate test coverage reports by setting the `coverage` option in `nej-mocha.conf.js` to `true`. You can also configure the reports to use different kinds of reporters. For a whole list of reporters supported, please read the documentation of [istanbul](https://github.com/gotwarlost/istanbul);
 
-### **Usage:**
+### **Optional Inline Flags:**
 
 Add `/* nej-mocha-cover */` or `// nej-mocha-cover` in the callback function of `NEJ.define` and this file will be covered and added to the reports generated.
+Add `/* nej-mocha-cover-ignore */` or `// nej-mocha-cover-ignore` in the callback function of `NEJ.define` and this file will be ignored in collecting coverage.
+
+### **Precedence of Options and Flags:**
+
+Options `include` and `exclude` in `coverageOptions` will always be overwritten by inline flags, which means, if a file is exluced by the regular expression defined in `exclude` and has the flag `/* nej-mocha-cover */`, the file **will NOT be ignored**.
+
+If`/* nej-mocha-cover */` and `/* nej-mocha-cover-ignore */` are both present in the function, the ignore flag will have higher priority.
 
 # API
 

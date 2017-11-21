@@ -9,6 +9,7 @@ module.exports = {
       CONFIG: 'nej-mocha.config.js'
     },
     COVERAGE_IDENTIFIER: 'nej-mocha-cover',
+    COVERAGE_IGNORE_IDENTIFIER: 'nej-mocha-cover-ignore',
     INJECT_IDENTIFIER: 'nej-mocha-inject',
     MOCHA_DONE_SIGNAL: 'TEST_MOCHA_DONE;',
     HAS_COVERAGE_SIGNAL: 'COVERAGE_OBJECT;'

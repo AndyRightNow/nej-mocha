@@ -14,7 +14,14 @@ function instrumentFunction (fn, instrumenter, filePath) {
   fn = fn || noop
   var fnStr = fn.toString()
 
-  if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr) && window.userConfig.coverage) {
+  if (!window.userConfig.coverage ||
+    new RegExp(config.CONSTANT.COVERAGE_IGNORE_IDENTIFIER).test(fnStr)) {
+    return
+  }
+
+  if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr) ||
+  (!new RegExp(window.userConfig.coverageOptions.exclude.source, window.userConfig.coverageOptions.exclude.flags).test(filePath) &&
+  new RegExp(window.userConfig.coverageOptions.include.source, window.userConfig.coverageOptions.include.flags).test(filePath))) {
     var fnCode = getFunctionCode(fnStr)
     var fnArgs = getFunctionArgs(fnStr)
 

@@ -11,7 +11,8 @@
         "sourceType": "module"
     },
     "rules": {
-        "no-console": "warn"
+        "no-console": "warn",
+        "no-unused-expressions": "off"
     },
     "globals": {
         "describe": true

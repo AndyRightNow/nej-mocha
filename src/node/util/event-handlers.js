@@ -1,4 +1,3 @@
-var util = require('./index')
 var logger = require('./logger')
 var consoleForwardHanlders = require('./console-forward-handlers')
 

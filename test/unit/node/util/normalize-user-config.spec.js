@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, before */
 
 var expect = require('chai').expect
 var config = require('./../../../../src/shared/config')
@@ -150,10 +150,19 @@ describe('src/node/util/normalize-user-config', () => {
 
     describe('normalizeCoverageOptions', () => {
       describe('If nothing is given', () => {
-        it('should set reporter to an array with one element `text`', () => {
+        before(() => {
           helpers.normalizeCoverageOptions(userConfig)
+        })
 
+        it('should set reporter to an array with one element `text`', () => {
           expect(userConfig.coverageOptions.reporters[0]).to.equal('text')
+          expect(userConfig.coverageOptions.include).to.be.a('RegExp')
+          expect(userConfig.coverageOptions.exclude).to.be.a('RegExp')
+        })
+
+        it('should set include and exclude to regular expressions', () => {
+          expect(userConfig.coverageOptions.include).to.be.a('RegExp')
+          expect(userConfig.coverageOptions.exclude).to.be.a('RegExp')
         })
       })
     })

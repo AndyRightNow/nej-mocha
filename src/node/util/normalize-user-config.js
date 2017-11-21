@@ -2,6 +2,9 @@ var util = require('./index')
 var config = require('./../../shared/config')
 var normalizeSlashes = util.normalizeSlashes
 
+var DEFAULT_INCLUDE_REGEXP = /\.js$/;
+var DEFAULT_EXCLUDE_REGEXP = /\.spec\.js$/;
+
 function normalizeGlobals (userConfig) {
   userConfig.globals = userConfig.globals || {}
 }
@@ -85,6 +88,8 @@ function normalizeCoverageOptions (userConfig) {
       return 'text'
     } else return val
   })
+  userConfig.coverageOptions.include = userConfig.coverageOptions.include || DEFAULT_INCLUDE_REGEXP
+  userConfig.coverageOptions.exclude = userConfig.coverageOptions.exclude || DEFAULT_EXCLUDE_REGEXP
 }
 
 function normalizeInject (userConfig) {
