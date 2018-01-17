@@ -1,3 +1,6 @@
+# v4.3.0 (Critical Fix)
+* Fix the bug that even though the tests fail, the exit code is still 0.
+
 # v4.2.10
 
 * Add `include` and `exclude` options to `coverageOptions`. See the documentation for more details.
