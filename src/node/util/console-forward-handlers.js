@@ -20,7 +20,7 @@ function consoleLogForwardHandler (args) {
 var consoleWarnForwardHandler = (function () {
   var doneFlag = false
   var coverageFlag = false
-  var testResultError = null
+  var testResultError
 
   function resetFlags () {
     doneFlag = false
@@ -32,7 +32,7 @@ var consoleWarnForwardHandler = (function () {
 
     if (new RegExp(config.CONSTANT.MOCHA_DONE_SIGNAL).test(content)) {
       doneFlag = true
-      testResultError = parseInt(args[1], 10) || null
+      testResultError = parseInt(args[1], 10) || undefined
 
       if (coverageFlag && doneFlag) {
         cb(testResultError)
