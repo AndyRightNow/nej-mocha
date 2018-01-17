@@ -22,18 +22,22 @@ nejMocha.run({
   config
 }, (err) => {
   if (err) {
-    logger.error(util.getErrorOutput(err))
+    var errOutput = util.getErrorOutput(err)
+
+    if (errOutput) {
+      logger.error(errOutput)
+    }
   }
 
-  exitUtil.bindExitHandlers(function () {
+  exitUtil.bindExitHandlers(function (eventName, exitCode) {
     if (process.env.NODE_ENV === 'test') {
       logger.debug('on exiting')
     }
 
-    nejMocha.end()
+    nejMocha.end(exitCode)
   })
 
   if (nejMocha.userConfig.shouldBrowserClosed) {
-    process.exit(0)
+    process.exit(err ? 1 : 0)
   }
 })

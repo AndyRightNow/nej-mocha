@@ -53,10 +53,7 @@ function finish (shouldBrowserClosed, server, proc, callback, err) {
 
     this.isRunning = false
     this.isClosed = true
-
-    proc.end()
   }
-
   callback(err)
 }
 
@@ -78,7 +75,7 @@ function normalizeCliOptionValue (val) {
 }
 
 function getErrorOutput (err, indent) {
-  if (!err) {
+  if (!err || typeof err !== 'object') {
     return ''
   }
   indent = indent || ''

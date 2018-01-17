@@ -20,6 +20,7 @@ function consoleLogForwardHandler (args) {
 var consoleWarnForwardHandler = (function () {
   var doneFlag = false
   var coverageFlag = false
+  var testResultError = null
 
   function resetFlags () {
     doneFlag = false
@@ -31,9 +32,10 @@ var consoleWarnForwardHandler = (function () {
 
     if (new RegExp(config.CONSTANT.MOCHA_DONE_SIGNAL).test(content)) {
       doneFlag = true
+      testResultError = parseInt(args[1], 10) || null
 
       if (coverageFlag && doneFlag) {
-        cb()
+        cb(testResultError)
         resetFlags()
       }
     } else if (new RegExp(config.CONSTANT.HAS_COVERAGE_SIGNAL).test(content)) {
@@ -51,14 +53,14 @@ var consoleWarnForwardHandler = (function () {
           }
           /* istanbul ignore if */
           if (doneFlag) {
-            cb()
+            cb(testResultError)
             resetFlags()
           }
         })
       } else {
         /* istanbul ignore if */
         if (doneFlag) {
-          cb()
+          cb(testResultError)
           resetFlags()
         }
       }

@@ -10,9 +10,7 @@ function consoleEventHandler (userConfig, cb) {
     if (type === 'log') {
       consoleForwardHanlders.consoleLogForwardHandler(args)
     } else if (type === 'warn') {
-      consoleForwardHanlders.consoleWarnForwardHandler(userConfig, args, function () {
-        cb()
-      })
+      consoleForwardHanlders.consoleWarnForwardHandler(userConfig, args, cb)
     }
   }
 }
