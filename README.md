@@ -105,6 +105,12 @@ module.exports = {
     entries: [
         './test'
     ],
+    /**
+     * The pattern to test for entry files to ignore
+     * 
+     * Default to /coverage|lib/
+     */
+    entryIgnorePattern: /coverage/,
     mochaOptions: {
         /**
         * The time to wait before mocha tests exit.
