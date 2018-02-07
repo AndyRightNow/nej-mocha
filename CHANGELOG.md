@@ -1,3 +1,6 @@
+# v4.3.1
+* Fix the bug that the server failed if the package is installed globally.
+
 # v4.3.0 (Critical Fix)
 * Fix the bug that even though the tests fail, the exit code is still 0.
 

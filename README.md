@@ -156,6 +156,7 @@ module.exports = {
         port: 8004,
      },
      /**
+      * @DEPRECATED
       * The port for the test runner server to listen on.
       *
       * Default to 8004

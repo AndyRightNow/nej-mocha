@@ -60265,268 +60265,302 @@ exports.createContext = Script.createContext = function (context) {
 },{"indexof":177}],291:[function(require,module,exports){
 /* global NEJ, dependencyInjectionArr */
 
-var util = require('./util')
-var Instrumenter = require('./../../../node_modules/istanbul/lib/instrumenter')
-require('./../../../node_modules/esprima/dist/esprima.js')
+var util = require('./util');
+var Instrumenter = require('./../../../node_modules/istanbul/lib/instrumenter');
+require('./../../../node_modules/esprima/dist/esprima.js');
 
-function coverageSetup () {
-  var originalDefine = NEJ.define
-  var instrumenter = new Instrumenter()
-  /* eslint no-undef:off */
-  NEJ.define = window.define = function () {
-    function getFilePath () {
-      var ua = (typeof window !== 'undefined' && window.navigator && window.navigator.userAgent && window.navigator.userAgent.toLowerCase()) || ''
+function coverageSetup() {
+	var originalDefine = NEJ.define;
+	var instrumenter = new Instrumenter();
+	/* eslint no-undef:off */
+	NEJ.define = window.define = function() {
+		function getFilePath() {
+			var ua =
+				(typeof window !== 'undefined' &&
+					window.navigator &&
+					window.navigator.userAgent &&
+					window.navigator.userAgent.toLowerCase()) ||
+				'';
 
-      if (!ua || !/chrome/i.test(ua)) {
-        console.error('Please run the test index page in chromium browsers. Other browsers are currently not supported.')
-        return ``
-      }
-      var matched = new Error().stack.match(/(at.*)/g)
-      var path = matched && matched.length && matched[matched.length - 1]
+			if (!ua || !/chrome/i.test(ua)) {
+				console.error(
+					'Please run the test index page in chromium browsers. Other browsers are currently not supported.'
+				);
+				return ``;
+			}
+			var matched = new Error().stack.match(/(at.*)/g);
+			var path = matched && matched.length && matched[matched.length - 1];
 
-      return path && path.replace('at ', '').replace(/:\d+:\d+$/, '').replace(/^http:\/\/.*?\//, '')
-    }
+			return (
+				path &&
+				path
+					.replace('at ', '')
+					.replace(/:\d+:\d+$/, '')
+					.replace(/^http:\/\/.*?\//, '')
+			);
+		}
 
-    var uri, deps, cb
-    var filePath = getFilePath()
+		var uri, deps, cb;
+		var filePath = getFilePath();
 
-    switch (arguments.length) {
-      case 1:
-        cb = arguments[0]
-        break
-      case 2:
-        deps = arguments[0]
-        cb = arguments[1]
-        break
-      case 3:
-        uri = arguments[0]
-        deps = arguments[1]
-        cb = arguments[2]
-        break
-      default:
-        return
-    }
+		switch (arguments.length) {
+			case 1:
+				cb = arguments[0];
+				break;
+			case 2:
+				deps = arguments[0];
+				cb = arguments[1];
+				break;
+			case 3:
+				uri = arguments[0];
+				deps = arguments[1];
+				cb = arguments[2];
+				break;
+			default:
+				return;
+		}
 
-    util.applyInjections(cb, deps, dependencyInjectionArr)
-    cb = util.instrumentFunction(cb, instrumenter, filePath) || cb
+		util.applyInjections(cb, deps, dependencyInjectionArr);
+		cb = util.instrumentFunction(cb, instrumenter, filePath) || cb;
 
-    originalDefine.apply(NEJ, uri ? [uri, deps, cb] : [deps, cb])
-  }
+		originalDefine.apply(NEJ, uri ? [uri, deps, cb] : [deps, cb]);
+	};
 }
 
-module.exports = coverageSetup
+module.exports = coverageSetup;
 
 },{"./../../../node_modules/esprima/dist/esprima.js":153,"./../../../node_modules/istanbul/lib/instrumenter":181,"./util":292}],292:[function(require,module,exports){
-var config = require('./../../shared/config')
+var config = require('./../../shared/config');
 
-var noop = () => true
+var noop = () => true;
 
-var functionStrRE = /^(function)?(.|[\r\n])*?(=>)?(.|[\r\n])*?\{/
+var functionStrRE = /^(function)?(.|[\r\n])*?(=>)?(.|[\r\n])*?\{/;
 
-function getFunctionCode (fnStr) {
-  return fnStr
-    .replace(functionStrRE, '')
-    .replace(/\}$/, '')
+function getFunctionCode(fnStr) {
+	return fnStr.replace(functionStrRE, '').replace(/\}$/, '');
 }
 
-function getFunctionArgs (fnStr) {
-  return fnStr
-    .match(functionStrRE)[0]
-    .match(/\((.|[\r\n])*\)/)[0]
-    .replace(/[()]/g, '')
-    .replace(/\/\/.*/g, '')
-    .replace(/\/\*(.|[\r\n])*\*\//g, '')
-    .replace(/[\s\r\n]/g, '')
-    .split(',')
+function getFunctionArgs(fnStr) {
+	return fnStr
+		.match(functionStrRE)[0]
+		.match(/\((.|[\r\n])*\)/)[0]
+		.replace(/[()]/g, '')
+		.replace(/\/\/.*/g, '')
+		.replace(/\/\*(.|[\r\n])*\*\//g, '')
+		.replace(/[\s\r\n]/g, '')
+		.split(',');
 }
 
-function instrumentFunction (fn, instrumenter, filePath) {
-  fn = fn || noop
-  var fnStr = fn.toString()
-  var includeRE = /./
-  var excludeRE = /./
+function instrumentFunction(fn, instrumenter, filePath) {
+	fn = fn || noop;
+	var fnStr = fn.toString();
+	var includeRE = /./;
+	var excludeRE = /./;
 
-  try {
-    includeRE = window.userConfig.coverageOptions && window.userConfig.coverageOptions.include && new RegExp(window.userConfig.coverageOptions.include.source, window.userConfig.coverageOptions.include.flags)
-    excludeRE = window.userConfig.coverageOptions && window.userConfig.coverageOptions.exclude && new RegExp(window.userConfig.coverageOptions.exclude.source, window.userConfig.coverageOptions.exclude.flags)
-  } catch (error) {
-    console.error(error)
-  }
+	try {
+		includeRE =
+			window.userConfig.coverageOptions &&
+			window.userConfig.coverageOptions.include &&
+			new RegExp(
+				window.userConfig.coverageOptions.include.source,
+				window.userConfig.coverageOptions.include.flags
+			);
+		excludeRE =
+			window.userConfig.coverageOptions &&
+			window.userConfig.coverageOptions.exclude &&
+			new RegExp(
+				window.userConfig.coverageOptions.exclude.source,
+				window.userConfig.coverageOptions.exclude.flags
+			);
+	} catch (error) {
+		console.error(error);
+	}
 
-  if (!window.userConfig.coverage ||
-    new RegExp(config.CONSTANT.COVERAGE_IGNORE_IDENTIFIER).test(fnStr)) {
-    return
-  }
+	if (
+		!window.userConfig.coverage ||
+		new RegExp(config.CONSTANT.COVERAGE_IGNORE_IDENTIFIER).test(fnStr)
+	) {
+		return;
+	}
 
-  if (new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr) ||
-    (!excludeRE.test(filePath) &&
-      includeRE.test(filePath))) {
-    var fnCode
-    var fnArgs
+	if (
+		new RegExp(config.CONSTANT.COVERAGE_IDENTIFIER).test(fnStr) ||
+		(!excludeRE.test(filePath) && includeRE.test(filePath))
+	) {
+		var fnCode;
+		var fnArgs;
 
-    try {
-      fnCode = getFunctionCode(fnStr)
-      fnArgs = getFunctionArgs(fnStr)
-    } catch (error) {
-      console.error(error)
-      return
-    }
+		try {
+			fnCode = getFunctionCode(fnStr);
+			fnArgs = getFunctionArgs(fnStr);
+		} catch (error) {
+			console.error(error);
+			return;
+		}
 
-    fnCode = instrumenter.instrumentSync(fnCode, filePath)
-    /* eslint no-new-func:off */
-    return new Function(...fnArgs.concat([fnCode]))
-  }
+		fnCode = instrumenter.instrumentSync(fnCode, filePath);
+		/* eslint no-new-func:off */
+		return new Function(...fnArgs.concat([fnCode]));
+	}
 }
 
-function applyInjections (fn, deps, dependencyInjectionArr) {
-  fn = fn || noop
-  var fnStr = fn.toString()
+function applyInjections(fn, deps, dependencyInjectionArr) {
+	fn = fn || noop;
+	var fnStr = fn.toString();
 
-  if (new RegExp(config.CONSTANT.INJECT_IDENTIFIER).test(fnStr)) {
-    var isNew = {}
-    dependencyInjectionArr.forEach(d => (isNew[d.path] = true))
+	if (new RegExp(config.CONSTANT.INJECT_IDENTIFIER).test(fnStr)) {
+		var isNew = {};
+		dependencyInjectionArr.forEach(d => (isNew[d.path] = true));
 
-    for (var injection of dependencyInjectionArr) {
-      var pattern = injection.pattern ? new RegExp(injection.pattern) : null
+		for (var injection of dependencyInjectionArr) {
+			var pattern = injection.pattern ? new RegExp(injection.pattern) : null;
 
-      if (pattern instanceof RegExp) {
-        for (var i = 0, l = deps.length; i < l; i++) {
-          if (pattern.test(deps[i]) && !isNew[deps[i]]) {
-            deps[i] = injection.path
-          }
-        }
-      }
-    }
-  }
+			if (pattern instanceof RegExp) {
+				for (var i = 0, l = deps.length; i < l; i++) {
+					if (pattern.test(deps[i]) && !isNew[deps[i]]) {
+						deps[i] = injection.path;
+					}
+				}
+			}
+		}
+	}
 }
 
 module.exports = {
-  getFunctionCode,
-  getFunctionArgs,
-  instrumentFunction,
-  applyInjections
-}
+	getFunctionCode,
+	getFunctionArgs,
+	instrumentFunction,
+	applyInjections,
+};
 
 },{"./../../shared/config":298}],293:[function(require,module,exports){
 /* eslint-env browser */
 
-require('mocha')
-require('./log-setup')(window.console)
-require('./coverage-setup')()
+require('mocha');
+require('./log-setup')(window.console);
+require('./coverage-setup')();
 
-window.globalsInjector = require('./globals-injector')
-window.mochaSetup = require('./mocha-setup')
-window.expect = require('chai').expect
-window.runTest = require('./run-test')
+window.globalsInjector = require('./globals-injector');
+window.mochaSetup = require('./mocha-setup');
+window.expect = require('chai').expect;
+window.runTest = require('./run-test');
 
 },{"./coverage-setup":291,"./globals-injector":294,"./log-setup":295,"./mocha-setup":296,"./run-test":297,"chai":53,"mocha":199}],294:[function(require,module,exports){
 /* global window */
 
-function globalsInjector (globalJSON, global) {
-  global = global || window || {}
-  function _injectHelper (obj, prop, value) {
-    if (typeof value === 'object') {
-      obj[prop] = {}
-      for (var k in value) {
-        if (value.hasOwnProperty(k)) {
-          _injectHelper(obj[prop], k, value[k])
-        }
-      }
-    } else {
-      obj[prop] = value
-    }
-  }
+function globalsInjector(globalJSON, global) {
+	global = global || window || {};
+	function _injectHelper(obj, prop, value) {
+		if (typeof value === 'object') {
+			obj[prop] = {};
+			for (var k in value) {
+				if (value.hasOwnProperty(k)) {
+					_injectHelper(obj[prop], k, value[k]);
+				}
+			}
+		} else {
+			obj[prop] = value;
+		}
+	}
 
-  var gs = null
-  try {
-    gs = JSON.parse(globalJSON)
-  } catch (e) {
-    /* istanbul ignore next */
-    gs = {}
-  }
+	var gs = null;
+	try {
+		gs = JSON.parse(globalJSON);
+	} catch (e) {
+		/* istanbul ignore next */
+		gs = {};
+	}
 
-  if (gs) {
-    for (var k in gs) {
-      if (gs.hasOwnProperty(k)) {
-        _injectHelper(global || {}, k, gs[k])
-      }
-    }
-  }
+	if (gs) {
+		for (var k in gs) {
+			if (gs.hasOwnProperty(k)) {
+				_injectHelper(global || {}, k, gs[k]);
+			}
+		}
+	}
 }
 
-module.exports = globalsInjector
+module.exports = globalsInjector;
 
 },{}],295:[function(require,module,exports){
-function logSetup (customConsole) {
-  if (!customConsole || !customConsole.log) {
-    return
-  }
+function logSetup(customConsole) {
+	if (!customConsole || !customConsole.log) {
+		return;
+	}
 
-  var originalFn = customConsole.log
+	var originalFn = customConsole.log;
 
-  // So that empty 'console.log()' is captured
-  customConsole.log = function () {
-    if (!arguments.length) {
-      originalFn.call(customConsole, ' ')
-    } else {
-      originalFn.apply(customConsole, arguments)
-    }
-  }
+	// So that empty 'console.log()' is captured
+	customConsole.log = function() {
+		if (!arguments.length) {
+			originalFn.call(customConsole, ' ');
+		} else {
+			originalFn.apply(customConsole, arguments);
+		}
+	};
 }
 
-module.exports = logSetup
+module.exports = logSetup;
 
 },{}],296:[function(require,module,exports){
-module.exports = function mochaSetup (mocha, mochaOptions) {
-  /* istanbul ignore if */
-  if (!mocha) {
-    return
-  }
+module.exports = function mochaSetup(mocha, mochaOptions) {
+	/* istanbul ignore if */
+	if (!mocha) {
+		return;
+	}
 
-  // MUST-HAVE
-  // Used to bind functions such as `describe`, `before` and etc. to the window
-  'ui' in mocha && mocha.ui('bdd')
+	// MUST-HAVE
+	// Used to bind functions such as `describe`, `before` and etc. to the window
+	'ui' in mocha && mocha.ui('bdd');
 
-  for (var option in mochaOptions) {
-    if (mochaOptions.hasOwnProperty(option) && option in mocha) {
-      mocha[option](mochaOptions[option])
-    }
-  }
-}
+	for (var option in mochaOptions) {
+		if (mochaOptions.hasOwnProperty(option) && option in mocha) {
+			mocha[option](mochaOptions[option]);
+		}
+	}
+};
 
 },{}],297:[function(require,module,exports){
 /* global NEJ, window */
 /* eslint no-console:off */
-var config = require('./../shared/config')
+var config = require('./../shared/config');
 
-function runTest (testFiles, mocha) {
-  NEJ.define(testFiles, function () {
-    mocha.run(function (err) {
-      console.warn(config.CONSTANT.MOCHA_DONE_SIGNAL, err)
-      console.warn(config.CONSTANT.HAS_COVERAGE_SIGNAL, JSON.stringify(window.__coverage__ || {}))
-    })
-  })
+function runTest(testFiles, mocha) {
+	NEJ.define(testFiles, function() {
+		mocha.run(function(err) {
+			console.warn(config.CONSTANT.MOCHA_DONE_SIGNAL, err);
+			console.warn(
+				config.CONSTANT.HAS_COVERAGE_SIGNAL,
+				JSON.stringify(window.__coverage__ || {})
+			);
+		});
+	});
 }
 
-module.exports = runTest
+module.exports = runTest;
 
 },{"./../shared/config":298}],298:[function(require,module,exports){
 module.exports = {
-  CONSTANT: {
-    DEFAULT_PORT: 8004,
-    TEST_INDEX: 'nej-mocha',
-    DEFAULT_NEJ_PRO: 'src/javascript',
-    DEFAULT_TEST_ENTRY: './test',
-    DEFAULT_CONFIG_FILENAME: {
-      CONF: 'nej-mocha.conf.js',
-      CONFIG: 'nej-mocha.config.js'
-    },
-    COVERAGE_IDENTIFIER: 'nej-mocha-cover',
-    COVERAGE_IGNORE_IDENTIFIER: 'nej-mocha-cover-ignore',
-    INJECT_IDENTIFIER: 'nej-mocha-inject',
-    MOCHA_DONE_SIGNAL: 'TEST_MOCHA_DONE;',
-    HAS_COVERAGE_SIGNAL: 'COVERAGE_OBJECT;'
-  }
-}
+	CONSTANT: {
+		DEFAULT_CWD_SERVER_PORT: 8004,
+		DEFAULT_LIB_SERVER_PORT: 7999,
+		TEST_INDEX: 'nej-mocha',
+		DEFAULT_NEJ_PRO: 'src/javascript',
+		DEFAULT_TEST_ENTRY: './test',
+		DEFAULT_CONFIG_FILENAME: {
+			CONF: 'nej-mocha.conf.js',
+			CONFIG: 'nej-mocha.config.js',
+		},
+		COVERAGE_IDENTIFIER: 'nej-mocha-cover',
+		COVERAGE_IGNORE_IDENTIFIER: 'nej-mocha-cover-ignore',
+		INJECT_IDENTIFIER: 'nej-mocha-inject',
+		MOCHA_DONE_SIGNAL: 'TEST_MOCHA_DONE;',
+		HAS_COVERAGE_SIGNAL: 'COVERAGE_OBJECT;',
+		IPC_MESSAGES: {
+			SERVER_PORT: 'IPC_SERVER_PORT: ',
+			CLOSE_SERVER: 'IPC_CLOSE_SERVER',
+		},
+	},
+};
 
 },{}]},{},[293]);

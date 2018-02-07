@@ -1,38 +1,35 @@
-var express = require('express')
-var path = require('path')
-var cors = require('cors')
-var getAllSpecs = require('./util/get-all-specs')
-var logger = require('./util/logger')
-var config = require('./../shared/config')
+const createCwdServer = require('./cwd-server');
+const fork = require('child_process').fork;
+const path = require('path');
+const nodeConfig = require('./../node/config');
+const config = require('./../shared/config');
+const getPort = require('get-port');
 
-function createServer (userConfig) {
-  var server = express()
-  var publicDir = path.resolve(process.cwd(), userConfig._baseDir || '.')
+function runServers(userConfig, cb) {
+	const libServerProc = fork(path.resolve(__dirname, 'lib-server', 'run.js'), [], {
+		cwd: nodeConfig.projectDir,
+		stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
+	});
 
-  server.use(cors())
-  server.use(express.static(publicDir))
-  server.set('view engine', 'ejs')
+	libServerProc.on('message', message => {
+		if (message.indexOf(config.CONSTANT.IPC_MESSAGES.SERVER_PORT) === 0) {
+			const libServerPort =
+				parseInt(message.replace(config.CONSTANT.IPC_MESSAGES.SERVER_PORT, ''), 10) ||
+				config.CONSTANT.DEFAULT_LIB_SERVER_PORT;
 
-  server.get(`/${config.CONSTANT.TEST_INDEX}`, function (req, res) {
-    res.render(path.resolve(__dirname, '../../dist', 'index.ejs'), {
-      testFiles: getAllSpecs(publicDir, userConfig.entries),
-      PORT: userConfig.testRunnerPort,
-      globalJSON: JSON.stringify(userConfig.globals),
-      nejPathAliases: userConfig.nejPathAliases,
-      userConfig: userConfig,
-      scriptsToInject: userConfig.scriptsToInject,
-      dependencyInjectionArr: userConfig.inject,
-      __DEV_TEST__: userConfig.__DEV_TEST__
-    })
-  })
-
-  server.use(function (err, req, res, next) {
-    logger.error('ERROR:', err)
-
-    next()
-  })
-
-  return server
+			getPort({
+				port: config.CONSTANT.DEFAULT_CWD_SERVER_PORT,
+			}).then(cwdServerPort => {
+				let cwdServer = createCwdServer(userConfig, libServerPort, cwdServerPort)
+					.listen(cwdServerPort, () => {
+						cb(cwdServer, cwdServerPort);
+					})
+					.on('close', () => {
+						libServerProc.send(config.CONSTANT.IPC_MESSAGES.CLOSE_SERVER);
+					});
+			});
+		}
+	});
 }
 
-module.exports = createServer
+module.exports = runServers;
