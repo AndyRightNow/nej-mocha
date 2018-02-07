@@ -7,172 +7,171 @@ const DEFAULT_EXCLUDE_REGEXP = /\.spec\.js$/;
 const DEFAULT_ENTRY_IGNORE_PATTERN = /coverage|lib/;
 
 function normalizeGlobals(userConfig) {
-	userConfig.globals = userConfig.globals || {};
+    userConfig.globals = userConfig.globals || {};
 }
 
 function normalizeEntries(userConfig) {
-	userConfig.entries = (userConfig.entries &&
-		(typeof userConfig.entries === 'string' ? [userConfig.entries] : userConfig.entries)) || [
-		config.CONSTANT.DEFAULT_TEST_ENTRY,
-	];
-	for (let i = 0, es = userConfig.entries, l = es.length; i < l; i++) {
-		es[i] = normalizeSlashes(es[i]);
-		if (es[i][0] !== '.') {
-			if (es[i][0] !== '/') {
-				es[i] = '/' + es[i];
-			}
-			es[i] = '.' + es[i];
-		}
-	}
+    userConfig.entries = (userConfig.entries &&
+        (typeof userConfig.entries === 'string' ? [userConfig.entries] : userConfig.entries)) || [
+        config.CONSTANT.DEFAULT_TEST_ENTRY,
+    ];
+    for (let i = 0, es = userConfig.entries, l = es.length; i < l; i++) {
+        es[i] = normalizeSlashes(es[i]);
+        if (es[i][0] !== '.') {
+            if (es[i][0] !== '/') {
+                es[i] = '/' + es[i];
+            }
+            es[i] = '.' + es[i];
+        }
+    }
 
-	if (userConfig.entryIgnorePattern &&
-		!(userConfig.entryIgnorePattern instanceof RegExp)) {
-		userConfig.entryIgnorePattern = DEFAULT_ENTRY_IGNORE_PATTERN;
-	}
+    if (userConfig.entryIgnorePattern && !(userConfig.entryIgnorePattern instanceof RegExp)) {
+        userConfig.entryIgnorePattern = DEFAULT_ENTRY_IGNORE_PATTERN;
+    }
 }
 
 function normalizeMochaOptions(userConfig) {
-	userConfig.mochaOptions = userConfig.mochaOptions || {};
-	userConfig.mochaOptions.timeout = isNaN(parseInt(userConfig.mochaOptions.timeout)) ?
-		3000 :
-		parseInt(userConfig.mochaOptions.timeout);
-	userConfig.mochaOptions.useColors =
-		userConfig.mochaOptions.useColors === undefined ? true : userConfig.mochaOptions.useColors;
-	userConfig.mochaOptions.reporter = userConfig.mochaOptions.reporter || 'spec';
+    userConfig.mochaOptions = userConfig.mochaOptions || {};
+    userConfig.mochaOptions.timeout = isNaN(parseInt(userConfig.mochaOptions.timeout))
+        ? 3000
+        : parseInt(userConfig.mochaOptions.timeout);
+    userConfig.mochaOptions.useColors =
+        userConfig.mochaOptions.useColors === undefined ? true : userConfig.mochaOptions.useColors;
+    userConfig.mochaOptions.reporter = userConfig.mochaOptions.reporter || 'spec';
 }
 
 function normalizeNejPathAliases(userConfig) {
-	userConfig.nejPathAliases = userConfig.nejPathAliases || {};
-	userConfig.nejPathAliases.pro =
-		userConfig.nejPathAliases.pro || config.CONSTANT.DEFAULT_NEJ_PRO;
-	const nejPathAliases = userConfig.nejPathAliases;
-	for (const alias in nejPathAliases) {
-		if (nejPathAliases.hasOwnProperty(alias)) {
-			nejPathAliases[alias] = normalizeSlashes(`${nejPathAliases[alias]}/`);
-		}
-	}
+    userConfig.nejPathAliases = userConfig.nejPathAliases || {};
+    userConfig.nejPathAliases.pro =
+        userConfig.nejPathAliases.pro || config.CONSTANT.DEFAULT_NEJ_PRO;
+    const nejPathAliases = userConfig.nejPathAliases;
+    for (const alias in nejPathAliases) {
+        if (nejPathAliases.hasOwnProperty(alias)) {
+            nejPathAliases[alias] = normalizeSlashes(`${nejPathAliases[alias]}/`);
+        }
+    }
 }
 
 function normalizeProxy(userConfig) {
-	userConfig.proxy = typeof userConfig.proxy === 'object' ? userConfig.proxy : {};
-	userConfig.proxy.port = isNaN(parseInt(userConfig.proxy.port)) ?
-		0 :
-		parseInt(userConfig.proxy.port);
-	userConfig.proxy.host = (userConfig.proxy.host || 'localhost').toString().trim();
+    userConfig.proxy = typeof userConfig.proxy === 'object' ? userConfig.proxy : {};
+    userConfig.proxy.port = isNaN(parseInt(userConfig.proxy.port))
+        ? 0
+        : parseInt(userConfig.proxy.port);
+    userConfig.proxy.host = (userConfig.proxy.host || 'localhost').toString().trim();
 }
 
 function normalizeShouldBrowserClosed(userConfig) {
-	userConfig.shouldBrowserClosed =
-		userConfig.shouldBrowserClosed === undefined ?
-		true :
-		Boolean(userConfig.shouldBrowserClosed);
+    userConfig.shouldBrowserClosed =
+        userConfig.shouldBrowserClosed === undefined
+            ? true
+            : Boolean(userConfig.shouldBrowserClosed);
 }
 
 function normalizeHeadless(userConfig) {
-	userConfig.headless = userConfig.headless === undefined ? true : Boolean(userConfig.headless);
+    userConfig.headless = userConfig.headless === undefined ? true : Boolean(userConfig.headless);
 }
 
 function normalizeScriptsToInject(userConfig) {
-	userConfig.scriptsToInject = userConfig.scriptsToInject || [];
-	let scriptsToInject = userConfig.scriptsToInject;
-	for (let i = 0, l = scriptsToInject.length, scriptPath; i < l; i++) {
-		scriptPath = scriptsToInject[i];
+    userConfig.scriptsToInject = userConfig.scriptsToInject || [];
+    let scriptsToInject = userConfig.scriptsToInject;
+    for (let i = 0, l = scriptsToInject.length, scriptPath; i < l; i++) {
+        scriptPath = scriptsToInject[i];
 
-		// Relative (Starts with dots, letters, slashs or backslashs)
-		if (/^(\.|[a-zA-Z]|[\\/])/.test(scriptPath) && !/^http/.test(scriptPath)) {
-			scriptsToInject[i] = normalizeSlashes(`./${scriptPath}`).replace(/(\.\/)+/g, './');
-			// Not url, invalid path, ignore
-		} else if (!/^http/.test(scriptPath)) {
-			scriptsToInject[i] = '';
-		}
-	}
+        // Relative (Starts with dots, letters, slashs or backslashs)
+        if (/^(\.|[a-zA-Z]|[\\/])/.test(scriptPath) && !/^http/.test(scriptPath)) {
+            scriptsToInject[i] = normalizeSlashes(`./${scriptPath}`).replace(/(\.\/)+/g, './');
+            // Not url, invalid path, ignore
+        } else if (!/^http/.test(scriptPath)) {
+            scriptsToInject[i] = '';
+        }
+    }
 }
 
 function normalizeCoverage(userConfig) {
-	userConfig.coverage = userConfig.coverage || false;
+    userConfig.coverage = userConfig.coverage || false;
 }
 
 function normalizeCoverageOptions(userConfig) {
-	userConfig.coverageOptions = userConfig.coverageOptions || {};
-	const reporters = userConfig.coverageOptions.reporters;
-	userConfig.coverageOptions.reporters = reporters || ['text'];
-	userConfig.coverageOptions.reporters = Array.isArray(reporters) ? reporters : [reporters];
-	userConfig.coverageOptions.reporters = userConfig.coverageOptions.reporters.map(function (val) {
-		if (typeof val !== 'string') {
-			return 'text';
-		} else return val;
-	});
-	userConfig.coverageOptions.include =
-		userConfig.coverageOptions.include || DEFAULT_INCLUDE_REGEXP;
-	userConfig.coverageOptions.exclude =
-		userConfig.coverageOptions.exclude || DEFAULT_EXCLUDE_REGEXP;
+    userConfig.coverageOptions = userConfig.coverageOptions || {};
+    const reporters = userConfig.coverageOptions.reporters;
+    userConfig.coverageOptions.reporters = reporters || ['text'];
+    userConfig.coverageOptions.reporters = Array.isArray(reporters) ? reporters : [reporters];
+    userConfig.coverageOptions.reporters = userConfig.coverageOptions.reporters.map(function(val) {
+        if (typeof val !== 'string') {
+            return 'text';
+        } else return val;
+    });
+    userConfig.coverageOptions.include =
+        userConfig.coverageOptions.include || DEFAULT_INCLUDE_REGEXP;
+    userConfig.coverageOptions.exclude =
+        userConfig.coverageOptions.exclude || DEFAULT_EXCLUDE_REGEXP;
 
-	if (!(userConfig.coverageOptions.include instanceof RegExp)) {
-		throw new Error(
-			'Invalid option coverageOptions.include. Expected RegExp. Instead received ' +
-			typeof userConfig.coverageOptions.include
-		);
-	}
-	if (!(userConfig.coverageOptions.exclude instanceof RegExp)) {
-		throw new Error(
-			'Invalid option coverageOptions.exclude. Expected RegExp. Instead received ' +
-			typeof userConfig.coverageOptions.exclude
-		);
-	}
+    if (!(userConfig.coverageOptions.include instanceof RegExp)) {
+        throw new Error(
+            'Invalid option coverageOptions.include. Expected RegExp. Instead received ' +
+                typeof userConfig.coverageOptions.include
+        );
+    }
+    if (!(userConfig.coverageOptions.exclude instanceof RegExp)) {
+        throw new Error(
+            'Invalid option coverageOptions.exclude. Expected RegExp. Instead received ' +
+                typeof userConfig.coverageOptions.exclude
+        );
+    }
 }
 
 function normalizeInject(userConfig) {
-	userConfig.inject =
-		(userConfig.inject && Array.isArray(userConfig.inject) && userConfig.inject) || [];
+    userConfig.inject =
+        (userConfig.inject && Array.isArray(userConfig.inject) && userConfig.inject) || [];
 
-	for (const injection of userConfig.inject) {
-		if (typeof injection !== 'object') {
-			userConfig.inject = [];
-			break;
-		} else {
-			injection.pattern =
-				injection.pattern && injection.pattern.source ?
-				injection.pattern.source :
-				(injection.pattern &&
-					typeof injection.pattern === 'string' &&
-					injection.pattern) ||
-				'';
-			injection.path =
-				(injection.path && typeof injection.path === 'string' && injection.path) || '';
-		}
-	}
+    for (const injection of userConfig.inject) {
+        if (typeof injection !== 'object') {
+            userConfig.inject = [];
+            break;
+        } else {
+            injection.pattern =
+                injection.pattern && injection.pattern.source
+                    ? injection.pattern.source
+                    : (injection.pattern &&
+                          typeof injection.pattern === 'string' &&
+                          injection.pattern) ||
+                      '';
+            injection.path =
+                (injection.path && typeof injection.path === 'string' && injection.path) || '';
+        }
+    }
 }
 
 /* istanbul ignore next */
 function normalizeUserConfig(userConfig) {
-	userConfig = (typeof userConfig === 'object' && userConfig) || {};
+    userConfig = (typeof userConfig === 'object' && userConfig) || {};
 
-	normalizeGlobals(userConfig);
-	normalizeEntries(userConfig);
-	normalizeMochaOptions(userConfig);
-	normalizeNejPathAliases(userConfig);
-	normalizeProxy(userConfig);
-	normalizeShouldBrowserClosed(userConfig);
-	normalizeHeadless(userConfig);
-	normalizeScriptsToInject(userConfig);
-	normalizeCoverage(userConfig);
-	normalizeCoverageOptions(userConfig);
-	normalizeInject(userConfig);
+    normalizeGlobals(userConfig);
+    normalizeEntries(userConfig);
+    normalizeMochaOptions(userConfig);
+    normalizeNejPathAliases(userConfig);
+    normalizeProxy(userConfig);
+    normalizeShouldBrowserClosed(userConfig);
+    normalizeHeadless(userConfig);
+    normalizeScriptsToInject(userConfig);
+    normalizeCoverage(userConfig);
+    normalizeCoverageOptions(userConfig);
+    normalizeInject(userConfig);
 
-	return userConfig;
+    return userConfig;
 }
 
 module.exports = normalizeUserConfig;
 module.exports.helpers = {
-	normalizeGlobals,
-	normalizeEntries,
-	normalizeMochaOptions,
-	normalizeNejPathAliases,
-	normalizeProxy,
-	normalizeShouldBrowserClosed,
-	normalizeHeadless,
-	normalizeScriptsToInject,
-	normalizeCoverage,
-	normalizeCoverageOptions,
-	normalizeInject,
+    normalizeGlobals,
+    normalizeEntries,
+    normalizeMochaOptions,
+    normalizeNejPathAliases,
+    normalizeProxy,
+    normalizeShouldBrowserClosed,
+    normalizeHeadless,
+    normalizeScriptsToInject,
+    normalizeCoverage,
+    normalizeCoverageOptions,
+    normalizeInject,
 };
