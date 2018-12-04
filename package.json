@@ -48,6 +48,7 @@
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "nightmare": "^2.10.0",
+    "should": "^13.2.3",
     "traverse": "^0.6.6",
     "winston": "^2.4.0",
     "yargs": "^7.1.0"
